@@ -21,7 +21,7 @@ element/Element.class: element/Element.java
 
 
 clean:
-	rm -f *.class
+	rm -rf *.class
 
 run:	
 	java -jar program.jar 20 50 

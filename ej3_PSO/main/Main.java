@@ -1,5 +1,7 @@
 package main;
 
+import world.World;
+
 public class Main{
 
     public static void main(String[] args){
@@ -16,7 +18,7 @@ public class Main{
         int personalFactor = Integer.parseInt(args[4]);
         int grupalFactor = Integer.parseInt(args[5]);
 
-        
+        World world = new World(dimensions, poblation);
 
 
 
@@ -38,7 +40,7 @@ public class Main{
     private static Boolean checkInitialValues(String[] args){
 
         if(args.length!= 6){
-            System.out.println("Número de parámetros de entrada inválidos("+ args.length+"). La ejecución debser del tipo:");
+            System.out.println("Número de parámetros de entrada inválidos("+ args.length+"). La ejecución debe ser del tipo:");
             System.out.println("java main \"Dimensión\" \"Iteraciones\" \"Poblacion\" \"FactorInercia\" \"FactorPersonal\" \"FactorGrupal\"");
             System.out.println("\tDimensión: Número de dimensiones del espacio a operar.");
             System.out.println("\tIteraciones: Número de iteraciones a realizar.");
@@ -59,6 +61,9 @@ public class Main{
     }
 
 
+    private static void printWorld(){
+        
+    }
     
 
 
