@@ -18,18 +18,44 @@ public class Main{
         int personalFactor = Integer.parseInt(args[4]);
         int grupalFactor = Integer.parseInt(args[5]);
 
-        World world = new World(dimensions, poblation);
+        World world = new World(dimensions, poblation, true);
+
+        Double newVelocity = 0.0d;
+        double newPosition = 0.0d;
+
+        for(int iteration=0 ; iteration<iterations ; iteration++){
+
+            //Paso 1: Actualización del vector de velocidades por cada partícula
+            for(int particle=0 ; particle<world.getInfo_particleList_size() ; particle++){
+                for(int dimension=0 ; dimension<world.getInfo_dimensionList_size() ; dimension++){
+
+                    newVelocity = inertiaFactor * world.getElement_particleList_byIndex(particle).getElement_actualVelocityList_byIndex(dimension);
+                    newVelocity = newVelocity + ( personalFactor * random0to1() * 
+                                    (world.getElement_particleList_byIndex(particle).getElement_bestPositionList_personal_byIndex(dimension) 
+                                    - world.getElement_particleList_byIndex(particle).getElement_actualPositionList_byIndex(dimension) 
+                                    ));
+                    newVelocity = newVelocity + ( grupalFactor * random0to1() * 
+                                    (world.getElement_particleList_byIndex(particle).getElement_bestPositionList_global_byIndex(dimension) 
+                                    - world.getElement_particleList_byIndex(particle).getElement_actualPositionList_byIndex(dimension) 
+                                    ));   
+                }
+            }
+
+            //Paso 2: Actualización del vector de posición por cada partícula
+            for(int particle=0 ; particle<world.getInfo_particleList_size() ; particle++){
+                for(int dimension=0 ; dimension<world.getInfo_dimensionList_size() ; dimension++){
+
+                    newPosition = world.getElement_particleList_byIndex(particle).getElement_actualPositionList_byIndex(dimension);
+                    newPosition = newPosition + world.getElement_particleList_byIndex(particle).getElement_actualVelocityList_byIndex(dimension);
+                    world.getElement_particleList_byIndex(particle).modifyElement_actualPositionList_byIndex(dimension, newPosition);
+                }
+            }
 
 
 
-
-
-
-
-
-
-
-
+            System.out.println("Iteracion: " + (iteration+1) + ", particulas:");
+            world.printParticles();
+        }
 
 
 
@@ -61,10 +87,14 @@ public class Main{
     }
 
 
-    private static void printWorld(){
-        
+    private static Double fitnessFunction_circle(Double x){
+        return Math.pow(x, 2);
     }
-    
+
+    private static double random0to1(){
+        return ((Math.random() * 1) + 1 );
+    }
+
 
 
 }
