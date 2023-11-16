@@ -14,17 +14,20 @@ public class Main{
         int dimensions = Integer.parseInt(args[0]);
         int iterations = Integer.parseInt(args[1]);
         int poblation = Integer.parseInt(args[2]);
-        int inertiaFactor = Integer.parseInt(args[3]);
-        int personalFactor = Integer.parseInt(args[4]);
-        int grupalFactor = Integer.parseInt(args[5]);
+        float inertiaFactor = Float.parseFloat(args[3]);
+        float personalFactor = Float.parseFloat(args[4]);
+        float grupalFactor = Float.parseFloat(args[5]);
 
         World world = new World(dimensions, poblation, true);
+        System.out.println("\nInitial World..:");
+        world.print_all();
+        System.out.println();
 
         Double newVelocity = 0.0d;
         double newPosition = 0.0d;
 
         for(int iteration=0 ; iteration<iterations ; iteration++){
-
+            
             //Paso 1: Actualización del vector de velocidades por cada partícula
             for(int particle=0 ; particle<world.getInfo_particleList_size() ; particle++){
                 for(int dimension=0 ; dimension<world.getInfo_dimensionList_size() ; dimension++){
@@ -40,7 +43,6 @@ public class Main{
                                     ));   
                 }
             }
-
             //Paso 2: Actualización del vector de posición por cada partícula
             for(int particle=0 ; particle<world.getInfo_particleList_size() ; particle++){
                 for(int dimension=0 ; dimension<world.getInfo_dimensionList_size() ; dimension++){
@@ -53,8 +55,8 @@ public class Main{
 
 
 
-            System.out.println("Iteracion: " + (iteration+1) + ", particulas:");
-            world.printParticles();
+            //System.out.println("Iteracion: " + (iteration+1) + ", particulas:");
+            //world.print_onlyParticles();
         }
 
 
@@ -77,12 +79,12 @@ public class Main{
             return false;
         }
         System.out.println("Ejecución algoritmo PSO Parámetros:");
-        System.out.println("\tNúmero de dimensiones:"+args[0]);
-        System.out.println("\tNúmero de iteraciones:"+args[1]+"\n");
-        System.out.println("\tNúmero de partículas:"+args[2]+"\n");
-        System.out.println("\tFactor de inercia:"+args[3]+"\n");
-        System.out.println("\tFactor personal:"+args[4]+"\n");
-        System.out.println("\tFactor grupal:"+args[5]+"\n");
+        System.out.println("\tNúmero de dimensiones: "+args[0]);
+        System.out.println("\tNúmero de iteraciones: "+args[1]);
+        System.out.println("\tNúmero de partículas: "+args[2]);
+        System.out.println("\tFactor de inercia: "+args[3]);
+        System.out.println("\tFactor personal: "+args[4]);
+        System.out.println("\tFactor grupal: "+args[5]);
         return true;
     }
 

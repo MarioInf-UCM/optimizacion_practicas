@@ -16,15 +16,33 @@ public class World {
     public World(int dimensions, int particles, boolean velocityZero){
         for(int i=0 ; i<dimensions ; i++){
             this.get_dimensionList().add(new Dimension());
+        }
+        for(int i=0 ; i<particles ; i++){
             this.get_particleList().add(new Particle(this.get_dimensionList(), velocityZero));
         }
     }
 
 
 
-    public void printParticles(){
+
+    public void print_all(){
+        System.out.println("Dimensions{");
+        for(int i=0 ; i<this.getInfo_dimensionList_size() ; i++){
+            this.getElement_dimensionList_byIndex(i).print();
+            System.out.println();
+        }
+        System.out.println("}\nParticles{");
         for(int i=0 ; i<this.getInfo_particleList_size() ; i++){
-            this.getElement_particleList_byIndex(i).print_onlyPosition();
+            this.getElement_particleList_byIndex(i).print_all();
+            System.out.println();
+        }
+        System.out.println("}\n");
+
+    }
+
+    public void print_onlyParticles(){
+        for(int i=0 ; i<this.getInfo_particleList_size() ; i++){
+            this.getElement_particleList_byIndex(i).print_all();
         }
     }
     

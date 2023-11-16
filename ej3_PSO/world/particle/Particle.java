@@ -33,6 +33,8 @@ public class Particle {
             }else{
                 this.get_actualVelocityList().add(  ((Math.random() * (dimensionList.get(i).getMaxValue() - dimensionList.get(i).getMinValue() )) + dimensionList.get(i).getMinValue() ) );
             }
+        this.get_bestPositionList_personal().add(0.0d);
+        this.get_bestPositionList_gloabl().add(0.0d);
         }
     }
     public Particle(ArrayList<Dimension> dimensionList, boolean velocityZero, double MinLimit, double MaxLimit){
@@ -47,14 +49,17 @@ public class Particle {
             }else{
                 this.get_actualVelocityList().add(  ((Math.random() * (MaxLimit - MinLimit )) + MaxLimit ));
             }
+            this.get_bestPositionList_personal().add(0.0d);
+            this.get_bestPositionList_gloabl().add(0.0d);
         }
     }
 
 
-    public void print_onlyPosition(){
+    public void print_all(){
         System.out.print("ID: "+this.get_ID() + "  <");
         for(int i=0 ; i>getInfo_actualPositionList_size() ; i++){
-            System.out.print(+i+") "+getElement_actualPositionList_byIndex(i)+ "   ");
+            System.out.print(+i+"( X: "+getElement_actualPositionList_byIndex(i)+"    V: " +getElement_actualPositionList_byIndex(i)+ 
+                                    "    P: "+this.getElement_bestPositionList_personal_byIndex(i) + "    G: "+this.getElement_bestPositionList_personal_byIndex(i)+ " )" );
         }
         System.out.print(">");
     }

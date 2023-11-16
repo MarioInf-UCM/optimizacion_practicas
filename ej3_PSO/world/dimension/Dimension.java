@@ -24,6 +24,12 @@ public class Dimension {
     }
 
 
+
+    public void print(){
+        System.out.print(this.getDescription() + "    Range: " + this.getMinValue() + " to " + this.getMaxValue());
+    }
+
+
     /*********************************************************************
      * ZONA DE DEFINICIÓN DE MÉTODOS PARA EL TRATAMIENTO DE LOS ATRIBUTOS
      *********************************************************************/
