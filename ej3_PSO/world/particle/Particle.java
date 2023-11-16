@@ -33,35 +33,18 @@ public class Particle {
             }else{
                 this.get_actualVelocityList().add(  ((Math.random() * (dimensionList.get(i).getMaxValue() - dimensionList.get(i).getMinValue() )) + dimensionList.get(i).getMinValue() ) );
             }
-        this.get_bestPositionList_personal().add(0.0d);
-        this.get_bestPositionList_gloabl().add(0.0d);
-        }
-    }
-    public Particle(ArrayList<Dimension> dimensionList, boolean velocityZero, double MinLimit, double MaxLimit){
-        this.set_ID(UUID.randomUUID().toString());
-        this.actualPositionList = new ArrayList<Double>();
-        this.bestPositionList_personal = new ArrayList<Double>();
-        this.bestPositionList_global = new ArrayList<Double>();
-        for(int i=0 ; i<dimensionList.size() ; i++){
-            this.get_actualPositionList().add(  ((Math.random() * (MaxLimit - MinLimit )) + MaxLimit ));
-            if(velocityZero){
-                this.get_actualVelocityList().add(0.0d); 
-            }else{
-                this.get_actualVelocityList().add(  ((Math.random() * (MaxLimit - MinLimit )) + MaxLimit ));
-            }
-            this.get_bestPositionList_personal().add(0.0d);
-            this.get_bestPositionList_gloabl().add(0.0d);
+        this.get_bestPositionList_personal().add(Double.MAX_VALUE);
+        this.get_bestPositionList_gloabl().add(Double.MAX_VALUE);
         }
     }
 
 
     public void print_all(){
-        System.out.print("ID: "+this.get_ID() + "  <");
-        for(int i=0 ; i>getInfo_actualPositionList_size() ; i++){
-            System.out.print(+i+"( X: "+getElement_actualPositionList_byIndex(i)+"    V: " +getElement_actualPositionList_byIndex(i)+ 
-                                    "    P: "+this.getElement_bestPositionList_personal_byIndex(i) + "    G: "+this.getElement_bestPositionList_personal_byIndex(i)+ " )" );
+        System.out.print("ID: "+this.get_ID() + "\t||");
+        for(int i=0 ; i<getInfo_actualPositionList_size() ; i++){
+            System.out.print("\t"+(i+1)+"( X: "+getElement_actualPositionList_byIndex(i)+"\tV: " +getElement_actualPositionList_byIndex(i)+ 
+                                "\tP: "+this.getElement_bestPositionList_personal_byIndex(i) + "\tG: "+this.getElement_bestPositionList_personal_byIndex(i)+ " )" );
         }
-        System.out.print(">");
     }
 
 

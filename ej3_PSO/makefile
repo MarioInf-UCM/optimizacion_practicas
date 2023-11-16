@@ -34,4 +34,4 @@ run:
 	java -jar program.jar $(dimensions) $(iterations) $(poblation) $(inertiaFactor) $(personalFactor) $(grupalFactor)
 
 runFile:	
-	java -jar program.jar $(URL) >> result/lastResult.txt
+	java -jar program.jar $(dimensions) $(iterations) $(poblation) $(inertiaFactor) $(personalFactor) $(grupalFactor) > result/lastResult.txt
