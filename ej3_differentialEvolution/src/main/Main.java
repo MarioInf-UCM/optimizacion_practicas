@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Random;
 
 import world.World;
 
@@ -24,13 +25,13 @@ public class Main {
             return;
         }
 
+        Random rand = new Random();
         Scanner sc = new Scanner(System.in);
         int dimensions = Integer.parseInt(args[0]);
         int iterations = Integer.parseInt(args[1]);
         int poblation = Integer.parseInt(args[2]);
-        float inertiaFactor = Float.parseFloat(args[3]);
-        float personalFactor = Float.parseFloat(args[4]);
-        float grupalFactor = Float.parseFloat(args[5]);
+        float crossover = Float.parseFloat(args[3]);
+        float differentialWeight = Float.parseFloat(args[4]);
 
         World world = new World(dimensions, poblation, DIMENSION_MIN_VALUE, DIMENSION_MAX_VALUE, MAX_VELOCITY_ABSOLUTE_VALOR);
         if (VERBOSE_FLAG) {
@@ -39,14 +40,19 @@ public class Main {
             System.out.println("\n\n");
         }
 
-        Double newVelocity = 0.0d;
-        Double newPosition = 0.0d;
-        Double resultFitness_actualposition = 0.0d;
-        Double resultFitness_bestPositionPersonal = 0.0d;
-        Double resultFitness_bestPositionGlobal = 0.0d;
-        Double posTemp = 0.0d;
+
         int lastIteration = 0;
         boolean flagEnd = false;
+        int partSelected_1=0, indexSelected_1=0;
+        int partSelected_2=0, indexSelected_2=0;
+        int partSelected_3=0, indexSelected_3=0;
+        int dimensionSelected=0;
+        Double newPosition = 0.0d;
+
+        ArrayList<Integer>particleSelectorList = new ArrayList<Integer>();
+        for(int i=0 ; i<poblation ; i++){
+            particleSelectorList.add(i);
+        }
 
         ArrayList<Double> minPointList = new ArrayList<Double>();
         for(int i=0 ; i<dimensions ; i++){
@@ -55,72 +61,54 @@ public class Main {
 
         do {
             for (int iteration = lastIteration; iteration < iterations; iteration++) {
-
-                // Paso 1: Actualización del vector de velocidades por cada partícula
                 for (int particle = 0; particle < world.getInfo_particleList_size(); particle++) {
-                    for (int dimension = 0; dimension < world.getInfo_dimensionList_size(); dimension++) {
+                    
+                    // Paso 1: Seleccionamos las partículas y la dimension a operar
+                    indexSelected_1 = rand.nextInt(particleSelectorList.size());
+                    partSelected_1 = particleSelectorList.get(indexSelected_1);
+                    particleSelectorList.remove(indexSelected_1);
 
-                        //System.out.println("Velocidad actual: " + world.getElement_particleList_byIndex(particle).getElement_actualVelocityList_byIndex(dimension));
+                    indexSelected_2 = rand.nextInt(particleSelectorList.size());
+                    partSelected_2 = particleSelectorList.get(indexSelected_2);
+                    particleSelectorList.remove(indexSelected_2);
 
-                        newVelocity = inertiaFactor * world.getElement_particleList_byIndex(particle).getElement_actualVelocityList_byIndex(dimension);
-                        newVelocity = newVelocity + (personalFactor * random0to1() *
-                                (world.getElement_particleList_byIndex(particle).getElement_bestPositionList_personal_byIndex(dimension)
-                                - world.getElement_particleList_byIndex(particle).getElement_actualPositionList_byIndex(dimension)));
-                        newVelocity = newVelocity + (grupalFactor * random0to1() *
-                                (minPointList.get(dimension)
-                                - world.getElement_particleList_byIndex(particle).getElement_actualPositionList_byIndex(dimension)));
+                    indexSelected_3 = rand.nextInt(particleSelectorList.size());
+                    partSelected_3 = particleSelectorList.get(indexSelected_3);
+                    particleSelectorList.remove(indexSelected_3);
 
-                        if(newVelocity > Math.abs(MAX_VELOCITY_ABSOLUTE_VALOR)){
-                            newVelocity = MAX_VELOCITY_ABSOLUTE_VALOR;
-                        }else if(newVelocity < (- Math.abs(MAX_VELOCITY_ABSOLUTE_VALOR))){
-                            newVelocity = - Math.abs(MAX_VELOCITY_ABSOLUTE_VALOR);
-                        }
+                    particleSelectorList = new ArrayList<Integer>();
+                    for(int i=0 ; i<poblation ; i++){
+                        particleSelectorList.add(i);
+                    }
 
-                        world.getElement_particleList_byIndex(particle).modifyElement_actualVelocityList_byIndex(dimension, newVelocity);
+                    dimensionSelected = rand.nextInt(dimensions);
+
+
+                    // Paso 2: Modificamos la dimensión seleccionada
+                    newPosition = modicateDimension(world, differentialWeight, dimensionSelected, partSelected_1, partSelected_2, partSelected_3);
+                    if(fitnessFunction(newPosition)<fitnessFunction(world.getElement_particleList_byIndex(particle).getElement_actualPositionList_byIndex(dimensionSelected))){
+                        world.getElement_particleList_byIndex(particle).modifyElement_actualPositionList_byIndex(dimensionSelected, newPosition);
                         
-                        //System.out.println("Velocidad calculada: " + newVelocity + "\n");
+                        if(fitnessFunction(newPosition)<fitnessFunction(minPointList.get(dimensionSelected))){
+                            minPointList.set(dimensionSelected, newPosition);
+                        }
                     }
-                }
 
-                // Paso 2: Actualización del vector de posición por cada partícula
-                for (int particle = 0; particle < world.getInfo_particleList_size(); particle++) {
+                    //Paso 3: Modificamos las dimensiones restantes
                     for (int dimension = 0; dimension < world.getInfo_dimensionList_size(); dimension++) {
+                        if(dimension != dimensionSelected && random0to1()<crossover){
+                            newPosition = modicateDimension(world, differentialWeight, dimensionSelected, partSelected_1, partSelected_2, partSelected_3);
+                            if(fitnessFunction(newPosition)<fitnessFunction(world.getElement_particleList_byIndex(particle).getElement_actualPositionList_byIndex(dimension))){
+                                world.getElement_particleList_byIndex(particle).modifyElement_actualPositionList_byIndex(dimension, newPosition);
+                            }
+                            if(fitnessFunction(newPosition)<fitnessFunction(minPointList.get(dimension))){
+                                minPointList.set(dimension, newPosition);
+                            }
 
-                        newPosition = world.getElement_particleList_byIndex(particle).getElement_actualPositionList_byIndex(dimension);
-                        //System.out.println("posicion actual: " +newPosition);
-
-                        newPosition = newPosition + world.getElement_particleList_byIndex(particle).getElement_actualVelocityList_byIndex(dimension);
-                        
-                        if (newPosition < world.getElement_dimensionList_byIndex(dimension).getMinValue()) {
-                            newPosition = world.getElement_dimensionList_byIndex(dimension).getMinValue();
-                        } else if (newPosition > world.getElement_dimensionList_byIndex(dimension).getMaxValue()) {
-                            newPosition = world.getElement_dimensionList_byIndex(dimension).getMaxValue();
-                        }
-                        world.getElement_particleList_byIndex(particle).modifyElement_actualPositionList_byIndex(dimension, newPosition);
-                        //System.out.println("Posicion calculada: " +newPosition+"\n");
-                    }
-                }
-
-                // Paso 3: Actualización de los minimos locales y globales
-                for (int particle = 0; particle < world.getInfo_particleList_size(); particle++) {
-                    for (int dimension = 0; dimension < world.getInfo_dimensionList_size(); dimension++) {
-
-                        posTemp = world.getElement_particleList_byIndex(particle).getElement_actualPositionList_byIndex(dimension);
-
-                        resultFitness_actualposition = fitnessFunction(posTemp);
-                        resultFitness_bestPositionPersonal = fitnessFunction(world.getElement_particleList_byIndex(particle).getElement_bestPositionList_personal_byIndex(dimension));
-                        resultFitness_bestPositionGlobal = fitnessFunction(minPointList.get(dimension));
-
-                        if (resultFitness_actualposition < resultFitness_bestPositionPersonal) {
-                            world.getElement_particleList_byIndex(particle).modifyElement_bestPositionList_personal_byIndex(dimension, posTemp);
-                        }
-                        if (resultFitness_actualposition < resultFitness_bestPositionGlobal) {
-                            minPointList.set(dimension, posTemp);
                         }
                     }
+
                 }
-
-
                 lastIteration = iteration;
                 if (VERBOSE_FLAG) {
                     System.out.println("\nIteracion: " + (iteration + 1));
@@ -168,16 +156,16 @@ public class Main {
 
     private static Boolean checkInitialValues(String[] args) {
 
-        if (args.length != 6) {
+        if (args.length != 5) {
             System.out.println(
                     "Número de parámetros de entrada inválidos(" + args.length + "). La ejecución debe ser del tipo:");
             System.out.println(
-                    "java main \"Dimensión\" \"Iteraciones\" \"Poblacion\" \"FactorInercia\" \"FactorPersonal\" \"FactorGrupal\"");
+                    "java main \"Dimensión\" \"Iteraciones\" \"Poblacion\" \"Crossover\" \"DifferentialWeight\"");
             System.out.println("\tDimensión: Número de dimensiones del espacio a operar.");
             System.out.println("\tIteraciones: Número de iteraciones a realizar.");
             System.out.println("\tPoblacion: Número de partículas con las que se va a operar.");
-            System.out.println("\tFactorInercia: Peso dado a la posición anterior de la partícula a operar.");
-            System.out.println("\tFactorPersonal: Peso dado a la mejor posición encontrada por al partícula a tratar.");
+            System.out.println("\tCrossover: Porcentaje de dimensiones a modificar en cada iteración [0,1]");
+            System.out.println("\tDifferentialWeight: Peso dado a las partículas secundarias con las que se realiza la modiciación del movimiento.");
             System.out
                     .println("\tFactorGrupal: Peso dado a la mejor posición encontrada por el conjunto de partículas.");
             return false;
@@ -186,11 +174,18 @@ public class Main {
         System.out.println("\tNúmero de dimensiones: " + args[0]);
         System.out.println("\tNúmero de iteraciones: " + args[1]);
         System.out.println("\tNúmero de partículas: " + args[2]);
-        System.out.println("\tFactor de inercia: " + args[3]);
-        System.out.println("\tFactor personal: " + args[4]);
-        System.out.println("\tFactor grupal: " + args[5]);
+        System.out.println("\tCrossover: " + args[3]);
+        System.out.println("\tPeso diferencial: " + args[4]);
         return true;
     }
+
+    private static Double modicateDimension(World world, float differentialWeight, int dimensionSelected, int partSelected_1, int partSelected_2, int partSelected_3){
+        return world.getElement_particleList_byIndex(partSelected_1).getElement_actualPositionList_byIndex(dimensionSelected) + differentialWeight * (
+                            world.getElement_particleList_byIndex(partSelected_2).getElement_actualPositionList_byIndex(dimensionSelected)
+                            - world.getElement_particleList_byIndex(partSelected_3).getElement_actualPositionList_byIndex(dimensionSelected));
+    }
+
+
 
     private static Double fitnessFunction(Double x) {
         if(FITNESS_FUCTION_SELECTED.toUpperCase().equals("CIRCLE")){
