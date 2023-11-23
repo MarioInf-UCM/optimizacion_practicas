@@ -11,30 +11,22 @@ public class Particle {
     private ArrayList<Double> actualPositionList = new ArrayList<Double>();
     private ArrayList<Double> actualVelocityList = new ArrayList<Double>();
     private ArrayList<Double> bestPositionList_personal = new ArrayList<Double>();
-    private ArrayList<Double> bestPositionList_global = new ArrayList<Double>();
     
     public Particle(){
     }
     public Particle(Particle particle){
         this.set_ID(particle.get_ID());
         this.set_actualPositionList_duplicate(particle.get_actualPositionList());
-        this.set_bestPositionList_global_duplicate(particle.get_bestPositionList_personal());
-        this.set_bestPositionList_global_duplicate(particle.get_bestPositionList_gloabl());
     }
-    public Particle(ArrayList<Dimension> dimensionList, boolean velocityZero){
+    public Particle(ArrayList<Dimension> dimensionList, double MaxVelocity_AbsoluteValor){
         this.set_ID(UUID.randomUUID().toString());
         this.actualPositionList = new ArrayList<Double>();
         this.bestPositionList_personal = new ArrayList<Double>();
-        this.bestPositionList_global = new ArrayList<Double>();
         for(int i=0 ; i<dimensionList.size() ; i++){
             this.get_actualPositionList().add(  ((Math.random() * (dimensionList.get(i).getMaxValue() - dimensionList.get(i).getMinValue() )) + dimensionList.get(i).getMinValue() ) );
-            if(velocityZero){
-                this.get_actualVelocityList().add(0.0d); 
-            }else{
-                this.get_actualVelocityList().add(  ((Math.random() * (dimensionList.get(i).getMaxValue() - dimensionList.get(i).getMinValue() )) + dimensionList.get(i).getMinValue() ) );
-            }
-        this.get_bestPositionList_personal().add(Double.MAX_VALUE);
-        this.get_bestPositionList_gloabl().add(Double.MAX_VALUE);
+            this.get_actualVelocityList().add(  ((Math.random() * (Math.abs(MaxVelocity_AbsoluteValor) + Math.abs(MaxVelocity_AbsoluteValor) )) - Math.abs(MaxVelocity_AbsoluteValor) ));
+            
+            this.get_bestPositionList_personal().add(this.get_actualPositionList().get(i));
         }
     }
 
@@ -42,8 +34,8 @@ public class Particle {
     public void print_all(){
         System.out.print("ID: "+this.get_ID() + "\t||");
         for(int i=0 ; i<getInfo_actualPositionList_size() ; i++){
-            System.out.print("\t"+(i+1)+"( X: "+getElement_actualPositionList_byIndex(i)+"\tV: " +getElement_actualPositionList_byIndex(i)+ 
-                                "\tP: "+this.getElement_bestPositionList_personal_byIndex(i) + "\tG: "+this.getElement_bestPositionList_personal_byIndex(i)+ " )" );
+            System.out.print("\t"+(i+1)+"( X: "+getElement_actualPositionList_byIndex(i)+"\tV: " +getElement_actualVelocityList_byIndex(i)+ 
+                                "\tP: "+this.getElement_bestPositionList_personal_byIndex(i) + " )" );
         }
     }
 
@@ -98,30 +90,6 @@ public class Particle {
     public Double getElement_bestPositionList_personal_byIndex(int index){ return this.bestPositionList_personal.get(index); }
     public int getInfo_bestPositionList_personal_size(){ return this.get_bestPositionList_personal().size(); }
     public void modifyElement_bestPositionList_personal_byIndex(int index, Double value){this.bestPositionList_personal.set(index, value);}
-    
-
-
-    public ArrayList<Double> get_bestPositionList_gloabl(){ return this.bestPositionList_global; }
-    public void set_bestPositionList_global_reference(ArrayList<Double> data){ this.bestPositionList_global = data; }
-    public void set_bestPositionList_global_duplicate(ArrayList<Double> data){ 
-        this.bestPositionList_global = new ArrayList<Double>();
-        for(int i=0 ; i<data.size() ; i++){
-            this.bestPositionList_global.add(data.get(i));
-        }
-        return;
-    }
-    public Double getElement_bestPositionList_global_byIndex(int index){ return this.bestPositionList_global.get(index); }
-    public int getInfo_bestPositionList_global_size(){ return this.get_bestPositionList_gloabl().size(); }
-    public void modifyElement_bestPositionList_global_byIndex(int index, Double value){this.bestPositionList_global.set(index, value);}
-
-    
-
-
-
-
-
-
-
 
 
 

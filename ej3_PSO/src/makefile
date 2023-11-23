@@ -9,7 +9,7 @@ inertiaFactor = 0.3925
 personalFactor = 2.5586
 grupalFactor = 1.3358
 
-
+outputFile = ../result/lastResult.txt
 
 
 main/Main.class: main/Main.java
@@ -34,4 +34,4 @@ run:
 	java -jar program.jar $(dimensions) $(iterations) $(poblation) $(inertiaFactor) $(personalFactor) $(grupalFactor)
 
 runFile:	
-	java -jar program.jar $(dimensions) $(iterations) $(poblation) $(inertiaFactor) $(personalFactor) $(grupalFactor) > result/lastResult.txt
+	java -jar program.jar $(dimensions) $(iterations) $(poblation) $(inertiaFactor) $(personalFactor) $(grupalFactor) > $(outputFile)

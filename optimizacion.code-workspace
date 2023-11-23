@@ -12,5 +12,10 @@
         {
             "path": "."
         }
-    ]
+    ],
+    "settings": {
+        "[java]": {
+            "editor.formatOnSave": false
+        }
+    }
 }
