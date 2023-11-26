@@ -8,6 +8,7 @@ public class Node{
 
     private int id = -1; 
     private int value = -1;
+    private float totalProbabilityEdges = 0.0f;
     private ArrayList<Edge> edgeList = new ArrayList<Edge>();
 
 
@@ -38,6 +39,7 @@ public class Node{
     public void printNodeComplet(){
         System.out.print("\t[ "+this.getId()+" | "+this.getValue()+" ]");
         for(int i=0 ; i<this.edgeList.size() ; i++){
+            System.out.print("    ");
             this.edgeList.get(i).printEdgeComplet();
         }
         System.out.println("");
@@ -46,19 +48,11 @@ public class Node{
     public void printNodeSimple(){
         System.out.print("\t[ "+this.getId()+" | "+this.getValue()+" ]");
         for(int i=0 ; i<this.edgeList.size() ; i++){
+            System.out.print("    ");
             this.edgeList.get(i).printEdgeSimple();
         }
         System.out.println("");
     }
-
-    public void printNodeSimple_withValue(){
-        System.out.print("\t[ "+this.getId()+" | "+this.getValue()+" ]");
-        for(int i=0 ; i<this.edgeList.size() ; i++){
-            this.edgeList.get(i).printEdgeSimple_withValue();
-        }
-        System.out.println("");
-    }
-
 
 
     /*********************************************************************
@@ -67,10 +61,19 @@ public class Node{
     public int getId(){ return id; }
     public void setId(int n){ this.id=n; }
 
-    public int getValue(){ return value; }
-    public void setValue(int n){ value=n; }
+
+    public int getValue(){ return this.value; }
+    public void setValue(int n){ this.value=n; }
+
+
+    public float getTotalProbablyEdges(){ return this.totalProbabilityEdges; }
+    public void setTotalProbablyEdges(float n){ this.totalProbabilityEdges=n; }
+
 
     public ArrayList<Edge> getEdgeList(){ return edgeList; }
+    public Edge getEdge_byIndex(int pos){
+        return getEdgeList().get(pos);
+    }
     public void setEdgeList_reference(ArrayList<Edge> n){this.edgeList = new ArrayList<Edge>(n);}
     public void setEdgeList_duplicate(ArrayList<Edge> n){ 
         this.edgeList = new ArrayList<Edge>();

@@ -32,9 +32,12 @@ public class Graph{
      *******************************/
     
     public void printGraphComplet(){
+        System.out.println("{");
+        System.out.println("ID: "+this.getId());
         for( int i =0 ; i<nodeList.size() ; i++){
             this.nodeList.get(i).printNodeComplet();
         }
+        System.out.println("}\n");
     }
 
 
@@ -43,15 +46,6 @@ public class Graph{
         System.out.println("ID: "+this.getId());
         for( int i =0 ; i<nodeList.size() ; i++){
             this.nodeList.get(i).printNodeSimple();
-        }
-        System.out.println("}\n");
-    }
-
-    public void printGraphSimple_withValue(){
-        System.out.println("{");
-        System.out.println("ID: "+this.getId());
-        for( int i =0 ; i<nodeList.size() ; i++){
-            this.nodeList.get(i).printNodeSimple_withValue();
         }
         System.out.println("}\n");
     }
@@ -104,7 +98,7 @@ public class Graph{
                 }else{
                     parts = line.split(" ", 2);
                     edgeTemp = new Edge(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
-                    edgeTemp.setValue((Integer.parseInt(parts[0]) + Integer.parseInt(parts[0]) )% 10);
+                    edgeTemp.setDistance((Integer.parseInt(parts[0]) + Integer.parseInt(parts[0]) )% 10);
                     graphResult.getNodeList().get(Integer.parseInt(parts[0])-1).addEdge(edgeTemp);
                 
                 }
@@ -125,8 +119,11 @@ public class Graph{
     public void setId(int n){ this.id = n;}
 
     public ArrayList<Node> getNodeList(){ return this.nodeList;}
+    public Node getNode_byIndex(int pos){
+        return getNodeList().get(pos);
+    }
     public void setNodeList_reference(ArrayList<Node> n){this.nodeList = new ArrayList<Node>(n);}
-    public void setNodeList_duplicate(ArrayList<Node> n){ 
+    public void setNodeList_duplicate(ArrayList<Node> n){
         this.nodeList = new ArrayList<Node>();
         Node nodeTemp;
         for(int i=0 ; i<n.size() ; i++){
