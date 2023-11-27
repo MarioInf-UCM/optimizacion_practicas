@@ -96,9 +96,10 @@ public class Graph{
                     firstLineFlag = false;
 
                 }else{
-                    parts = line.split(" ", 2);
+                    parts = line.split(" ", 3);
                     edgeTemp = new Edge(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
-                    edgeTemp.setDistance((Integer.parseInt(parts[0]) + Integer.parseInt(parts[0]) )% 10);
+                    edgeTemp.setDistance(Float.parseFloat(parts[2]));
+                    edgeTemp.setPheromone(1);
                     graphResult.getNodeList().get(Integer.parseInt(parts[0])-1).addEdge(edgeTemp);
                 
                 }

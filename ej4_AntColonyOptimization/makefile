@@ -2,11 +2,11 @@ program.jar: src/main/Main.class src/graph/Graph.class src/graph/edge/Edge.class
 	jar cmfv manifest $@ $^
 
 
-iterations = 400
+iterations = 1000
 pheromoneControl = 1
 desirabilityControl = 1
 
-graphFileURL = /home/mario/Documentos/universidad/optimizacion/ej4_AntColonyOptimization/dataPonderateGraph/vc-exact_005.gr
+graphFileURL = /home/mario/Documentos/universidad/optimizacion/ej4_AntColonyOptimization/dataPonderateGraph/graphCities5.gr
 outputFileURL = /home/mario/Documentos/universidad/optimizacion/ej4_AntColonyOptimization/result/lastResult.txt
 
 

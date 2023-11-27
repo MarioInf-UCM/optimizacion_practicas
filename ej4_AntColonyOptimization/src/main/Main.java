@@ -2,6 +2,8 @@ package src.main;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import src.graph.Graph;
@@ -10,7 +12,7 @@ import src.graph.node.Node;
 
 public class Main{
 
-    private static final boolean VERBOSE_MODE = true;
+    private static final boolean VERBOSE_MODE = false;
 
     private static String graphFileURL = "";
     private static int iterations = 0;
@@ -40,20 +42,30 @@ public class Main{
         boolean finishAnt_Success = false;
         int movementDoneCount = 0;
 
-        System.out.println("Grafo inicial..:");
-        graph.printGraphComplet();
-        for(int iteration=0 ; iteration<iterations ; iteration++){
+        ArrayList<Edge>finalPath = new ArrayList<Edge>();
+        float pathDistance = 0.0f, minPathDistance=Float.MAX_VALUE;
+
+        if(VERBOSE_MODE){
+            System.out.println("Grafo inicial..:");
+            graph.printGraphComplet();
+        }
+        for(int hormiga=0 ; hormiga<iterations ; hormiga++){
             
                 resetGraphValue(graph);
                 actualNodePosition = 0;
                 movementDoneCount = 0;
+                finishAnt_Fail = false;
+                finishAnt_Success = false;
                 actualNode = graph.getNode_byIndex(actualNodePosition);
-
+                finalPath = new ArrayList<Edge>();
+                pathDistance = 0.0f;
             
             do {    // Calculamos el recorido de una hormiga
 
                 // Paso 1: Verificamos si existe un camino disponible
                 graph.getNode_byIndex(actualNodePosition).setValue(0);
+                finishAnt_Fail = false;
+                finishAnt_Success = false;
                 if(!checkPosiblilities(graph, actualNode)){
                     if(checkCompleteGraph(graph)){
                         finishAnt_Success = true;
@@ -63,32 +75,56 @@ public class Main{
                     break;
                 }
 
+
                 //Paso 2: Calculamos el proximo camino a recorrer
                 calculateEdgesProbability(graph, actualNode);
 
+
                 //Paso 3: Movemos a la hormiga
                 selectedEdge = selectNextMovement(actualNode);
+                finalPath.add(selectedEdge);
+
                 if(VERBOSE_MODE){
-                    System.out.println("\n\nNº Hormiga: "+iteration+"    nº movimiento "+movementDoneCount);
-                    System.out.println("posición actual: "+actualNodePosition+ "    posoción siguiente: "+graph.getNode_byIndex(selectedEdge.getIdDestine()-1));
+                    System.out.println("\n\nNº Hormiga: "+(hormiga+1)+"    nº movimiento "+(movementDoneCount+1));
+                    System.out.println("posición actual: "+(actualNodePosition+1)+ "    posición siguiente: "+selectedEdge.getIdDestine());
                     graph.printGraphComplet();
                 }
 
+                graph.getNode_byIndex(actualNodePosition).setValue(1);
                 actualNode = graph.getNode_byIndex(selectedEdge.getIdDestine()-1);
                 actualNodePosition = selectedEdge.getIdDestine()-1;
-                finishAnt_Fail = false;
-                finishAnt_Success = false;
-                
                 movementDoneCount++;
-            } while (finishAnt_Fail || finishAnt_Success);
 
-            if(finishAnt_Fail){
-                System.out.println("La hormiga no ha encontrado el camino. La pobre ha muerto de inanición.");
-            }else if(finishAnt_Success){
-                System.out.println("¡¡La hormiga ha logrado encontrar el camino!!. Será recordada como un heroe.");
-            }  
-        }
+            } while (!finishAnt_Fail && !finishAnt_Success); // Fin bucle de recorrido de hormigas
+            
+            pathDistance=0; 
+            for(int i=0 ; i<finalPath.size() ; i++){
+                pathDistance = pathDistance + finalPath.get(i).getDistance();
+            }
 
+            if(pathDistance < minPathDistance){
+                minPathDistance = pathDistance;
+                if(VERBOSE_MODE){
+                    System.out.println("\n\nÚltimo movimiento..:");
+                    System.out.println("Nº Hormiga: "+(hormiga+1)+"    nº movimiento "+(movementDoneCount+1));
+                    System.out.println("posición actual: "+(actualNodePosition+1) +"    Posición siguiente: De vuelta a casa");
+                    graph.printGraphComplet();
+                    
+                    if(finishAnt_Fail){
+                        System.out.println("La hormiga no ha encontrado el camino. La pobre ha muerto de inanición.");
+                    }else if(finishAnt_Success){
+                        System.out.println("¡¡La hormiga ha logrado encontrar el camino!!. Será recordada como un heroe.");
+                        printResult(finalPath, pathDistance);
+                        break;
+                    }       
+                }else{
+                    System.out.println("\nNuevo camino más optimo encontrado..:");
+                    System.out.println("Nº Hormiga: "+(hormiga+1)+"    nº movimiento "+(movementDoneCount+1));               
+                    printResult(finalPath, pathDistance);
+                }
+            }
+            
+        } // Fin bucle de iteraciones (hormigas)
 
     }
     
@@ -109,7 +145,7 @@ public class Main{
     private static boolean checkPosiblilities(Graph graph, Node actualNode){
 
         for(int i=0 ; i<actualNode.getEdgeList().size() ; i++){
-            if(graph.getNode_byIndex(i).getValue() == -1){
+            if(graph.getNode_byIndex( actualNode.getEdge_byIndex(i).getIdDestine()-1).getValue() == -1){
                 return true;
             }
         }
@@ -135,9 +171,9 @@ public class Main{
         float totalProbablyTemp = 0.0f;
 
         for(int i=0 ; i< node.getEdgeList().size() ; i++){
-
+            
             if(graph.getNode_byIndex(node.getEdge_byIndex(i).getIdDestine()-1).getValue()!=-1){
-                node.getEdge_byIndex(i).setProbably(0);              
+                node.getEdge_byIndex(i).setProbably(0);          
             }else{
                 probablyTemp = pheromoneControl * node.getEdge_byIndex(i).getPheromone();
                 probablyTemp = probablyTemp * desirabilityControl * (1/node.getEdge_byIndex(i).getDistance());
@@ -146,12 +182,13 @@ public class Main{
             }
         }
 
-        node.setTotalProbablyEdges(totalProbablyTemp);
+        node.setTotalProbablyEdges(0);
         for(int i=0 ; i< node.getEdgeList().size() ; i++){
-            if(totalProbablyTemp==0){
+            if(totalProbablyTemp==0 || node.getEdge_byIndex(i).getProbably()==0){
                 node.getEdge_byIndex(i).setProbably(0);
             }else{
                 node.getEdge_byIndex(i).setProbably(node.getEdge_byIndex(i).getProbably()/totalProbablyTemp);
+                node.setTotalProbablyEdges(node.getTotalProbablyEdges()+node.getEdge_byIndex(i).getProbably());
             }
         }
 
@@ -163,9 +200,8 @@ public class Main{
     private static Edge selectNextMovement(Node node){
         int positionSelected = 0;
         float randomSelection = (float)Math.random() * node.getTotalProbablyEdges();
-
         for(int i=0 ; i<node.getEdgeList().size() ; i++){
-            if(randomSelection <= node.getEdge_byIndex(i).getProbably()){
+            if(randomSelection <= node.getEdge_byIndex(i).getProbably() && node.getEdge_byIndex(i).getProbably() > 0){
                 positionSelected = i;
                 break;
             }else{
@@ -176,6 +212,27 @@ public class Main{
         return node.getEdge_byIndex(positionSelected);
     }
 
+
+
+    private static void printResult(ArrayList<Edge> list, float distance){
+        
+        System.out.print("Recorrido final ("+distance+")..: " +list.get(0).getIdSource()+" -> ");
+        for(int i=0 ; i<list.size() ; i++){
+            if(i==list.size()-1){
+                System.out.print(list.get(i).getIdDestine()+"\n");
+            }else{
+                System.out.print(list.get(i).getIdDestine()+" -> ");
+            }
+        }
+        System.out.print("Desglose de aristas..:");
+        for(int i=0 ; i<list.size() ; i++){
+            list.get(i).printEdgeComplet();
+        }
+        System.out.println();
+
+
+        return;
+    }
 
 
 

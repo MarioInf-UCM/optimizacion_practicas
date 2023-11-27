@@ -37,7 +37,7 @@ public class Node{
     }
 
     public void printNodeComplet(){
-        System.out.print("\t[ "+this.getId()+" | "+this.getValue()+" ]");
+        System.out.print("\t[ ID: "+this.getId()+" | Val: "+this.getValue()+" | TPro: " +this.getTotalProbablyEdges()+ "]");
         for(int i=0 ; i<this.edgeList.size() ; i++){
             System.out.print("    ");
             this.edgeList.get(i).printEdgeComplet();
@@ -46,7 +46,7 @@ public class Node{
     }
 
     public void printNodeSimple(){
-        System.out.print("\t[ "+this.getId()+" | "+this.getValue()+" ]");
+        System.out.print("\t[ "+this.getId()+" | " +this.getTotalProbablyEdges()+ "]");
         for(int i=0 ; i<this.edgeList.size() ; i++){
             System.out.print("    ");
             this.edgeList.get(i).printEdgeSimple();

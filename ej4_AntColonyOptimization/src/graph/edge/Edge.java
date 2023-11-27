@@ -39,7 +39,7 @@ public class Edge{
      *******************************/
 
     public void printEdgeComplet(){
-        System.out.print("<"+this.getIdSource()+"  -| Dis:"+this.getDistance()+"  Fer:" +this.getPheromone()+" |-  " + this.getIdDestine()+">");
+        System.out.print("<"+this.getIdSource()+"  -| Dis:"+this.getDistance()+"  Fer:" +this.getPheromone()+ "  Pro:"+this.getProbably()+ " |-  " + this.getIdDestine()+">");
     }
 
     public void printEdgeSimple(){
