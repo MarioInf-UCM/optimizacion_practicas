@@ -13,7 +13,7 @@ DEF: Un árbol recubridor es un subgrado dentro de otro grafo que abarca todos l
 DEF: Un ciclo aureliano es un subgrado dentro de otro grafo que abarca todos los nodos del mismo pasando una única vez por cada arista y forma ciclos.
 NOTA: Si quitamos una arista del recorrido optimo del TSP obtenemos un árbol recubridor.
 		
-coste(ARM) <= coste(TSP) 	//El coste del árbol recibridor mínimo obtenido será siempre menor que el coste del TSP.
+coste(ARM) <= coste(TSP) 	//El coste del árbol recubridor mínimo obtenido será siempre menor que el coste del TSP.
 coste(ciclo-aureliano) = 2*coste(ARM) <= 2*coste(TSP)
 coste(algoritmo) <= coste(ciclo-aureliano) <= coste(TSP)
 		
