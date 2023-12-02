@@ -1,4 +1,4 @@
-program.jar: src/main/Main.class src/graph/Graph.class src/graph/edge/Edge.class src/graph/node/Node.class 
+program.jar: src/main/Main.class src/graph/Graph.class src/graph/edge/Edge.class src/graph/node/Node.class src/kruskalAlgorithm/KruskalAlgorithm.class src/kruskalAlgorithm/kruskalEdge/KruskalEdge.class
 	jar cmfv manifest $@ $^
 
 
@@ -11,6 +11,14 @@ outputFileURL = /home/mario/Documentos/universidad/optimizacion/ej5_algoritmoChr
 src/main/Main.class: src/main/Main.java
 	javac $^
 	
+
+src/kruskalAlgorithm/KruskalAlgorithm.class: src/kruskalAlgorithm/KruskalAlgorithm.java
+	javac $^
+
+src/kruskalAlgorithm/kruskalEdge/KruskalEdge.class: src/kruskalAlgorithm/kruskalEdge/KruskalEdge.java
+	javac $^
+
+
 
 src/graph/Graph.class: src/graph/Graph.java
 	javac $^
