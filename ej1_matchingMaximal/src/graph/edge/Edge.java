@@ -1,4 +1,4 @@
-package src.Graph.Edge;
+package src.graph.edge;
 
 public class Edge{
 

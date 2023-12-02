@@ -13,6 +13,12 @@
             "path": "ej3_differentialEvolution"
         },
         {
+            "path": "ej4_AntColonyOptimization"
+        },
+        {
+            "path": "ej5_algoritmoChristofides"
+        },
+        {
             "path": "."
         }
     ],

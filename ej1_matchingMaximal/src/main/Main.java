@@ -1,18 +1,25 @@
-package src.Main;
+package src.main;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 
-import src.Graph.Graph;
-import src.Graph.Edge.Edge;
+import src.graph.Graph;
+import src.graph.edge.Edge;
 
 public class Main{
 
+    private static String filePath = "";
+
     public static void main(String[] args) throws FileNotFoundException, IOException{
-        
-        String filePath = "/home/mario/Documentos/universidad/Optimizacion/MatchingMaximal/data/vc-exact_001.gr";        
-        Graph graph = Graph.ensambleGraph_byFile(filePath);
+   
+        if (!checkInitialValues(args)) {
+            System.out.println("\nFinalizando ejecución.");
+            return;
+        }
+
+        Main.filePath = args[0];
+        Graph graph = Graph.ensambleGraph_byFile(Main.filePath);
         int numNodesResult = 0;
         
         MatchingMaximal(graph);
@@ -53,6 +60,19 @@ public class Main{
         }
     }
     
+
+    private static Boolean checkInitialValues(String[] args) {
+
+        if (args.length != 1) {
+            System.out.println("Número de parámetros de entrada inválidos(" + args.length + "). La ejecución debe ser del tipo:");
+            System.out.println("java main \"grafoURL\"");
+            System.out.println("\tgrafoURL: Dirección del archivo que contiene la definición del grafo.");
+            return false;
+        }
+        System.out.println("Ejecución algoritmo `Matching Maximal'. Parámetros:");
+        System.out.println("\tDirección del grafo: " + args[0]);
+        return true;
+    }
 
 
 }

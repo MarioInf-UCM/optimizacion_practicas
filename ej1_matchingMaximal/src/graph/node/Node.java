@@ -1,7 +1,8 @@
-package src.Graph.Node;
+package src.graph.node;
 
 import java.util.ArrayList;
-import src.Graph.Edge.Edge;
+
+import src.graph.edge.Edge;
 
 public class Node{
 

@@ -1,13 +1,14 @@
-package src.Graph;
+package src.graph;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+
+import src.graph.edge.Edge;
+import src.graph.node.Node;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import src.Graph.Edge.Edge;
-import src.Graph.Node.Node;
 
 public class Graph{
 

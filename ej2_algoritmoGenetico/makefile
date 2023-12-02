@@ -28,3 +28,5 @@ run:
 
 runFile:	
 	java -jar program.jar 20 50 >> result/lastResult.txt
+	
+
