@@ -71,8 +71,34 @@ public class Main{
         }
 
         //PASO 6: Eliminamos los vertices repetidos
-        deleteRepeatedEdges(hierholzerEdgesList, graph.getNodeList().size());
+        ArrayList<Integer> nodeList = deleteRepeatedEdges(hierholzerEdgesList, graph.getNodeList().size());
+        if(VERBOSE_MODE){
+            System.out.println("\nPASO 6: Eliminamos los vertices repetidos");
+            for(int i=0 ; i<nodeList.size() ; i++){
+                System.out.print(nodeList.get(i)+"  ");
+            };
+        } 
 
+        //PASO 7: Ensamblamos los resultados
+        ArrayList<Edge> pathResult = new ArrayList<Edge>();
+        Edge edgeTemp = null;
+        int source=0, destine=0;
+        for(int i=0 ; i<nodeList.size()-1 ; i++){
+            source = nodeList.get(i);
+            destine = nodeList.get(i+1);
+            if(source>destine){
+                edgeTemp = new Edge( graph.getNode_byIndex(source).getEdge_byIndex(destine));
+            }else if(source<destine){
+                edgeTemp = new Edge( graph.getNode_byIndex(source).getEdge_byIndex(destine-1));
+            }
+            pathResult.add(edgeTemp);
+        }
+
+        System.out.println("\n\nFINALIZACIÓN..:");
+        for(int i=0 ; i<pathResult.size() ; i++){
+            pathResult.get(i).printEdgeComplet();
+            System.out.println();
+        };       
 
         return;
     }
@@ -92,38 +118,6 @@ public class Main{
         return true;
     }
 
-
-
-    private static boolean finalizationCheck(){
-
-        Scanner sc = new Scanner(System.in);
-        String input;
-
-        System.out.println("\n\nFINALIZACIÓN..:");
-        System.out.println("Iteracion: " + iterations);
-        System.out.println("Quiere realizar más interacciones? (S/n)..: ");
-        do{
-            input = sc.nextLine().toUpperCase();
-            if (input.equals("S")) {
-                while (true) {
-                    try {
-                        System.out.println("Introduzca el número de nuevas iteraciones a realizar..: ");
-                        iterations = iterations + sc.nextInt();
-                        break;
-                    } catch (Exception e) {
-                        System.out.println("ERROR..: " + e.getMessage());
-                    }
-                }
-                break;
-            } else if(input.equals("N")){
-                sc.close();
-                return false;
-            }
-        }while(true);
-
-        sc.close();
-        return true;
-    }
 
 
     private static ArrayList<KruskalEdge> graph_To_KruskalEdgesList(Graph graph){
@@ -203,7 +197,7 @@ public class Main{
     }
 
 
-    private static ArrayList<Edge> deleteRepeatedEdges(ArrayList<HierholzerEdge>list, int numNodes){
+    private static ArrayList<Integer> deleteRepeatedEdges(ArrayList<HierholzerEdge>list, int numNodes){
         
         
         ArrayList<Boolean> checkList = new ArrayList<Boolean>();
@@ -226,18 +220,7 @@ public class Main{
             }
         }
 
-/*         for(int i=0 ; i<nodeOrderList.size() ; i++){
-            System.out.print(nodeOrderList.get(i)+"  ");
-        }
-        System.out.print("TAMANO: "+nodeOrderList.size()) */;
-        
-        ArrayList<Edge> returnList = new ArrayList<Edge>();
-        Edge edgeTemp = new Edge();
-        for(int i=0 ; i<nodeOrderList.size() ; i++){
-            
-        }
-
-        return returnList;
+        return nodeOrderList;
     }
 
 
