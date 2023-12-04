@@ -2,15 +2,15 @@ package src.main;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 
 import src.graph.Graph;
+import src.graph.edge.Edge;
+import src.hierholzerAlgorithm.HierholzerAlgorithm;
+import src.hierholzerAlgorithm.hierholzerEdge.HierholzerEdge;
 import src.kruskalAlgorithm.KruskalAlgorithm;
 import src.kruskalAlgorithm.kruskalEdge.KruskalEdge;
 
@@ -32,8 +32,6 @@ public class Main{
         }
         
         Main.graphFileURL = args[0];
-        Main.iterations = Integer.parseInt(args[1]);
-        ArrayList<KruskalEdge> KruskalEdgesList = null;
         Graph graph = Graph.ensamblePonderateGraph_byFileXML(graphFileURL);
         if(VERBOSE_MODE){
             System.out.println("Grafo inicial..:");
@@ -42,7 +40,8 @@ public class Main{
 
 
         //PASO 1: Calculamos el árbol recubridor mínimo mediante el algoritmo de Kruskal
-        KruskalEdgesList = KruskalAlgorithm.kruskalMST(graphTo_KruskalEdgesList(graph), graph.getNodeList().size());
+        ArrayList<KruskalEdge> KruskalEdgesList = null;
+        KruskalEdgesList = KruskalAlgorithm.kruskalMST(graph_To_KruskalEdgesList(graph), graph.getNodeList().size());
         if(VERBOSE_MODE){
             System.out.println("\nPASO 1: Calculamos el árbol recubridor mínimo mediante el algoritmo de Kruskal");
             printKruskalEdgeList(KruskalEdgesList);
@@ -63,11 +62,17 @@ public class Main{
         }
 
         //PASO 5: Buscamos un ciclo aureliano mediante el algoritmo de Hierholzer
-        KruskalEdgesList = findEulerianCycle(KruskalEdgesList, graph.getNodeList().size());
+        ArrayList<HierholzerEdge> hierholzerEdgesList = new ArrayList<HierholzerEdge>();
+        hierholzerEdgesList = KruskalEdgesList_To_HierholzerEdge(KruskalEdgesList);
+        hierholzerEdgesList = HierholzerAlgorithm.hierholzer(hierholzerEdgesList);
         if(VERBOSE_MODE){
-            System.out.println("\nPASO 3: Buscamos un ciclo aureliano mediante el algoritmo de Hierholzer");
-            printKruskalEdgeList(KruskalEdgesList);
+            System.out.println("\nPASO 5: Buscamos un ciclo aureliano mediante el algoritmo de Hierholzer");
+            printHierholzerEdgeList(hierholzerEdgesList);
         }
+
+        //PASO 6: Eliminamos los vertices repetidos
+        deleteRepeatedEdges(hierholzerEdgesList, graph.getNodeList().size());
+
 
         return;
     }
@@ -76,16 +81,14 @@ public class Main{
 
     private static Boolean checkInitialValues(String[] args) {
 
-        if (args.length != 2) {
+        if (args.length != 1) {
             System.out.println("Número de parámetros de entrada inválidos(" + args.length + "). La ejecución debe ser del tipo:");
             System.out.println("java main \"grafoURL\" \"Iteraciones\" \"ControlFeromonas\" \"ControlDeseabilidad\" \"tEvaporacionFeromonas\"");
             System.out.println("\tgrafoURL: Dirección dle archivo que contiene la definición del grafo.");
-            System.out.println("\tIteraciones: Número de iteraciones a realizar (es decir, el número de hormigas).");
             return false;
         }
         System.out.println("Ejecución algoritmo `Christofides'. Parámetros:");
         System.out.println("\tDirección del grafo: " + args[0]);
-        System.out.println("\tNúmero de iteraciones: " + args[1]);
         return true;
     }
 
@@ -123,7 +126,7 @@ public class Main{
     }
 
 
-    private static ArrayList<KruskalEdge> graphTo_KruskalEdgesList(Graph graph){
+    private static ArrayList<KruskalEdge> graph_To_KruskalEdgesList(Graph graph){
         ArrayList<KruskalEdge> listResult = new ArrayList<KruskalEdge>();
         KruskalEdge kruskalEdgeTemp = null;
 
@@ -145,20 +148,12 @@ public class Main{
         KruskalEdge edgeTemp = null;
         int initialSize = list.size();
         for(int i=0 ; i<initialSize ; i++){
-            edgeTemp = new KruskalEdge(list.get(i).getSrc(), list.get(i).getDest(), list.get(i).getWeight());
+            edgeTemp = new KruskalEdge(list.get(i).getDest(), list.get(i).getSrc(), list.get(i).getWeight());
             list.add(edgeTemp);
         }
         return list;
      }
 
-
-
-    private static void printKruskalEdgeList(ArrayList<KruskalEdge> list){
-        for(int i=0 ; i<list.size() ; i++){
-            list.get(i).printComplete();
-        }
-        return;
-    }   
 
 
     private static ArrayList<KruskalEdge> destroyOddEdges(ArrayList<KruskalEdge> list){
@@ -186,9 +181,9 @@ public class Main{
         }else{
             for(int i=0 ; i<oddEdgesLIst.size() ; i++){
                 if(i<oddEdgesLIst.size()-1){
-                    edgeTemp = new KruskalEdge(oddEdgesLIst.get(i),oddEdgesLIst.get(i)+1, 1);
+                    edgeTemp = new KruskalEdge(oddEdgesLIst.get(i),oddEdgesLIst.get(i)+1, 1f);
                 }else{
-                    edgeTemp = new KruskalEdge(oddEdgesLIst.get(i),0, 1);
+                    edgeTemp = new KruskalEdge(oddEdgesLIst.get(i),oddEdgesLIst.get(0), 1f);
                 }
                 list.add(edgeTemp);           
             }
@@ -197,42 +192,71 @@ public class Main{
     }
 
 
-    public static ArrayList<KruskalEdge> findEulerianCycle(ArrayList<KruskalEdge> edges, int numVertices) {
-        ArrayList<ArrayList<KruskalEdge>> graph = buildGraph(edges, numVertices);
-        ArrayList<KruskalEdge> eulerianCycle = new ArrayList<>();
-        Stack<KruskalEdge> stack = new Stack<>();
-        KruskalEdge startEdge = edges.get(0);
+    public static ArrayList<HierholzerEdge> KruskalEdgesList_To_HierholzerEdge(ArrayList<KruskalEdge> list) {
+        ArrayList<HierholzerEdge> hierholzerEdgesList = new ArrayList<HierholzerEdge>();
+        HierholzerEdge hierholzerEdgeTemp;
+        for (int i=0 ; i<list.size() ; i++) {
+            hierholzerEdgeTemp = new HierholzerEdge(list.get(i).getSrc(), list.get(i).getDest(), list.get(i).getWeight());
+            hierholzerEdgesList.add(hierholzerEdgeTemp);
+        }
+        return hierholzerEdgesList;
+    }
 
-        stack.push(startEdge);
 
-        while (!stack.isEmpty()) {
-            KruskalEdge currentEdge = stack.peek();
-            int currentVertex = currentEdge.getDest();
-
-            if (graph.get(currentVertex).size() > 0) {
-                KruskalEdge nextEdge = graph.get(currentVertex).remove(0);
-                stack.push(nextEdge);
-            } else {
-                eulerianCycle.add(0, stack.pop());
+    private static ArrayList<Edge> deleteRepeatedEdges(ArrayList<HierholzerEdge>list, int numNodes){
+        
+        
+        ArrayList<Boolean> checkList = new ArrayList<Boolean>();
+        for(int i=0 ; i<numNodes ; i++){
+            checkList.add(false);
+        }
+        
+        ArrayList<Integer> nodeOrderList = new ArrayList<Integer>();
+        for(int i=0 ; i<list.size() ; i++){
+            nodeOrderList.add(list.get(i).getSrc());
+        }        
+        nodeOrderList.add(list.get(list.size()-2).getDest());
+        
+        for(int i=0 ; i<nodeOrderList.size() ; i++){
+            if(checkList.get(nodeOrderList.get(i))==false ){
+                checkList.set(nodeOrderList.get(i), true);
+            }else{
+                nodeOrderList.remove(i);
+                i--;
             }
         }
 
-        return eulerianCycle;
-    }
-
-    private static ArrayList<ArrayList<KruskalEdge>> buildGraph(ArrayList<KruskalEdge> edges, int numVertices) {
-        ArrayList<ArrayList<KruskalEdge>> graph = new ArrayList<>();
-
-        for (int i = 0; i < numVertices; i++) {
-            graph.add(new ArrayList<>());
+/*         for(int i=0 ; i<nodeOrderList.size() ; i++){
+            System.out.print(nodeOrderList.get(i)+"  ");
+        }
+        System.out.print("TAMANO: "+nodeOrderList.size()) */;
+        
+        ArrayList<Edge> returnList = new ArrayList<Edge>();
+        Edge edgeTemp = new Edge();
+        for(int i=0 ; i<nodeOrderList.size() ; i++){
+            
         }
 
-        for (KruskalEdge edge : edges) {
-            graph.get(edge.getSrc()).add(edge);
-            graph.get(edge.getDest()).add(edge);
-        }
-
-        return graph;
+        return returnList;
     }
 
+
+
+    private static void printKruskalEdgeList(ArrayList<KruskalEdge> list){
+        for(int i=0 ; i<list.size() ; i++){
+            list.get(i).printComplete();
+        }
+        return;
+    }   
+
+    private static void printHierholzerEdgeList(ArrayList<HierholzerEdge> list){
+        for(int i=0 ; i<list.size() ; i++){
+            list.get(i).printComplete();
+        }
+        return;
+    }   
+
+
+
+ 
 }
