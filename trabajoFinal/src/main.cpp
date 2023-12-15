@@ -1,6 +1,8 @@
 #include <iostream>
 #include <mpi.h>
 
+#include "world/world.h"
+
 int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
 

@@ -1,16 +1,38 @@
 CC = mpic++
 CFLAGS = -std=c++11
-
-TARGET = src/mpi_exc
+OUT_DIR = bin
+TARGET = trabajoFinal_exec
 numProc = 2
+
+OBJS = $(patsubst %.cpp,$(OUT_DIR)/%.o,$(SRCS))
+SRCS += src/main.cpp
+SRCS += src/world/world.cpp
+SRCS += libs/arrayList/arrayList.cpp
+SRCS += libs/fitnessFunctions/fitnessFunctions.cpp
+SRCS += libs/heuristics/heuristics.cpp
+
+
 
 all: $(TARGET)
 
-$(TARGET): src/main.cpp
-	$(CC) $(CFLAGS) src/main.cpp -o $(TARGET)
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(OUT_DIR)/$(TARGET)
+
+$(OUT_DIR)/%.o: %.cpp
+	mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+
 
 run: $(TARGET)
-	mpirun -n $(numProc) ./$(TARGET)
+	mpirun -n $(numProc) ./$(OUT_DIR)/$(TARGET)
+
+
 
 clean:
-	rm -f $(TARGET)
+	rm -rf $(OUT_DIR) $(TARGET)
+
+
+
+
+
