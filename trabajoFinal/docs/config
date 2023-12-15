@@ -1,0 +1,31 @@
+{
+    "pc": {
+        "ip": "12:12:12:12",
+        "world":{
+            "id": "abcd",
+            "dimensions": 2,
+            "fitness": "circle"
+
+        },
+        "rank": [{
+            "id": [0],
+            "outFIleURL": "output_0.txt",
+            "heuristic":{
+                "name": "pso",
+                "iterations": "500",
+                "poblation" : 25,
+                "values":[0.3925, 2.5586, 1.3358]
+            }
+        },
+        {
+            "id": [1],
+            "outFIleURL": "output_0.txt",
+            "heuristicConfig":{
+                "name": "ants",
+                "iterations": "500",
+                "poblation" : 25,
+                "values":[0.3925, 2.5586, 1.3358]
+            }
+        }]
+    }
+}  
