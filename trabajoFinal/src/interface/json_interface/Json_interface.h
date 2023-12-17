@@ -33,9 +33,6 @@ class Json_interface {
             jsonFileURL = data;
             return;
         }
-
-
-
 };
 
 #endif

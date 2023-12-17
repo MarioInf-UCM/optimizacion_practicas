@@ -1,31 +1,45 @@
 {
-    "pc": {
-        "ip": "12:12:12:12",
-        "world":{
+    "computerConfiguration": [{
+        "default": false,
+        "ip": "12.12.12.12",
+        "worldConfiguration":{
             "id": "abcd",
             "dimensions": 2,
-            "fitness": "circle"
-
+            "fitnessFunctionID": "circle"
         },
-        "rank": [{
-            "id": [0],
+        "rankConfiguration": [{
+            "rankList": [0],
             "outFIleURL": "output_0.txt",
-            "heuristic":{
-                "name": "pso",
-                "iterations": "500",
-                "poblation" : 25,
-                "values":[0.3925, 2.5586, 1.3358]
-            }
+            "heuristicID": "pso",
+            "iterations": "500",
+            "poblation" : 25,
+            "valueList":[0.3925, 2.5586, 1.3358]
         },
         {
-            "id": [1],
+            "rankList": [1],
             "outFIleURL": "output_0.txt",
-            "heuristicConfig":{
-                "name": "ants",
-                "iterations": "500",
-                "poblation" : 25,
-                "values":[0.3925, 2.5586, 1.3358]
-            }
+            "heuristicID": "pso",
+            "iterations": "500",
+            "poblation" : 25,
+            "vavalueListlues":[0.3925, 2.5586, 1.3358]
         }]
-    }
+    },
+    {
+        "default": true,
+        "ip": "00.00.00.00",
+        "worldConfiguration":{
+            "id": "abcd",
+            "dimensions": 2,
+            "fitnessFunctionID": "circle"
+        },
+        "rankConfiguration": [{
+            "default": true,
+            "rankList": [0],
+            "outFIleURL": "output_0.txt",
+            "heuristicID": "pso",
+            "iterations": "500",
+            "poblation" : 25,
+            "valueList":[0.3925, 2.5586, 1.3358]
+        }]
+    }]
 }  
