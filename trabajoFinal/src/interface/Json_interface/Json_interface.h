@@ -3,36 +3,25 @@
 
 #include <jsoncpp/json/json.h>
 #include <string>
+#include "JsonConfiguration/JsonConfiguration.h"
 
 using namespace std;
 
 class Json_interface {
 
     private:
-        string jsonFileURL;
+        string fileURL;
 
     public:
-
-        Json_interface(string jsonFileURL){
-            Json_interface::jsonFileURL = jsonFileURL;
-        }
-        ~Json_interface(){ }
-
+        Json_interface();
+        Json_interface(string jsonFileURL);
+        ~Json_interface();
         
-        void processJSONFile();
+        JsonConfiguration getJSONConfiguration_FromFile();
 
+        string getFileURL(void);
+        void setFileURL(string data);
 
-        //********************************************************
-        // ZONA DE DEFINICIÓN DE MÉTODOS DE ACCESO A LAS VARIABLES
-        //********************************************************
-
-        string get_jsonFileURL(void){
-            return jsonFileURL;
-        }
-        void get_jsonFileURL(string data){
-            jsonFileURL = data;
-            return;
-        }
 };
 
 #endif

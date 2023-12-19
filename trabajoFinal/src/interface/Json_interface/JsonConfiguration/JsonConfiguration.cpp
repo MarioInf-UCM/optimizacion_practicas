@@ -1,9 +1,6 @@
 #include "JsonConfiguration.h"
 
 
-
-
-
 //******************************************
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
 //******************************************
@@ -19,6 +16,6 @@ JsonConfiguration::~JsonConfiguration(){}
 WorldConfiguration JsonConfiguration::getWorldConfiguration(){ return worldConfiguration; }
 void JsonConfiguration::sertWorldConfiguration(WorldConfiguration newWorldConfiguration){ worldConfiguration = newWorldConfiguration; }
 
-ArrayList<ComputerConfiguration> JsonConfiguration::getComputerConfigurationList(){}
-void JsonConfiguration::setComputerConfigurationList_reference(ArrayList<ComputerConfiguration> *newlist){}
-void JsonConfiguration::setComputerConfigurationList_duplicate(ArrayList<ComputerConfiguration> newlist){}
+ArrayList<ComputerConfiguration> JsonConfiguration::getComputerConfigurationList(){ return computerConfigurationList; }
+void JsonConfiguration::setComputerConfigurationList_reference(ArrayList<ComputerConfiguration> *newlist){ computerConfigurationList = *newlist; }
+void JsonConfiguration::setComputerConfigurationList_duplicate(ArrayList<ComputerConfiguration> newlist){ computerConfigurationList = newlist; }

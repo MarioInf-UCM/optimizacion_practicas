@@ -1,5 +1,6 @@
 #include "WorldConfiguration.h"
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -16,6 +17,18 @@ WorldConfiguration:: WorldConfiguration(string ID, unsigned int dimensions, stri
 }
 
 WorldConfiguration::~WorldConfiguration(){}
+
+
+
+//**********************************
+// DEFINICIÓN DE MÉTODOS FUNCIONALES
+//**********************************
+string WorldConfiguration::displayInfo(){
+    stringstream value;
+    value << "ID: " << getID() << "    Dimensions: " << getDimensions() << "    FitnessFunctionID: " << getFitnessFunctionID();
+    return value.str();
+}
+
 
 
 //*******************************************

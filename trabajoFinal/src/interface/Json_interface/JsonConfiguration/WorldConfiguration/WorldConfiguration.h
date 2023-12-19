@@ -17,6 +17,9 @@ class WorldConfiguration{
         WorldConfiguration(string ID, unsigned int dimensions, string fitnessFunctionID);
         ~WorldConfiguration();
 
+        string displayInfo();
+
+
         string getID();
         void setID(string newID);
 

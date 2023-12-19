@@ -1,56 +1,95 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 
 #include "Json_interface.h"
+#include "JsonConfiguration/JsonConfiguration.h"
 
-void Json_interface::processJSONFile() {
+using namespace std;
+using namespace Json;
 
-    std::ifstream jsonFileStream(jsonFileURL);
-    if (!jsonFileStream.is_open()) {
-        std::cerr << "Error al abrir el archivo JSON.\n" << std::endl;;
+
+//******************************************
+// DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
+//******************************************
+Json_interface::Json_interface(){}
+Json_interface::Json_interface(string jsonFileURL){
+    setFileURL(jsonFileURL);
+}
+
+Json_interface::~Json_interface(){ }
+
+
+
+//**********************************
+// DEFINICIÓN DE MÉTODOS FUNCIONALES
+//**********************************
+JsonConfiguration Json_interface::getJSONConfiguration_FromFile() {
+
+    ifstream file(getFileURL());
+    if (!file.is_open()) {
+        cerr << "Error al abrir el archivo JSON.\n" << endl;
         return;
     }
 
-    // Parsear el contenido JSON
-    Json::Value root;
-    Json::CharReaderBuilder reader;
-    Json::parseFromStream(reader, jsonFileStream, &root, nullptr);
+    CharReaderBuilder builder;
+    Value root;
+    CharReader *reader;
+    JSONCPP_STRING errs;
+    bool result = true;
+    
 
-    // Acceder a los datos específicos
-    std::string ipAddress = root["pc"]["ip"].asString();
-    std::string worldId = root["pc"]["world"]["id"].asString();
-    int worldDimensions = root["pc"]["world"]["dimensions"].asInt();
-    std::string worldFitness = root["pc"]["world"]["fitness"].asString();
+    //Leemos el fichero JSON
+    reader = builder.newCharReader();
+    result = parseFromStream(builder, file, &root, &errs);
+    if(!result){
+        std::cerr << "Error al parsear el archivo JSON: " << errs << std::endl;
+        return;
+    }
+    file.close();
+    
 
-    std::cout << "IP Address: " << ipAddress << "\n";
-    std::cout << "World ID: " << worldId << "\n";
-    std::cout << "World Dimensions: " << worldDimensions << "\n";
-    std::cout << "World Fitness: " << worldFitness << "\n";
+    JsonConfiguration jsonConfiguration = JsonConfiguration();
+    ComputerConfiguration computerConfigurationTemp;
+    RankConfiguration rankConfigurationTemp;
 
-    // Acceder a la lista de rangos
-    const Json::Value& rankList = root["pc"]["rank"];
-    for (const auto& rank : rankList) {
-        int rankId = rank["id"][0].asInt();
-        std::string outFileURL = rank["outFIleURL"].asString();
-        std::string heuristicName = rank["heuristic"]["name"].asString();
-        int heuristicIterations = rank["heuristic"]["iterations"].asInt();
-        int heuristicPoblation = rank["heuristic"]["poblation"].asInt();
+    jsonConfiguration.getWorldConfiguration().setID(root["worldConfiguration"]["id"].asString());
+    jsonConfiguration.getWorldConfiguration().setDimensions(root["worldConfiguration"]["dimensions"].asInt());
+    jsonConfiguration.getWorldConfiguration().setFitnessFunctionID(root["worldConfiguration"]["fitnessFunctionID"].asString());
 
-        std::cout << "\nRank ID: " << rankId << "\n";
-        std::cout << "Out File URL: " << outFileURL << "\n";
-        std::cout << "Heuristic Name: " << heuristicName << "\n";
-        std::cout << "Heuristic Iterations: " << heuristicIterations << "\n";
-        std::cout << "Heuristic Poblation: " << heuristicPoblation << "\n";
+    for (const auto &computerConfig : root["computerConfiguration"]) {
+        computerConfigurationTemp = ComputerConfiguration();
+        computerConfigurationTemp.setIsDefault(computerConfig["isDefault?"].asBool());
+        computerConfigurationTemp.setIP(computerConfig["IP"].asString());
 
-        // Acceder a la lista de valores en la heurística
-        const Json::Value& heuristicValues = rank["heuristic"]["values"];
-        std::cout << "Heuristic Values: ";
-        for (const auto& value : heuristicValues) {
-            std::cout << value.asDouble() << " ";
+        for (const auto &rankConfig : computerConfig["rankConfigurationList"]) {
+            rankConfigurationTemp = RankConfiguration();
+            rankConfigurationTemp.setIsDefault(rankConfig["isDefault?"].asBool());
+            for (const auto &rank : rankConfig["rankList"]) {
+                rankConfigurationTemp.getRankList().add(rank.asInt());
+            }
+
+            rankConfigurationTemp.setOutputFile(rankConfig["outFIleURL"].asString());
+            rankConfigurationTemp.setHeuristicID(rankConfig["heuristicID"].asString());
+            rankConfigurationTemp.setIterations(rankConfig["iterations"].asInt());
+            rankConfigurationTemp.setPoblation(rankConfig["poblation"].asInt());
+
+            for (const auto &value : rankConfig["valueList"]) {
+                rankConfigurationTemp.getValueList().add(value.asFloat());
+            }
+
+            computerConfigurationTemp.getRankConfigurationList().add(rankConfigurationTemp);
         }
-        std::cout << "\n";
+
+        jsonConfiguration.getComputerConfigurationList().add(computerConfigurationTemp);
     }
 
-
-
+    return jsonConfiguration;
 }
+
+
+//********************************************************
+// ZONA DE DEFINICIÓN DE MÉTODOS DE ACCESO A LAS VARIABLES
+//********************************************************
+string Json_interface::getFileURL(void){ return fileURL; }
+void Json_interface::setFileURL(string data){ fileURL = data; }
