@@ -1,4 +1,5 @@
 #include <string>
+#include <sstream>
 #include "ComputerConfiguration.h"
 #include "../RankConfiguration/RankConfiguration.h"
 
@@ -21,8 +22,24 @@ ComputerConfiguration::ComputerConfiguration(bool isDefault, string IP, ArrayLis
     setRankConfigurationList_reference(rankConfigurationList);
 }
 
-
 ComputerConfiguration::~ComputerConfiguration(){}
+
+
+
+
+//**********************************
+// DEFINICIÓN DE MÉTODOS FUNCIONALES
+//**********************************
+string ComputerConfiguration::displayInfo(){
+    stringstream value;
+    value << "IsDefault?: " << (getIsDefault()? "true" : false) << "    IP: " << getIP() << "    rankConfigurationList{" << std::endl;
+    for(int i=0 ; i<getRankConfigurationList().size() ; i++){
+        value << getRankConfigurationList().get(i)->data.displayInfo();
+        value << endl << endl;
+    }
+    value << "}";
+    return value.str();
+}
 
 
 

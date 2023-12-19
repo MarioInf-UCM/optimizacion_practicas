@@ -19,7 +19,6 @@ class WorldConfiguration{
 
         string displayInfo();
 
-
         string getID();
         void setID(string newID);
 

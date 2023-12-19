@@ -13,6 +13,9 @@ class JsonConfiguration{
         JsonConfiguration();
         ~JsonConfiguration();
 
+        string displayInfo();
+        
+
         WorldConfiguration getWorldConfiguration();
         void sertWorldConfiguration(WorldConfiguration newWorldConfiguration);
 

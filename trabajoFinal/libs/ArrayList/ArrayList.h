@@ -25,7 +25,7 @@ public:
     void reverse();
     Node<T>* nextNode(Node<T>* current);
     Node<T>* previousNode(Node<T>* current);
-    Node<T>* getNodeAtPosition(int position);
+    Node<T>* get(int position);
 
     ArrayList<T> findPositions(T value);
 };

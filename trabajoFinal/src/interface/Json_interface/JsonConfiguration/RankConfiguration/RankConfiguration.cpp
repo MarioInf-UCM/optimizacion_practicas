@@ -1,5 +1,6 @@
 #include "RankConfiguration.h"
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -17,6 +18,27 @@ RankConfiguration:: RankConfiguration(ArrayList<unsigned int> rankList, string o
 
 RankConfiguration::~RankConfiguration(){}
 
+
+
+//**********************************
+// DEFINICIÓN DE MÉTODOS FUNCIONALES
+//**********************************
+string RankConfiguration::displayInfo(){
+    stringstream value;
+    value << "IsDefault?: " << (getIsDefault()? "true" : false) << "    OutputFile: " << getOutputFile() << "    rankList: ";
+    for(int i=0 ; i<getRankList().size() ; i++){
+        value << getRankList().get(i);
+    }
+    value << std::endl;
+    
+    value << " HeuristicID: " << getHeuristicID() << "    Iterations: " << getIterations() << "    Poblation: " << getPoblation() << "    valueList: ";
+    for(int i=0 ; i<getValueList().size() ; i++){
+        value << getValueList().get(i);
+    }
+    value << std::endl;
+
+    return value.str();
+}
 
 //*******************************************
 // MÉTODOS DE ACCESO A LAS VARIABLES PRIVADAS

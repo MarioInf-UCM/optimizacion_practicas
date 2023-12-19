@@ -21,6 +21,7 @@ class ComputerConfiguration{
         ComputerConfiguration(bool isDefault, string IP, ArrayList<RankConfiguration> *rankConfigurationList);
         ~ComputerConfiguration();
 
+        string displayInfo();
 
         bool getIsDefault();
         void setIsDefault(bool isDefault);

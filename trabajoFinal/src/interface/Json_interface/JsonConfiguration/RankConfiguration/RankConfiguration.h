@@ -14,7 +14,8 @@ class RankConfiguration{
         bool isDefault = false;
         ArrayList<unsigned int> rankList = ArrayList<unsigned int>();
         string outputFile = "";
-        string heuristicID = "";
+        
+        string heuristicID = "";       
         unsigned  int iterations = USHRT_MAX;
         unsigned int poblation = 0;
         ArrayList<float> valueList = ArrayList<float>();
@@ -23,6 +24,8 @@ class RankConfiguration{
         RankConfiguration();
         RankConfiguration(ArrayList<unsigned int> rankList, string outputFile, string heuristicID, unsigned int poblation, ArrayList<float> valueList);
         ~RankConfiguration();
+
+        string displayInfo();
 
 
         bool getIsDefault();

@@ -1,3 +1,4 @@
+#include <sstream>
 #include "JsonConfiguration.h"
 
 
@@ -7,6 +8,22 @@
 JsonConfiguration::JsonConfiguration(){}
 
 JsonConfiguration::~JsonConfiguration(){}
+
+
+
+//**********************************
+// DEFINICIÓN DE MÉTODOS FUNCIONALES
+//**********************************
+string JsonConfiguration::displayInfo(){
+    stringstream value;
+    value << "WorldConfiguration{" << endl <<getWorldConfiguration().displayInfo() << endl << "}" <<endl;
+    value << "ComputerConfigurationList{" <<endl;
+    for(int i=0 ; i<getComputerConfigurationList().size() ; i++){
+        value << getComputerConfigurationList().get(i)->data.displayInfo();
+    }
+    value << "}";
+    return value.str();
+}
 
 
 
