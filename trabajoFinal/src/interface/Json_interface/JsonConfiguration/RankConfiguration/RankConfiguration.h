@@ -11,6 +11,7 @@ using namespace std;
 class RankConfiguration{
     
     private:
+        bool isDefault = false;
         ArrayList<unsigned int> rankList = ArrayList<unsigned int>();
         string outputFile = "";
         string heuristicID = "";
@@ -22,6 +23,10 @@ class RankConfiguration{
         RankConfiguration();
         RankConfiguration(ArrayList<unsigned int> rankList, string outputFile, string heuristicID, unsigned int poblation, ArrayList<float> valueList);
         ~RankConfiguration();
+
+
+        bool getIsDefault();
+        void setIsDefault(bool isDefault);
 
         ArrayList<unsigned int> getRankList();
         void setRankList_reference(ArrayList<unsigned int> *newRank);

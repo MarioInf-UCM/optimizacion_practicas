@@ -2,7 +2,7 @@
 #include <mpi.h>
 
 #include "world/world.h"
-#include "interface/json_interface/json_interface.h"
+#include "interface/Json_interface/Json_interface.h"
 
 #define ENTRY_PARAM_NUM 1
 bool entryParams_check(int argc, char** argv);

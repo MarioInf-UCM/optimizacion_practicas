@@ -21,6 +21,8 @@ RankConfiguration::~RankConfiguration(){}
 //*******************************************
 // MÉTODOS DE ACCESO A LAS VARIABLES PRIVADAS
 //*******************************************
+bool RankConfiguration::getIsDefault(){ return isDefault; }
+void RankConfiguration::setIsDefault(bool newIsDefault){ isDefault =newIsDefault; }
 
 ArrayList<unsigned int> RankConfiguration::getRankList() { return rankList; }
 void RankConfiguration::setRankList_reference(ArrayList<unsigned int> *newRank) { rankList = *newRank; }

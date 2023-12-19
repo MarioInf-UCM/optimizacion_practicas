@@ -1,13 +1,14 @@
 {
+    "worldConfiguration":{
+        "id": "abcd",
+        "dimensions": 2,
+        "fitnessFunctionID": "circle"
+    },
     "computerConfiguration": [{
-        "default": false,
-        "ip": "12.12.12.12",
-        "worldConfiguration":{
-            "id": "abcd",
-            "dimensions": 2,
-            "fitnessFunctionID": "circle"
-        },
-        "rankConfiguration": [{
+        "isDefault?": false,
+        "IP": "12.12.12.12",
+        "rankConfigurationList": [{
+            "isDefault?": false,
             "rankList": [0],
             "outFIleURL": "output_0.txt",
             "heuristicID": "pso",
@@ -16,6 +17,7 @@
             "valueList":[0.3925, 2.5586, 1.3358]
         },
         {
+            "isDefault?": false,
             "rankList": [1],
             "outFIleURL": "output_0.txt",
             "heuristicID": "pso",
@@ -25,15 +27,10 @@
         }]
     },
     {
-        "default": true,
-        "ip": "00.00.00.00",
-        "worldConfiguration":{
-            "id": "abcd",
-            "dimensions": 2,
-            "fitnessFunctionID": "circle"
-        },
-        "rankConfiguration": [{
-            "default": true,
+        "sDefault?": true,
+        "IP": "00.00.00.00",
+        "rankConfigurationList": [{
+            "isDefault?": true,
             "rankList": [0],
             "outFIleURL": "output_0.txt",
             "heuristicID": "pso",
@@ -42,4 +39,5 @@
             "valueList":[0.3925, 2.5586, 1.3358]
         }]
     }]
+
 }  
