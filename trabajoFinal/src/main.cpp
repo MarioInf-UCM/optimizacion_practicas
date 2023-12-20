@@ -4,6 +4,7 @@
 #include "World/World.h"
 #include "interface/Json_interface/Json_interface.h"
 #include "interface/Json_interface/JsonConfiguration/JsonConfiguration.h"
+#include "../libs/ArrayList/ArrayList.h"
 
 #define ENTRY_PARAM_NUM 2
 bool entryParams_check(int argc, char** argv);
@@ -18,6 +19,7 @@ int main(int argc, char** argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+    ArrayList<unsigned int> arrayTemp = ArrayList<unsigned int>();
     if(rank == 0){
         if(!entryParams_check(argc, argv)){
             cerr << "FINALIZANDO PROGRAMA" << endl;
@@ -26,7 +28,7 @@ int main(int argc, char** argv) {
         }
         Json_interface json_interface = Json_interface(argv[1]);
         JsonConfiguration jsonConfiguration = json_interface.getJSONConfiguration_FromFile();
-        cout << jsonConfiguration.displayInfo() << endl;
+        cout <<  jsonConfiguration.displayInfo() << endl;
 
 
     }

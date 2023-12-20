@@ -3,17 +3,18 @@
 
 #include "WorldConfiguration/WorldConfiguration.h"
 #include "ComputerConfiguration/ComputerConfiguration.h"
-#include "../../../../libs/ArrayList/ArrayList.h"
 
+#define COMPUTERCONFIGURATIONLIST_SIZE 16
 
 class JsonConfiguration{
     private:
-        bool status = true;
-        WorldConfiguration worldConfiguration = WorldConfiguration();
-        ArrayList<ComputerConfiguration> computerConfigurationList;
-
+        bool status;
+        WorldConfiguration worldConfiguration;
+        ComputerConfiguration computerConfigurationList[COMPUTERCONFIGURATIONLIST_SIZE];
     public:
+
         JsonConfiguration();
+        JsonConfiguration(bool newStatus, WorldConfiguration newWorldConfiguration, ComputerConfiguration newComputerConfigurationList[COMPUTERCONFIGURATIONLIST_SIZE]);
         ~JsonConfiguration();
 
         string displayInfo();
@@ -24,9 +25,9 @@ class JsonConfiguration{
         WorldConfiguration getWorldConfiguration();
         void setWorldConfiguration(WorldConfiguration newWorldConfiguration);
 
-        ArrayList<ComputerConfiguration> getComputerConfigurationList();
-        void setComputerConfigurationList_reference(ArrayList<ComputerConfiguration> *newlist);
-        void setComputerConfigurationList_duplicate(ArrayList<ComputerConfiguration> newlist);
+        ComputerConfiguration *getComputerConfigurationList();
+        void setComputerConfigurationList(ComputerConfiguration newList[COMPUTERCONFIGURATIONLIST_SIZE]);
+        void computerConfigurationList_init();
 
 };
 

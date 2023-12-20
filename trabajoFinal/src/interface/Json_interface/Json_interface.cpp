@@ -5,16 +5,12 @@
 
 #include "Json_interface.h"
 #include "JsonConfiguration/JsonConfiguration.h"
-#include "../../../libs/ArrayList/ArrayList.h"
-#include "../../../libs/ArrayList/ArrayList.cpp"
+#include "JsonConfiguration/ComputerConfiguration/ComputerConfiguration.h"
+#include "JsonConfiguration/RankConfiguration/RankConfiguration.h"
+#include "JsonConfiguration/WorldConfiguration/WorldConfiguration.h"
 
 using namespace std;
 using namespace Json;
-
-template class ArrayList<RankConfiguration>;
-template class ArrayList<ComputerConfiguration>;
-
-
 
 
 
@@ -35,12 +31,12 @@ Json_interface::~Json_interface(){ }
 //**********************************
 JsonConfiguration Json_interface::getJSONConfiguration_FromFile() {
 
-    JsonConfiguration jsonConfiguration;
+    JsonConfiguration jsonConfiguration = JsonConfiguration();
+     
     ifstream file(getFileURL());
     if (!file.is_open()) {
         cerr << "Error al abrir el archivo JSON (" << getFileURL() << ")"  << endl;
         jsonConfiguration.setStatus(false);
-        return jsonConfiguration;
     }
 
     CharReaderBuilder builder;
@@ -60,53 +56,38 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile() {
     }
     file.close();
     
+    WorldConfiguration worldConfigurationTemp;
+    worldConfigurationTemp.setID(root["worldConfiguration"]["id"].asString());
+    worldConfigurationTemp.setDimensions(root["worldConfiguration"]["dimensions"].asUInt());
+    worldConfigurationTemp.setFitnessFunctionID(root["worldConfiguration"]["fitnessFunctionID"].asString());
+    jsonConfiguration.setWorldConfiguration(worldConfigurationTemp);
 
-    jsonConfiguration.getWorldConfiguration().setID(root["worldConfiguration"]["id"].asString());
-    jsonConfiguration.getWorldConfiguration().setDimensions(root["worldConfiguration"]["dimensions"].asUInt());
-
-    jsonConfiguration.setStatus(true);
-    cout << "status:" <<jsonConfiguration.getStatus() <<endl;
-    jsonConfiguration.setStatus(false);
-    cout << "status" <<jsonConfiguration.getStatus() <<endl;
-
-    jsonConfiguration.getWorldConfiguration().setFitnessFunctionID("JUANJO");
-    cout << "fitness" << jsonConfiguration.getWorldConfiguration().getFitnessFunctionID() << endl;
-
-    cout << "dimensiones:"<< root["worldConfiguration"]["dimensions"].asUInt() << endl;
-    cout << "dimensiones: " <<jsonConfiguration.getWorldConfiguration().getDimensions() <<endl;
-
-    jsonConfiguration.getWorldConfiguration().setFitnessFunctionID(root["worldConfiguration"]["fitnessFunctionID"].asString());
-
-
-    ComputerConfiguration computerConfigurationTemp;
-    RankConfiguration rankConfigurationTemp;
-
+    int i=0, j=0, k=0;
     for (const auto &computerConfig : root["computerConfiguration"]) {
-        computerConfigurationTemp = ComputerConfiguration();
-        computerConfigurationTemp.setIsDefault(computerConfig["isDefault?"].asBool());
-        computerConfigurationTemp.setIP(computerConfig["IP"].asString());
+        //computerConfigurationTemp.setIsDefault(computerConfig["isDefault?"].asBool());
+        jsonConfiguration.getComputerConfigurationList()[i].setIsDefault(false);
+        jsonConfiguration.getComputerConfigurationList()[i].setIP(computerConfig["IP"].asString());
 
+        j=0;
         for (const auto &rankConfig : computerConfig["rankConfigurationList"]) {
-            rankConfigurationTemp = RankConfiguration();
-            rankConfigurationTemp.setIsDefault(rankConfig["isDefault?"].asBool());
-            for (const auto &rank : rankConfig["rankList"]) {
-                rankConfigurationTemp.getRankList().add(rank.asUInt());
-            }
+            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setIsDefault(false);
+            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setRank(rankConfig["rank"].asUInt());
+            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setOutputFile(rankConfig["outFIleURL"].asString());
+            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setHeuristicID(rankConfig["heuristicID"].asString());
+            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setIterations(rankConfig["iterations"].asUInt());
+            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setPoblation(rankConfig["poblation"].asUInt());
 
-            rankConfigurationTemp.setOutputFile(rankConfig["outFIleURL"].asString());
-            rankConfigurationTemp.setHeuristicID(rankConfig["heuristicID"].asString());
-            rankConfigurationTemp.setIterations(rankConfig["iterations"].asUInt());
-            rankConfigurationTemp.setPoblation(rankConfig["poblation"].asUInt());
-
+            k=0;
             for (const auto &value : rankConfig["valueList"]) {
-                rankConfigurationTemp.getValueList().add(value.asFloat());
+                jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setValue_byIndex(k, value.asFloat());
+                k++;
             }
 
-            computerConfigurationTemp.getRankConfigurationList().add(rankConfigurationTemp);
+            j++;
         }
-
-        jsonConfiguration.getComputerConfigurationList().add(computerConfigurationTemp);
-    }
+        
+        i++;
+    } 
 
     return jsonConfiguration;
 }

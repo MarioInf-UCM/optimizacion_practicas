@@ -3,7 +3,9 @@
 
 #include <string>
 #include <limits.h>
-#include "../../../../../libs/ArrayList/ArrayList.h"
+
+#define RANKLIST_SIZE 16
+#define VALUELIST_SIZE 10
 
 using namespace std;
 
@@ -12,28 +14,30 @@ class RankConfiguration{
     
     private:
         bool isDefault;
-        ArrayList<unsigned int> rankList;
+        unsigned int rank;
         string outputFile;
         
         string heuristicID;       
         unsigned  int iterations;
         unsigned int poblation;
-        ArrayList<float> valueList;
+        float valueList[VALUELIST_SIZE];
 
     public:
         RankConfiguration();
-        RankConfiguration(ArrayList<unsigned int> rankList, string outputFile, string heuristicID, unsigned int poblation, ArrayList<float> valueList);
+        RankConfiguration(unsigned int rank, string outputFile, string heuristicID, unsigned int poblation, float valueList[VALUELIST_SIZE]);
         ~RankConfiguration();
 
         string displayInfo();
 
 
+
+        //* MÉTODOS DE TRATAMIENTO DE VARIABLES PRIVADAS
+        //**********************************************
         bool getIsDefault();
         void setIsDefault(bool isDefault);
 
-        ArrayList<unsigned int> getRankList();
-        void setRankList_reference(ArrayList<unsigned int> *newRank);
-        void setRankList_duplicate(ArrayList<unsigned int> newRank);
+        unsigned int getRank();
+        void setRank(unsigned int newRank);
         
         string getOutputFile();
         void setOutputFile(string newOutputFile);
@@ -47,10 +51,10 @@ class RankConfiguration{
         unsigned int getPoblation();
         void setPoblation(unsigned int newPoblation);
         
-        ArrayList<float> getValueList();
-        void setValueList_reference(ArrayList<float> *newValueList);
-        void setValueList_duplicate(ArrayList<float> newValueList);
-
+        float *getValueList();
+        void setValueList(float newList[VALUELIST_SIZE]);
+        void setValue_byIndex(unsigned int index, float value);
+        void valueList_init();
 
 };
 

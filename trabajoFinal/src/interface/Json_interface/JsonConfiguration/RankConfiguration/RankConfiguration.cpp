@@ -8,19 +8,22 @@ using namespace std;
 //******************************************
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
 //******************************************
-RankConfiguration::RankConfiguration(){
-    setIsDefault(false);
-    rankList = ArrayList<unsigned int>();
-    setOutputFile("");
-    setHeuristicID("");
-    setIterations(USHRT_MAX);
-    setPoblation(0);
-    valueList = ArrayList<float>();
+RankConfiguration::RankConfiguration():
+    isDefault(true),
+    rank(0),
+    outputFile(""),
+    heuristicID(""),
+    iterations(USHRT_MAX),
+    poblation(0)
+{
+    valueList_init();
 }
-RankConfiguration::RankConfiguration(ArrayList<unsigned int> rankList, string outputFile, string heuristicID, unsigned int poblation, ArrayList<float> valueList){
-    setRankList_duplicate(rankList);
-    setOutputFile(outputFile);
-    setHeuristicID(heuristicID);
+RankConfiguration::RankConfiguration(unsigned int rank, string outputFile, string heuristicID, unsigned int poblation, float valueList[VALUELIST_SIZE]):
+    isDefault(false),
+    outputFile(outputFile),
+    heuristicID(heuristicID)
+{
+    setValueList(valueList);
 }
 
 RankConfiguration::~RankConfiguration(){}
@@ -32,17 +35,15 @@ RankConfiguration::~RankConfiguration(){}
 //**********************************
 string RankConfiguration::displayInfo(){
     stringstream value;
-    value << "IsDefault?: " << (getIsDefault()? "true" : "false") << "    OutputFile: " << getOutputFile() << "    rankList: ";
-    for(int i=0 ; i<getRankList().size() ; i++){
-        value << getRankList().get(i);
+
+    if(!getIsDefault()){
+        value << "\t\tRank: " << getRank() << "    OutputFile: " << getOutputFile() << 
+            "    HeuristicID: " << getHeuristicID() << "    Iterations: " << getIterations() << "    Poblation: " << getPoblation() << "    valueList[ ";
+        for(int i=0 ; i<VALUELIST_SIZE ; i++){
+            value << valueList[i] << ", " << ends;
+        }
+        value <<" ]" <<endl;
     }
-    value << std::endl;
-    
-    value << " HeuristicID: " << getHeuristicID() << "    Iterations: " << getIterations() << "    Poblation: " << getPoblation() << "    valueList: ";
-    for(int i=0 ; i<getValueList().size() ; i++){
-        value << getValueList().get(i);
-    }
-    value << std::endl;
 
     return value.str();
 }
@@ -53,9 +54,8 @@ string RankConfiguration::displayInfo(){
 bool RankConfiguration::getIsDefault(){ return isDefault; }
 void RankConfiguration::setIsDefault(bool newIsDefault){ isDefault =newIsDefault; }
 
-ArrayList<unsigned int> RankConfiguration::getRankList() { return rankList; }
-void RankConfiguration::setRankList_reference(ArrayList<unsigned int> *newRank) { rankList = *newRank; }
-void RankConfiguration::setRankList_duplicate(ArrayList<unsigned int> newRank) { rankList = newRank; }
+unsigned int RankConfiguration::getRank(){ return rank; }
+void RankConfiguration::setRank(unsigned int newRank){ rank = newRank; }
 
 string RankConfiguration::getOutputFile() { return outputFile; }
 void RankConfiguration::setOutputFile(string newOutputFile) { outputFile = newOutputFile; }
@@ -69,7 +69,18 @@ void RankConfiguration::setIterations(unsigned int newIterations) { iterations =
 unsigned int RankConfiguration::getPoblation() { return poblation; }
 void RankConfiguration::setPoblation(unsigned int newPoblation) { poblation = newPoblation; }
 
-ArrayList<float> RankConfiguration::getValueList() { return valueList; }
-void RankConfiguration::setValueList_reference(ArrayList<float> *newValueList) { valueList = *newValueList; }
-void RankConfiguration::setValueList_duplicate(ArrayList<float> newValueList) { valueList = newValueList; }
+float *RankConfiguration::getValueList(){ return valueList; }
+void RankConfiguration::setValueList(float newList[VALUELIST_SIZE]){
+    for (int i=0 ; i<VALUELIST_SIZE ; i++) {
+        valueList[i] = newList[i];
+    }
+}
+void RankConfiguration::setValue_byIndex(unsigned int index, float value){
+    valueList[index] = value;
+}
+void RankConfiguration::valueList_init(){
+    for (int i=0 ; i<VALUELIST_SIZE ; i++) {
+        valueList[i] = 0.0;
+    } 
+}
 

@@ -5,28 +5,22 @@
 
 using namespace std;
 
-template class ArrayList<RankConfiguration>;
-
-
 //******************************************
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
 //******************************************
-ComputerConfiguration::ComputerConfiguration(){
-    setIsDefault(false);
-    setIP("0.0.0.0");
-    rankConfigurationList = ArrayList<RankConfiguration>();
+ComputerConfiguration::ComputerConfiguration():
+    isDefault(true),
+    IP("0.0.0.0")
+{
+    rankConfigurationList_init();
+}
+ComputerConfiguration::ComputerConfiguration(string IP, RankConfiguration rankConfigurationList[RANKCONFIGURATIONLIST_SIZE]):
+    isDefault(false),
+    IP(IP)
+{
+    setRankConfigurationList(rankConfigurationList);
+}
 
-}
-ComputerConfiguration::ComputerConfiguration(bool isDefault, string IP, ArrayList<RankConfiguration> rankConfigurationList){
-    setIsDefault(isDefault);
-    setIP(IP);
-    setRankConfigurationList_duplicate(rankConfigurationList);
-}
-ComputerConfiguration::ComputerConfiguration(bool isDefault, string IP, ArrayList<RankConfiguration> *rankConfigurationList){
-    setIsDefault(isDefault);
-    setIP(IP);
-    setRankConfigurationList_reference(rankConfigurationList);
-}
 
 ComputerConfiguration::~ComputerConfiguration(){}
 
@@ -38,12 +32,13 @@ ComputerConfiguration::~ComputerConfiguration(){}
 //**********************************
 string ComputerConfiguration::displayInfo(){
     stringstream value;
-    value << "IsDefault?: " << (getIsDefault()? "true" : "false") << "    IP: " << getIP() << "    rankConfigurationList{" << std::endl;
-    for(int i=0 ; i<getRankConfigurationList().size() ; i++){
-        value << getRankConfigurationList().get(i)->data.displayInfo();
-        value << endl << endl;
+    if(!getIsDefault()){
+        value << "IP: " << getIP() << "    rankConfigurationList{" << std::endl;
+        for(int i=0 ; i<RANKCONFIGURATIONLIST_SIZE ; i++){
+            value << rankConfigurationList[i].displayInfo();
+        }
+        value << endl << "}" << ends;
     }
-    value << "}";
     return value.str();
 }
 
@@ -58,8 +53,16 @@ void ComputerConfiguration::setIsDefault(bool newIsDefault){ isDefault =newIsDef
 string ComputerConfiguration::getIP(){ return IP; }
 void ComputerConfiguration::setIP(string newIP){ IP = newIP; }
 
-ArrayList<RankConfiguration> ComputerConfiguration::getRankConfigurationList() { return rankConfigurationList; }
-void ComputerConfiguration::setRankConfigurationList_reference(ArrayList<RankConfiguration> *newRank) { rankConfigurationList = *newRank; }
-void ComputerConfiguration::setRankConfigurationList_duplicate(ArrayList<RankConfiguration> newRank) { rankConfigurationList = newRank; }
+RankConfiguration *ComputerConfiguration::getRankConfigurationList(){ return rankConfigurationList; }
+void ComputerConfiguration::setRankConfigurationList(RankConfiguration newList[RANKCONFIGURATIONLIST_SIZE]){
+    for (int i = 0 ; i<RANKCONFIGURATIONLIST_SIZE ; i++) {
+        rankConfigurationList[i] = newList[i];
+    }
+}
+void ComputerConfiguration::rankConfigurationList_init(){
+    for (int i=0 ; i<RANKCONFIGURATIONLIST_SIZE ; i++) {
+        rankConfigurationList[i] = RankConfiguration();
+    } 
+}
 
 

@@ -27,7 +27,7 @@ public:
     void add(int position, T value);
     //void printList();
     int size();
-    //void remove_byValue(T value);
+    void remove_byValue(T value);
     void remove_byIndex(int index);
     void reverse();
     Node<T>* nextNode(Node<T>* current);

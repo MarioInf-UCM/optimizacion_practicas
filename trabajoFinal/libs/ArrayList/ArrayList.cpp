@@ -1,6 +1,12 @@
 #include <iostream>
 #include "ArrayList.h"
 
+using namespace std;
+
+template class ArrayList<int>;  
+template class ArrayList<float>;
+template class ArrayList<unsigned int>;
+
 // Definición de la estructura Node
 template <typename T>
 Node<T>::Node(T value) : data(value), next(nullptr) {}
@@ -13,10 +19,11 @@ ArrayList<T>::ArrayList() : head(nullptr) {}
 template <typename T>
 void ArrayList<T>::add(T value) {
     Node<T>* newNode = new Node<T>(value);
-
     if (head == nullptr) {
+        cout << "NULLL: " <<endl;
         head = newNode;
     } else {
+        cout << "NO NULLL: " <<endl;
         Node<T>* current = head;
         while (current->next != nullptr) {
             current = current->next;
@@ -221,6 +228,4 @@ ArrayList<T>::~ArrayList() {
 
 // Es importante incluir la definición de las funciones de la plantilla en el archivo .cpp
 // Esto garantiza que el compilador genere el código necesario para la plantilla con el tipo int
-template class ArrayList<int>;  
-template class ArrayList<float>;
-template class ArrayList<unsigned int>;
+
