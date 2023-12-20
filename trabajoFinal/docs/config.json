@@ -12,7 +12,7 @@
             "rankList": [0],
             "outFIleURL": "output_0.txt",
             "heuristicID": "pso",
-            "iterations": "500",
+            "iterations": 500,
             "poblation" : 25,
             "valueList":[0.3925, 2.5586, 1.3358]
         },
@@ -21,7 +21,7 @@
             "rankList": [1],
             "outFIleURL": "output_0.txt",
             "heuristicID": "pso",
-            "iterations": "500",
+            "iterations": 500,
             "poblation" : 25,
             "vavalueListlues":[0.3925, 2.5586, 1.3358]
         }]
@@ -34,7 +34,7 @@
             "rankList": [0],
             "outFIleURL": "output_0.txt",
             "heuristicID": "pso",
-            "iterations": "500",
+            "iterations": 500,
             "poblation" : 25,
             "valueList":[0.3925, 2.5586, 1.3358]
         }]

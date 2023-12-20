@@ -5,12 +5,19 @@
 using namespace std;
 
 
-
 //******************************************
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
 //******************************************
-RankConfiguration::RankConfiguration(){}
-RankConfiguration:: RankConfiguration(ArrayList<unsigned int> rankList, string outputFile, string heuristicID, unsigned int poblation, ArrayList<float> valueList){
+RankConfiguration::RankConfiguration(){
+    setIsDefault(false);
+    rankList = ArrayList<unsigned int>();
+    setOutputFile("");
+    setHeuristicID("");
+    setIterations(USHRT_MAX);
+    setPoblation(0);
+    valueList = ArrayList<float>();
+}
+RankConfiguration::RankConfiguration(ArrayList<unsigned int> rankList, string outputFile, string heuristicID, unsigned int poblation, ArrayList<float> valueList){
     setRankList_duplicate(rankList);
     setOutputFile(outputFile);
     setHeuristicID(heuristicID);
@@ -25,7 +32,7 @@ RankConfiguration::~RankConfiguration(){}
 //**********************************
 string RankConfiguration::displayInfo(){
     stringstream value;
-    value << "IsDefault?: " << (getIsDefault()? "true" : false) << "    OutputFile: " << getOutputFile() << "    rankList: ";
+    value << "IsDefault?: " << (getIsDefault()? "true" : "false") << "    OutputFile: " << getOutputFile() << "    rankList: ";
     for(int i=0 ; i<getRankList().size() ; i++){
         value << getRankList().get(i);
     }

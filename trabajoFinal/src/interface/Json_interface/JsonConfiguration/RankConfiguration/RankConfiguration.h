@@ -3,7 +3,7 @@
 
 #include <string>
 #include <limits.h>
-#include "libs/ArrayList/ArrayList.h"
+#include "../../../../../libs/ArrayList/ArrayList.h"
 
 using namespace std;
 
@@ -11,14 +11,14 @@ using namespace std;
 class RankConfiguration{
     
     private:
-        bool isDefault = false;
-        ArrayList<unsigned int> rankList = ArrayList<unsigned int>();
-        string outputFile = "";
+        bool isDefault;
+        ArrayList<unsigned int> rankList;
+        string outputFile;
         
-        string heuristicID = "";       
-        unsigned  int iterations = USHRT_MAX;
-        unsigned int poblation = 0;
-        ArrayList<float> valueList = ArrayList<float>();
+        string heuristicID;       
+        unsigned  int iterations;
+        unsigned int poblation;
+        ArrayList<float> valueList;
 
     public:
         RankConfiguration();
@@ -53,11 +53,5 @@ class RankConfiguration{
 
 
 };
-
-RankConfiguration::RankConfiguration(){
-}
-
-RankConfiguration::~RankConfiguration(){
-}
 
 #endif

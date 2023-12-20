@@ -3,17 +3,17 @@
 
 #include <string>
 #include <limits.h>
-#include "libs/ArrayList/ArrayList.h"
 #include "../RankConfiguration/RankConfiguration.h"
+#include "../../../../../libs/ArrayList/ArrayList.h"
 
 using namespace std;
 
 class ComputerConfiguration{
 
     private:
-        bool isDefault = false;
-        string IP = "0.0.0.0";
-        ArrayList<RankConfiguration> rankConfigurationList = ArrayList<RankConfiguration>();
+        bool isDefault;
+        string IP;
+        ArrayList<RankConfiguration> rankConfigurationList;
 
     public:
         ComputerConfiguration();
@@ -34,7 +34,6 @@ class ComputerConfiguration{
         void setRankConfigurationList_duplicate(ArrayList<RankConfiguration> newRank);
 
 };
-
 #endif
 
 

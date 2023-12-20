@@ -1,4 +1,7 @@
-#pragma once
+#ifndef ARRAYLIST_H
+#define ARRAYLIST_H
+
+#include <iostream>
 
 template <typename T>
 struct Node {
@@ -8,9 +11,12 @@ struct Node {
     Node(T value);
 };
 
+
+
 template <typename T>
 class ArrayList {
 private:
+
     Node<T>* head;
 
 public:
@@ -19,14 +25,16 @@ public:
 
     void add(T value);
     void add(int position, T value);
-    void printList();
+    //void printList();
     int size();
-    void remove(T value);
+    //void remove_byValue(T value);
+    void remove_byIndex(int index);
     void reverse();
     Node<T>* nextNode(Node<T>* current);
     Node<T>* previousNode(Node<T>* current);
     Node<T>* get(int position);
-
-    ArrayList<T> findPositions(T value);
+    //ArrayList<T> findPositions(T value);
+    
 };
 
+#endif

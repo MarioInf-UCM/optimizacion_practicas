@@ -3,21 +3,26 @@
 
 #include "WorldConfiguration/WorldConfiguration.h"
 #include "ComputerConfiguration/ComputerConfiguration.h"
+#include "../../../../libs/ArrayList/ArrayList.h"
+
 
 class JsonConfiguration{
     private:
+        bool status = true;
         WorldConfiguration worldConfiguration = WorldConfiguration();
-        ArrayList<ComputerConfiguration> computerConfigurationList = ArrayList<ComputerConfiguration>();
+        ArrayList<ComputerConfiguration> computerConfigurationList;
 
     public:
         JsonConfiguration();
         ~JsonConfiguration();
 
         string displayInfo();
-        
+
+        bool getStatus();
+        void setStatus(bool data);
 
         WorldConfiguration getWorldConfiguration();
-        void sertWorldConfiguration(WorldConfiguration newWorldConfiguration);
+        void setWorldConfiguration(WorldConfiguration newWorldConfiguration);
 
         ArrayList<ComputerConfiguration> getComputerConfigurationList();
         void setComputerConfigurationList_reference(ArrayList<ComputerConfiguration> *newlist);

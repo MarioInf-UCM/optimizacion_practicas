@@ -1,3 +1,4 @@
+#include <iostream>
 #include "ArrayList.h"
 
 // Definición de la estructura Node
@@ -54,7 +55,7 @@ void ArrayList<T>::add(int position, T value) {
 }
 
 // Método para imprimir la lista
-template <typename T>
+/* template <typename T>
 void ArrayList<T>::printList() {
     Node<T>* current = head;
     while (current != nullptr) {
@@ -62,7 +63,7 @@ void ArrayList<T>::printList() {
         current = current->next;
     }
     std::cout << std::endl;
-}
+} */
 
 // Método para obtener el tamaño de la lista
 template <typename T>
@@ -79,8 +80,8 @@ int ArrayList<T>::size() {
 }
 
 // Método para eliminar un elemento de la lista
-template <typename T>
-void ArrayList<T>::remove(T value) {
+/* template <typename T>
+void ArrayList<T>::remove_byValue(T value) {
     Node<T>* current = head;
     Node<T>* previous = nullptr;
 
@@ -98,6 +99,37 @@ void ArrayList<T>::remove(T value) {
         delete current;
     }
 }
+ */
+
+template <typename T>
+void ArrayList<T>::remove_byIndex(int index) {
+    if (index < 0 || head == nullptr) {
+        return;
+    }
+
+    if (index == 0) {
+        Node<T>* temp = head;
+        head = head->next;
+        delete temp;
+        return;
+    }
+
+    Node<T>* current = head;
+    Node<T>* previous = nullptr;
+    int currentIndex = 0;
+
+    while (current != nullptr && currentIndex < index) {
+        previous = current;
+        current = current->next;
+        ++currentIndex;
+    }
+
+    if (current != nullptr) {
+        previous->next = current->next;
+        delete current;
+    }
+}
+
 
 // Método para invertir la lista
 template <typename T>
@@ -157,7 +189,7 @@ Node<T>* ArrayList<T>::get(int position) {
 }
 
 // Método para encontrar todas las posiciones de un valor en la lista
-template <typename T>
+/* template <typename T>
 ArrayList<T> ArrayList<T>::findPositions(T value) {
     ArrayList<T> positions;
     Node<T>* current = head;
@@ -172,7 +204,7 @@ ArrayList<T> ArrayList<T>::findPositions(T value) {
     }
 
     return positions;
-}
+} */
 
 // Destructor de la clase ArrayList
 template <typename T>
@@ -188,4 +220,7 @@ ArrayList<T>::~ArrayList() {
 }
 
 // Es importante incluir la definición de las funciones de la plantilla en el archivo .cpp
-template class ArrayList<int>;  // Esto garantiza que el compilador genere el código necesario para la plantilla con el tipo int
+// Esto garantiza que el compilador genere el código necesario para la plantilla con el tipo int
+template class ArrayList<int>;  
+template class ArrayList<float>;
+template class ArrayList<unsigned int>;

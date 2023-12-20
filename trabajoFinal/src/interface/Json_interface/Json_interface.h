@@ -5,6 +5,7 @@
 #include <string>
 #include "JsonConfiguration/JsonConfiguration.h"
 
+
 using namespace std;
 
 class Json_interface {
@@ -19,7 +20,7 @@ class Json_interface {
         
         JsonConfiguration getJSONConfiguration_FromFile();
 
-        string getFileURL(void);
+        string getFileURL();
         void setFileURL(string data);
 
 };

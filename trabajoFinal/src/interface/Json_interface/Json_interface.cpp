@@ -1,12 +1,21 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <jsoncpp/json/json.h>
 
 #include "Json_interface.h"
 #include "JsonConfiguration/JsonConfiguration.h"
+#include "../../../libs/ArrayList/ArrayList.h"
+#include "../../../libs/ArrayList/ArrayList.cpp"
 
 using namespace std;
 using namespace Json;
+
+template class ArrayList<RankConfiguration>;
+template class ArrayList<ComputerConfiguration>;
+
+
+
 
 
 //******************************************
@@ -26,10 +35,12 @@ Json_interface::~Json_interface(){ }
 //**********************************
 JsonConfiguration Json_interface::getJSONConfiguration_FromFile() {
 
+    JsonConfiguration jsonConfiguration;
     ifstream file(getFileURL());
     if (!file.is_open()) {
-        cerr << "Error al abrir el archivo JSON.\n" << endl;
-        return;
+        cerr << "Error al abrir el archivo JSON (" << getFileURL() << ")"  << endl;
+        jsonConfiguration.setStatus(false);
+        return jsonConfiguration;
     }
 
     CharReaderBuilder builder;
@@ -38,24 +49,37 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile() {
     JSONCPP_STRING errs;
     bool result = true;
     
-
     //Leemos el fichero JSON
     reader = builder.newCharReader();
     result = parseFromStream(builder, file, &root, &errs);
     if(!result){
-        std::cerr << "Error al parsear el archivo JSON: " << errs << std::endl;
-        return;
+        cerr << "Error al parsear el archivo JSON (" << getFileURL() << ")" << endl ;
+        cerr << errs << endl;
+        jsonConfiguration.setStatus(false);
+        return jsonConfiguration;
     }
     file.close();
     
 
-    JsonConfiguration jsonConfiguration = JsonConfiguration();
+    jsonConfiguration.getWorldConfiguration().setID(root["worldConfiguration"]["id"].asString());
+    jsonConfiguration.getWorldConfiguration().setDimensions(root["worldConfiguration"]["dimensions"].asUInt());
+
+    jsonConfiguration.setStatus(true);
+    cout << "status:" <<jsonConfiguration.getStatus() <<endl;
+    jsonConfiguration.setStatus(false);
+    cout << "status" <<jsonConfiguration.getStatus() <<endl;
+
+    jsonConfiguration.getWorldConfiguration().setFitnessFunctionID("JUANJO");
+    cout << "fitness" << jsonConfiguration.getWorldConfiguration().getFitnessFunctionID() << endl;
+
+    cout << "dimensiones:"<< root["worldConfiguration"]["dimensions"].asUInt() << endl;
+    cout << "dimensiones: " <<jsonConfiguration.getWorldConfiguration().getDimensions() <<endl;
+
+    jsonConfiguration.getWorldConfiguration().setFitnessFunctionID(root["worldConfiguration"]["fitnessFunctionID"].asString());
+
+
     ComputerConfiguration computerConfigurationTemp;
     RankConfiguration rankConfigurationTemp;
-
-    jsonConfiguration.getWorldConfiguration().setID(root["worldConfiguration"]["id"].asString());
-    jsonConfiguration.getWorldConfiguration().setDimensions(root["worldConfiguration"]["dimensions"].asInt());
-    jsonConfiguration.getWorldConfiguration().setFitnessFunctionID(root["worldConfiguration"]["fitnessFunctionID"].asString());
 
     for (const auto &computerConfig : root["computerConfiguration"]) {
         computerConfigurationTemp = ComputerConfiguration();
@@ -66,13 +90,13 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile() {
             rankConfigurationTemp = RankConfiguration();
             rankConfigurationTemp.setIsDefault(rankConfig["isDefault?"].asBool());
             for (const auto &rank : rankConfig["rankList"]) {
-                rankConfigurationTemp.getRankList().add(rank.asInt());
+                rankConfigurationTemp.getRankList().add(rank.asUInt());
             }
 
             rankConfigurationTemp.setOutputFile(rankConfig["outFIleURL"].asString());
             rankConfigurationTemp.setHeuristicID(rankConfig["heuristicID"].asString());
-            rankConfigurationTemp.setIterations(rankConfig["iterations"].asInt());
-            rankConfigurationTemp.setPoblation(rankConfig["poblation"].asInt());
+            rankConfigurationTemp.setIterations(rankConfig["iterations"].asUInt());
+            rankConfigurationTemp.setPoblation(rankConfig["poblation"].asUInt());
 
             for (const auto &value : rankConfig["valueList"]) {
                 rankConfigurationTemp.getValueList().add(value.asFloat());
@@ -91,5 +115,7 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile() {
 //********************************************************
 // ZONA DE DEFINICIÓN DE MÉTODOS DE ACCESO A LAS VARIABLES
 //********************************************************
-string Json_interface::getFileURL(void){ return fileURL; }
+string Json_interface::getFileURL(){ return fileURL; }
 void Json_interface::setFileURL(string data){ fileURL = data; }
+
+

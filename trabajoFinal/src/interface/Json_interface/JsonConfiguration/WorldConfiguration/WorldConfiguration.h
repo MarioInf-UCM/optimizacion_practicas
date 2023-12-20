@@ -8,9 +8,9 @@ using namespace std;
 class WorldConfiguration{
 
     private:
-        string ID = "";
-        unsigned int dimensions = 0;
-        string fitnessFunctionID = "";
+        string ID;
+        unsigned int dimensions;
+        string fitnessFunctionID;
 
     public:
         WorldConfiguration();

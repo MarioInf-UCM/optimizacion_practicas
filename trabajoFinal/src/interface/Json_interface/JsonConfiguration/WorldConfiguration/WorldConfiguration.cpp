@@ -1,6 +1,7 @@
 #include "WorldConfiguration.h"
 #include <string>
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -9,8 +10,12 @@ using namespace std;
 //******************************************
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
 //******************************************
-WorldConfiguration::WorldConfiguration(){}
-WorldConfiguration:: WorldConfiguration(string ID, unsigned int dimensions, string fitnessFunctionID){
+WorldConfiguration::WorldConfiguration(){
+    setID("");
+    setDimensions(0);
+    setFitnessFunctionID("");
+}
+WorldConfiguration::WorldConfiguration(string ID, unsigned int dimensions, string fitnessFunctionID){
     setID(ID);
     setDimensions(dimensions);
     setFitnessFunctionID(fitnessFunctionID);
@@ -38,8 +43,12 @@ string WorldConfiguration::getID() {return ID;}
 void WorldConfiguration::setID(string newID) {ID = newID;}
 
 
-unsigned int WorldConfiguration::getDimensions(){return dimensions;}
-void WorldConfiguration::setDimensions(unsigned int newDimensions) {dimensions = newDimensions;}
+unsigned int WorldConfiguration::getDimensions(){return this->dimensions;}
+void WorldConfiguration::setDimensions(unsigned int newDimensions) {
+    cout <<"pepe1: " << newDimensions << endl;
+    this->dimensions = newDimensions;
+    cout <<"pepe2: " << dimensions << endl;
+    }
 
 
 string WorldConfiguration::getFitnessFunctionID() {return fitnessFunctionID;}
