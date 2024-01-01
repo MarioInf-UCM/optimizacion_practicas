@@ -12,7 +12,6 @@ bool entryParams_check(int argc, char** argv);
 using namespace std;
 
 int main(int argc, char** argv) {
-
     int rank, size;
 
     MPI_Init(&argc, &argv);

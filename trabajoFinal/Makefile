@@ -4,7 +4,8 @@ LIBS = -ljsoncpp
 OUT_DIR = bin
 TARGET = trabajoFinal_exec
 numProc = 2
-configFileURL = /home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/docs/config.json
+#configFileURL = /home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/docs/config.json
+configFileURL = /home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/docs/config.json
 
 OBJS = $(patsubst %.cpp,$(OUT_DIR)/%.o,$(SRCS))
 
