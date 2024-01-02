@@ -10,12 +10,13 @@ using namespace std;
 
 
 class JsonConfiguration{
-    public:
+    
+    private:
         bool status;
         WorldConfiguration worldConfiguration;
         vector<ComputerConfiguration> computerConfigurationList;
+    
     public:
-
         JsonConfiguration();
         JsonConfiguration(bool newStatus, WorldConfiguration newWorldConfiguration, vector<ComputerConfiguration>);
         ~JsonConfiguration();

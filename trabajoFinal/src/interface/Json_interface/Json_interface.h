@@ -22,6 +22,10 @@ class Json_interface {
 
         string getFileURL();
         void setFileURL(string data);
+    
+    private:
+        bool checkIp(vector<string>& addressList, string concretAddress);
+
 
 };
 

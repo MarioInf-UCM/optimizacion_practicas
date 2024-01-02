@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 #include <jsoncpp/json/json.h>
 
 #include "Json_interface.h"
@@ -60,12 +61,28 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile(vector<string>& 
     jsonConfiguration.getWorldConfiguration().setID(root["worldConfiguration"]["id"].asString());
     jsonConfiguration.getWorldConfiguration().setDimensions(root["worldConfiguration"]["dimensions"].asUInt());
    
-    int i=0, j=0, k=0;
+    Value computerConfigurationSelected = Value::null;
     for (const auto &computerConfig : root["computerConfiguration"]) {
-/*         if(computerConfig["IP"].asString().compare()){
+        if(checkIp(ipv4Addresses, computerConfig["IP"].asString()) || checkIp(ipv6Addresses, computerConfig["IP"].asString())){
+            computerConfigurationSelected = computerConfig;
+            break;
+        }
+    }
+    if(computerConfigurationSelected == Value::null){
+        cerr << "No se encontro ninguna configuración compatible con las direcciones IP del equipo." << endl ;
+        jsonConfiguration.setStatus(false);
+        return jsonConfiguration;
+    }
 
+    cout << "ENCONTRADA CONFIGURACIÓN IP:" << computerConfigurationSelected["IP"].asString() << endl << endl;
+
+
+
+/*  
+
+    int i=0, j=0, k=0;
         } */
-        jsonConfiguration.getComputerConfigurationList()[i].setIP(computerConfig["IP"].asString());
+       // jsonConfiguration.getComputerConfigurationList()[i].setIP(computerConfig["IP"].asString());
 
         /*
         j=0;
@@ -85,14 +102,24 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile(vector<string>& 
 
             j++;
         }
-        */
         i++;
-    }  
+        */
+      
 
-    cout << jsonConfiguration.displayInfo() << endl << endl;
 
     return jsonConfiguration;
 }
+
+
+bool Json_interface::checkIp(vector<string>& addressList, string concretAddress){
+    auto iterador = find(addressList.begin(), addressList.end(), concretAddress);
+    if (iterador != addressList.end()) {
+        int posicion = distance(addressList.begin(), iterador);
+        return true;
+    }
+    return false;
+}
+
 
 
 //********************************************************

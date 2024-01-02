@@ -14,6 +14,8 @@
 #include "../libs/ArrayList/ArrayList.h"
 
 #define ENTRY_PARAM_NUM 2
+#define IPV4_DEFAULT "0.0.0.0"
+#define IPV6_DEFAULT "::0"
 bool entryParams_check(int argc, char** argv, bool printInfo = true);
 bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, bool printInfo = true);
 bool FinalizingExecution();
@@ -145,9 +147,9 @@ bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Add
             continue;
         }
     }
-    ipv4Addresses.push_back("0.0.0.0");
+    ipv4Addresses.push_back(IPV4_DEFAULT);
     IPv4Ifaces.push_back("Default");
-    ipv6Addresses.push_back("::0");
+    ipv6Addresses.push_back(IPV6_DEFAULT);
     IPv6Ifaces.push_back("Default");
 
 
