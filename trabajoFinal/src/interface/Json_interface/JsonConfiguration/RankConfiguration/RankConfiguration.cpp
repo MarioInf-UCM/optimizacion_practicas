@@ -40,7 +40,7 @@ string RankConfiguration::displayInfo(){
     stringstream value;
 
     if(!getIsDefault()){
-        value << "\t\tRankList: ";
+        value << "\t\tRankList[";
         for(int i=0 ; i<getRankList().size() ; i++){
             if(i == (getRankList().size()-1)){
                 value << rankList[i] << ends;
@@ -48,17 +48,15 @@ string RankConfiguration::displayInfo(){
                 value << rankList[i] << ", " << ends;
             }
         }
-        value <<" ]" <<endl;
-        
-        value << "    OutputFile: " << getOutputFile() << "    HeuristicID: " << getHeuristicID() << "    Iterations: " << getIterations() << "    Poblation: " << getPoblation() << "    valueList[ ";
+        value <<"]" << "    OutputFile: " << getOutputFile() << "    HeuristicID: " << getHeuristicID() << "    Iterations: " << getIterations() << "    Poblation: " << getPoblation() << "    valueList[";
         for(int i=0 ; i<getValueList().size() ; i++){
-            if(i == (getRankList().size()-1)){
+            if(i == (getValueList().size()-1)){
                 value << valueList[i] << ends;
             }else{
                 value << valueList[i] << ", " << ends;
             }
         }
-        value <<" ]" <<endl;
+        value <<"]" <<endl;
     }
 
     return value.str();
@@ -71,8 +69,8 @@ bool RankConfiguration::getIsDefault() const { return isDefault; }
 void RankConfiguration::setIsDefault(bool newIsDefault){ isDefault =newIsDefault; }
 
 
-vector<unsigned int> RankConfiguration::getRankList() const { return rankList; }
-unsigned int RankConfiguration::getRank_byIndex(unsigned int index) const { 
+vector<unsigned int>& RankConfiguration::getRankList() { return rankList; }
+unsigned int RankConfiguration::getRank_byIndex(unsigned int index){ 
     return getRankList()[index];
 }
 void RankConfiguration::setRankList(vector<unsigned int> newList){
@@ -102,8 +100,8 @@ unsigned int RankConfiguration::getPoblation() const { return poblation; }
 void RankConfiguration::setPoblation(unsigned int newPoblation) { poblation = newPoblation; }
 
 
-vector<float> RankConfiguration::getValueList() const { return valueList; }
-float RankConfiguration::getValue_byIndex(unsigned int index) const {
+vector<float>& RankConfiguration::getValueList() { return valueList; }
+float RankConfiguration::getValue_byIndex(unsigned int index){
     return getValueList()[index];
 }
 void RankConfiguration::setValueList(vector<float> newList){

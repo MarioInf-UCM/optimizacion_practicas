@@ -30,11 +30,11 @@ ComputerConfiguration::~ComputerConfiguration(){}
 //**********************************
 string ComputerConfiguration::displayInfo(){
     stringstream value;
-    value << "IP: " << getIP() << "    rankConfigurationList{" << endl;
+    value << "IP: " << getIP() << "    rankConfigurationList[" << endl;
     for(int i=0 ; i<getRankConfigurationList().size() ; i++){
         value << rankConfigurationList[i].displayInfo();
     }
-    value << endl << "}" << ends;
+    value << "\t]" << endl;
     return value.str();
 }
 
@@ -47,8 +47,8 @@ string ComputerConfiguration::getIP() const { return IP; }
 void ComputerConfiguration::setIP(string newIP){ IP = newIP; }
 
 
-vector<RankConfiguration> ComputerConfiguration::getRankConfigurationList() const { return rankConfigurationList; }
-RankConfiguration ComputerConfiguration::getRankConfiguration_byIndex(unsigned int index) const {
+vector<RankConfiguration>& ComputerConfiguration::getRankConfigurationList() { return rankConfigurationList; }
+RankConfiguration ComputerConfiguration::getRankConfiguration_byIndex(unsigned int index) {
     return getRankConfigurationList()[index];
 }
 void ComputerConfiguration::setRankConfigurationList(vector<RankConfiguration> newList){

@@ -27,8 +27,8 @@ class ComputerConfiguration{
         string getIP() const;
         void setIP(string newIP);
         
-        vector<RankConfiguration> getRankConfigurationList() const;
-        RankConfiguration getRankConfiguration_byIndex(unsigned int index) const;
+        vector<RankConfiguration>& getRankConfigurationList();
+        RankConfiguration getRankConfiguration_byIndex(unsigned int index);
         void setRankConfigurationList(vector<RankConfiguration> newList);
         void setRankConfiguration_byIndex(unsigned int index, RankConfiguration value);
 

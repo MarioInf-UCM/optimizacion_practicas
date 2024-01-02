@@ -7,14 +7,6 @@
     "computerConfiguration": [{
         "IP": "192.168.0.18",
         "rankConfigurationList": [{
-            "rankList": [99],
-            "outFIleURL": "output_rank0.txt",
-            "heuristicID": "pso",
-            "iterations": 500,
-            "poblation" : 25,
-            "valueList":[0.3925, 2.5586, 1.3358]
-        },
-        {
             "rankList": [0, 1],
             "outFIleURL": "output_rank0.txt",
             "heuristicID": "pso",

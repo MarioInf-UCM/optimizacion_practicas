@@ -73,38 +73,26 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile(vector<string>& 
         jsonConfiguration.setStatus(false);
         return jsonConfiguration;
     }
+    jsonConfiguration.getComputerConfiguration().setIP(computerConfigurationSelected["IP"].asString());
 
-    cout << "ENCONTRADA CONFIGURACIÓN IP:" << computerConfigurationSelected["IP"].asString() << endl << endl;
+    RankConfiguration rankConfigurationTemp;
+    for (const auto &rankConfig : computerConfigurationSelected["rankConfigurationList"]) {
+        rankConfigurationTemp = RankConfiguration();
+        rankConfigurationTemp.setIsDefault(false);
+        rankConfigurationTemp.setOutputFile(rankConfig["outFIleURL"].asString());
+        rankConfigurationTemp.setHeuristicID(rankConfig["heuristicID"].asString());
+        rankConfigurationTemp.setIterations(rankConfig["iterations"].asUInt());
+        rankConfigurationTemp.setPoblation(rankConfig["poblation"].asUInt());
 
-
-
-/*  
-
-    int i=0, j=0, k=0;
-        } */
-       // jsonConfiguration.getComputerConfigurationList()[i].setIP(computerConfig["IP"].asString());
-
-        /*
-        j=0;
-        for (const auto &rankConfig : computerConfig["rankConfigurationList"]) {
-            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setIsDefault(false);
-            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setRank(rankConfig["rank"].asUInt());
-            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setOutputFile(rankConfig["outFIleURL"].asString());
-            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setHeuristicID(rankConfig["heuristicID"].asString());
-            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setIterations(rankConfig["iterations"].asUInt());
-            jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setPoblation(rankConfig["poblation"].asUInt());
-
-            k=0;
-            for (const auto &value : rankConfig["valueList"]) {
-                jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setValue_byIndex(k, value.asFloat());
-                k++;
-            }
-
-            j++;
+        
+        for (const auto &value : rankConfig["rankList"]) {
+            rankConfigurationTemp.getRankList().push_back(value.asUInt());
         }
-        i++;
-        */
-      
+        for (const auto &value : rankConfig["valueList"]) {
+            rankConfigurationTemp.getValueList().push_back(value.asFloat());
+        }
+        jsonConfiguration.getComputerConfiguration().getRankConfigurationList().push_back(rankConfigurationTemp);
+    }
 
 
     return jsonConfiguration;

@@ -9,15 +9,13 @@
 JsonConfiguration::JsonConfiguration():
     status(true),
     worldConfiguration(WorldConfiguration()),
-    computerConfigurationList(vector<ComputerConfiguration>())
+    computerConfiguration(ComputerConfiguration())
 {}
-JsonConfiguration::JsonConfiguration(bool newStatus, WorldConfiguration newWorldConfiguration, vector<ComputerConfiguration> newComputerConfigurationList):
+JsonConfiguration::JsonConfiguration(bool newStatus, WorldConfiguration newWorldConfiguration, ComputerConfiguration computerConfiguration):
     status(newStatus),
     worldConfiguration(newWorldConfiguration),
-    computerConfigurationList(vector<ComputerConfiguration>())
-{
-    setComputerConfigurationList(newComputerConfigurationList);
-}
+    computerConfiguration(computerConfiguration)
+{}
 JsonConfiguration::~JsonConfiguration(){}
 
 
@@ -28,12 +26,8 @@ JsonConfiguration::~JsonConfiguration(){}
 string JsonConfiguration::displayInfo(){
     stringstream value;
     value << "Status: " << (getStatus()? "true" : "false" ) << endl;
-    value << "WorldConfiguration{" << endl << getWorldConfiguration().displayInfo() << endl << "}" <<endl;
-    value << "ComputerConfigurationList[ "<<endl;
-    for(int i=0 ; i<getComputerConfigurationList().size() ; i++){
-        value << "\t" << computerConfigurationList[i].displayInfo();
-    }
-    value << " ]" << ends;
+    value << "WorldConfiguration{" << endl << "\t" << getWorldConfiguration().displayInfo() << endl << "}" <<endl;
+    value << "ComputerConfiguration{" << endl << "\t" << getComputerConfiguration().displayInfo() << "}" << endl;
     return value.str();
 }
 
@@ -50,16 +44,5 @@ WorldConfiguration& JsonConfiguration::getWorldConfiguration() { return worldCon
 void JsonConfiguration::setWorldConfiguration(WorldConfiguration newWorldConfiguration){ worldConfiguration = newWorldConfiguration; }
 
 
-vector<ComputerConfiguration> JsonConfiguration::getComputerConfigurationList() const {return computerConfigurationList;}
-ComputerConfiguration JsonConfiguration::getComputerConfiguration_byIndex(unsigned int index) const {
-    return getComputerConfigurationList()[index];
-}
-void JsonConfiguration::setComputerConfigurationList(vector<ComputerConfiguration> newList){
-    getComputerConfigurationList().clear();
-    for (int i=0 ; i<newList.size() ; i++) {
-        getComputerConfigurationList().push_back(newList[i]);
-    }
-}
-void JsonConfiguration::setComputerConfiguration_byIndex(unsigned int index, ComputerConfiguration value){
-    getComputerConfigurationList()[index] = value;
-}
+ComputerConfiguration& JsonConfiguration::getComputerConfiguration() {return computerConfiguration;}
+void JsonConfiguration::setComputerConfigurationList(ComputerConfiguration newComputerCnfiguration){ computerConfiguration = newComputerCnfiguration; }

@@ -14,11 +14,11 @@ class JsonConfiguration{
     private:
         bool status;
         WorldConfiguration worldConfiguration;
-        vector<ComputerConfiguration> computerConfigurationList;
+        ComputerConfiguration computerConfiguration;
     
     public:
         JsonConfiguration();
-        JsonConfiguration(bool newStatus, WorldConfiguration newWorldConfiguration, vector<ComputerConfiguration>);
+        JsonConfiguration(bool newStatus, WorldConfiguration newWorldConfiguration, ComputerConfiguration computerConfiguration);
         ~JsonConfiguration();
 
         string displayInfo();
@@ -29,10 +29,8 @@ class JsonConfiguration{
         WorldConfiguration& getWorldConfiguration();
         void setWorldConfiguration(WorldConfiguration newWorldConfiguration);
 
-        vector<ComputerConfiguration> getComputerConfigurationList() const;
-        ComputerConfiguration getComputerConfiguration_byIndex(unsigned int index) const;
-        void setComputerConfigurationList(vector<ComputerConfiguration> newList);
-        void setComputerConfiguration_byIndex(unsigned int index, ComputerConfiguration value);
+        ComputerConfiguration& getComputerConfiguration();
+        void setComputerConfigurationList(ComputerConfiguration newComputerCnfiguration);
 
 };
 

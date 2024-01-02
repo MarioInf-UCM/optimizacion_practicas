@@ -31,7 +31,7 @@ WorldConfiguration::~WorldConfiguration(){}
 //**********************************
 string WorldConfiguration::displayInfo(){
     stringstream value;
-    value << "\tID: " << getID() << "    Dimensions: " << getDimensions() << "    FitnessFunctionID: " << getFitnessFunctionID();
+    value << "ID: " << getID() << "    Dimensions: " << getDimensions() << "    FitnessFunctionID: " << getFitnessFunctionID();
     return value.str();
 }
 

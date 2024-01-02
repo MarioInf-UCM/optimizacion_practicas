@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 
         Json_interface json_interface = Json_interface(argv[1]);
         JsonConfiguration jsonConfiguration = json_interface.getJSONConfiguration_FromFile(ipv4Addresses, ipv6Addresses);
-        //cout <<  jsonConfiguration.displayInfo() << endl;
+        cout <<  jsonConfiguration.displayInfo() << endl;
     }
 
     

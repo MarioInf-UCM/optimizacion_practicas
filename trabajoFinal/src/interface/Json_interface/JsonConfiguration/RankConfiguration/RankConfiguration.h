@@ -36,8 +36,8 @@ class RankConfiguration{
         bool getIsDefault() const;
         void setIsDefault(bool isDefault);
 
-        vector<unsigned int> getRankList() const;
-        unsigned int getRank_byIndex(unsigned int index) const;
+        vector<unsigned int>& getRankList();
+        unsigned int getRank_byIndex(unsigned int index);
         void setRankList(vector<unsigned int> newList);
         void setRank_byIndex(unsigned int index, unsigned int value);
         
@@ -53,8 +53,8 @@ class RankConfiguration{
         unsigned int getPoblation() const;
         void setPoblation(unsigned int newPoblation);
         
-        vector<float> getValueList() const;
-        float getValue_byIndex(unsigned int index) const;
+        vector<float>& getValueList();
+        float getValue_byIndex(unsigned int index);
         void setValueList(vector<float> newList);
         void setValue_byIndex(unsigned int index, float value);
 
