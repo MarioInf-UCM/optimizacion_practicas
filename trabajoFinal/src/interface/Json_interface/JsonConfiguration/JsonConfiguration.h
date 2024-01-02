@@ -1,20 +1,23 @@
 #ifndef JSONCONFIGURATION_H_
 #define JSONCONFIGURATION_H_
 
+#include <vector>
+
 #include "WorldConfiguration/WorldConfiguration.h"
 #include "ComputerConfiguration/ComputerConfiguration.h"
 
-#define COMPUTERCONFIGURATIONLIST_SIZE 16
+using namespace std;
+
 
 class JsonConfiguration{
-    private:
+    public:
         bool status;
         WorldConfiguration worldConfiguration;
-        ComputerConfiguration computerConfigurationList[COMPUTERCONFIGURATIONLIST_SIZE];
+        vector<ComputerConfiguration> computerConfigurationList;
     public:
 
         JsonConfiguration();
-        JsonConfiguration(bool newStatus, WorldConfiguration newWorldConfiguration, ComputerConfiguration newComputerConfigurationList[COMPUTERCONFIGURATIONLIST_SIZE]);
+        JsonConfiguration(bool newStatus, WorldConfiguration newWorldConfiguration, vector<ComputerConfiguration>);
         ~JsonConfiguration();
 
         string displayInfo();
@@ -22,12 +25,13 @@ class JsonConfiguration{
         bool getStatus();
         void setStatus(bool data);
 
-        WorldConfiguration getWorldConfiguration();
+        WorldConfiguration& getWorldConfiguration();
         void setWorldConfiguration(WorldConfiguration newWorldConfiguration);
 
-        ComputerConfiguration *getComputerConfigurationList();
-        void setComputerConfigurationList(ComputerConfiguration newList[COMPUTERCONFIGURATIONLIST_SIZE]);
-        void computerConfigurationList_init();
+        vector<ComputerConfiguration> getComputerConfigurationList() const;
+        ComputerConfiguration getComputerConfiguration_byIndex(unsigned int index) const;
+        void setComputerConfigurationList(vector<ComputerConfiguration> newList);
+        void setComputerConfiguration_byIndex(unsigned int index, ComputerConfiguration value);
 
 };
 

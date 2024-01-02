@@ -29,7 +29,7 @@ Json_interface::~Json_interface(){ }
 //**********************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES
 //**********************************
-JsonConfiguration Json_interface::getJSONConfiguration_FromFile() {
+JsonConfiguration Json_interface::getJSONConfiguration_FromFile(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses) {
 
     JsonConfiguration jsonConfiguration = JsonConfiguration();
      
@@ -56,18 +56,18 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile() {
     }
     file.close();
     
-    WorldConfiguration worldConfigurationTemp;
-    worldConfigurationTemp.setID(root["worldConfiguration"]["id"].asString());
-    worldConfigurationTemp.setDimensions(root["worldConfiguration"]["dimensions"].asUInt());
-    worldConfigurationTemp.setFitnessFunctionID(root["worldConfiguration"]["fitnessFunctionID"].asString());
-    jsonConfiguration.setWorldConfiguration(worldConfigurationTemp);
-
+    jsonConfiguration.getWorldConfiguration().setFitnessFunctionID(root["worldConfiguration"]["fitnessFunctionID"].asString());
+    jsonConfiguration.getWorldConfiguration().setID(root["worldConfiguration"]["id"].asString());
+    jsonConfiguration.getWorldConfiguration().setDimensions(root["worldConfiguration"]["dimensions"].asUInt());
+   
     int i=0, j=0, k=0;
     for (const auto &computerConfig : root["computerConfiguration"]) {
-        //computerConfigurationTemp.setIsDefault(computerConfig["isDefault?"].asBool());
-        jsonConfiguration.getComputerConfigurationList()[i].setIsDefault(false);
+/*         if(computerConfig["IP"].asString().compare()){
+
+        } */
         jsonConfiguration.getComputerConfigurationList()[i].setIP(computerConfig["IP"].asString());
 
+        /*
         j=0;
         for (const auto &rankConfig : computerConfig["rankConfigurationList"]) {
             jsonConfiguration.getComputerConfigurationList()[i].getRankConfigurationList()[j].setIsDefault(false);
@@ -85,9 +85,11 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile() {
 
             j++;
         }
-        
+        */
         i++;
-    } 
+    }  
+
+    cout << jsonConfiguration.displayInfo() << endl << endl;
 
     return jsonConfiguration;
 }

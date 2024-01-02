@@ -11,7 +11,7 @@ using namespace std;
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
 //******************************************
 WorldConfiguration::WorldConfiguration():
-    ID(""), 
+    ID("pepe"), 
     dimensions(0), 
     fitnessFunctionID("")
 {}
@@ -31,7 +31,7 @@ WorldConfiguration::~WorldConfiguration(){}
 //**********************************
 string WorldConfiguration::displayInfo(){
     stringstream value;
-    value << "ID: " << getID() << "    Dimensions: " << getDimensions() << "    FitnessFunctionID: " << getFitnessFunctionID();
+    value << "\tID: " << getID() << "    Dimensions: " << getDimensions() << "    FitnessFunctionID: " << getFitnessFunctionID();
     return value.str();
 }
 
@@ -40,15 +40,15 @@ string WorldConfiguration::displayInfo(){
 //*******************************************
 // MÉTODOS DE ACCESO A LAS VARIABLES PRIVADAS
 //*******************************************
-string WorldConfiguration::getID() {return ID;}
+string WorldConfiguration::getID() const {return ID;}
 void WorldConfiguration::setID(string newID) {ID = newID;}
 
 
-unsigned int WorldConfiguration::getDimensions(){return dimensions;}
+unsigned int WorldConfiguration::getDimensions() const {return dimensions;}
 void WorldConfiguration::setDimensions(unsigned int newDimensions) {dimensions = newDimensions;}
 
 
-string WorldConfiguration::getFitnessFunctionID() {return fitnessFunctionID;}
+string WorldConfiguration::getFitnessFunctionID() const {return fitnessFunctionID;}
 void WorldConfiguration::setFitnessFunctionID(string newFitnessFunction) {fitnessFunctionID = newFitnessFunction;}
 
 

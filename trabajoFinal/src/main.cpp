@@ -15,15 +15,15 @@
 
 #define ENTRY_PARAM_NUM 2
 bool entryParams_check(int argc, char** argv, bool printInfo = true);
-bool getIPDirections_UNIX(std::vector<std::string>& ipv4Addresses, std::vector<std::string>& ipv6Addresses, bool printInfo = true);
+bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, bool printInfo = true);
 bool FinalizingExecution();
 
 using namespace std;
 
 int main(int argc, char** argv) {
 
-    std::vector<std::string> ipv4Addresses;
-    std::vector<std::string> ipv6Addresses;
+    vector<string> ipv4Addresses;
+    vector<string> ipv6Addresses;
     int rank, size;
 
     MPI_Init(&argc, &argv);
@@ -39,13 +39,13 @@ int main(int argc, char** argv) {
         cout << endl;
 
         if(!entryParams_check(argc, argv)){
-            std::cerr << "Error en los parámetros de entrada." << std::endl;
+            cerr << "Error en los parámetros de entrada." << endl;
             cerr << "FINALIZANDO PROGRAMA" << endl;
             FinalizingExecution();
             return 1;
         }
         if(!getIPDirections_UNIX(ipv4Addresses, ipv6Addresses)) {
-            std::cerr << "Error al obtener direcciones IP." << std::endl;
+            cerr << "Error al obtener direcciones IP." << endl;
             cerr << "FINALIZANDO PROGRAMA" << endl;
             FinalizingExecution();
             return 1;
@@ -55,8 +55,8 @@ int main(int argc, char** argv) {
         cout << endl;
 
         Json_interface json_interface = Json_interface(argv[1]);
-        JsonConfiguration jsonConfiguration = json_interface.getJSONConfiguration_FromFile();
-        cout <<  jsonConfiguration.displayInfo() << endl;
+        JsonConfiguration jsonConfiguration = json_interface.getJSONConfiguration_FromFile(ipv4Addresses, ipv6Addresses);
+        //cout <<  jsonConfiguration.displayInfo() << endl;
     }
 
     
@@ -112,18 +112,17 @@ bool entryParams_check(int argc, char** argv, bool printInfo){
 
 
 
-bool getIPDirections_UNIX(std::vector<std::string>& ipv4Addresses, std::vector<std::string>& ipv6Addresses, bool printInfo) {
+bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, bool printInfo) {
     struct ifaddrs *ifAddrStruct = nullptr;
     struct ifaddrs *ifa = nullptr;
     vector<string> IPv4Ifaces;
     vector<string> IPv6Ifaces;
 
     if(getifaddrs(&ifAddrStruct) == -1) {
-        std::cerr << "Error al obtener la información de las interfaces de red." << std::endl;
+        cerr << "Error al obtener la información de las interfaces de red." << endl;
         return false;
     }
 
-    unsigned int pos=0;
     for(ifa = ifAddrStruct; ifa != nullptr; ifa = ifa->ifa_next) {
         if (ifa->ifa_addr == nullptr) {
             continue;
@@ -145,20 +144,24 @@ bool getIPDirections_UNIX(std::vector<std::string>& ipv4Addresses, std::vector<s
         } else {
             continue;
         }
-        pos++;
     }
+    ipv4Addresses.push_back("0.0.0.0");
+    IPv4Ifaces.push_back("Default");
+    ipv6Addresses.push_back("::0");
+    IPv6Ifaces.push_back("Default");
+
 
     if(ifAddrStruct != nullptr) {
         freeifaddrs(ifAddrStruct);
     }
     if(printInfo){
-        std::cout << "Direcciones IPv4:" << std::endl;
+        cout << "Direcciones IPv4:" << endl;
         for (size_t i = 0; i < ipv4Addresses.size(); ++i) {
-            std::cout << "\tInterfaz: " << IPv4Ifaces[i] << "\tDirección IPv4: " << ipv4Addresses[i] << std::endl;
+            cout << "\tInterfaz: " << IPv4Ifaces[i] << "\t\tDirección: " << ipv4Addresses[i] << endl;
         }
-        std::cout << "\nDirecciones IPv6:" << std::endl;
+        cout << "\nDirecciones IPv6:" << endl;
         for (size_t i = 0; i < ipv6Addresses.size(); ++i) {
-            std::cout << "\tInterfaz: " << IPv6Ifaces[i] << "\tDirección IPv6: " << ipv6Addresses[i] << std::endl;
+            cout << "\tInterfaz: " << IPv6Ifaces[i] << "\t\tDirección: " << ipv6Addresses[i] << endl;
         }
     }
 

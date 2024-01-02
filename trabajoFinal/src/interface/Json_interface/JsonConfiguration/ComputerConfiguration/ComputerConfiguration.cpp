@@ -1,5 +1,7 @@
 #include <string>
 #include <sstream>
+#include <vector>
+
 #include "ComputerConfiguration.h"
 #include "../RankConfiguration/RankConfiguration.h"
 
@@ -9,19 +11,15 @@ using namespace std;
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
 //******************************************
 ComputerConfiguration::ComputerConfiguration():
-    isDefault(true),
-    IP("0.0.0.0")
-{
-    rankConfigurationList_init();
-}
-ComputerConfiguration::ComputerConfiguration(string IP, RankConfiguration rankConfigurationList[RANKCONFIGURATIONLIST_SIZE]):
-    isDefault(false),
-    IP(IP)
+    IP("0.0.0.0"),
+    rankConfigurationList(vector<RankConfiguration>())
+{}
+ComputerConfiguration::ComputerConfiguration(string IP, vector<RankConfiguration> rankConfigurationList):
+    IP(IP),
+    rankConfigurationList(vector<RankConfiguration>())
 {
     setRankConfigurationList(rankConfigurationList);
 }
-
-
 ComputerConfiguration::~ComputerConfiguration(){}
 
 
@@ -32,13 +30,11 @@ ComputerConfiguration::~ComputerConfiguration(){}
 //**********************************
 string ComputerConfiguration::displayInfo(){
     stringstream value;
-    if(!getIsDefault()){
-        value << "IP: " << getIP() << "    rankConfigurationList{" << std::endl;
-        for(int i=0 ; i<RANKCONFIGURATIONLIST_SIZE ; i++){
-            value << rankConfigurationList[i].displayInfo();
-        }
-        value << endl << "}" << ends;
+    value << "IP: " << getIP() << "    rankConfigurationList{" << endl;
+    for(int i=0 ; i<getRankConfigurationList().size() ; i++){
+        value << rankConfigurationList[i].displayInfo();
     }
+    value << endl << "}" << ends;
     return value.str();
 }
 
@@ -47,22 +43,21 @@ string ComputerConfiguration::displayInfo(){
 //*******************************************
 // MÉTODOS DE ACCESO A LAS VARIABLES PRIVADAS
 //*******************************************
-bool ComputerConfiguration::getIsDefault(){ return isDefault; }
-void ComputerConfiguration::setIsDefault(bool newIsDefault){ isDefault =newIsDefault; }
-
-string ComputerConfiguration::getIP(){ return IP; }
+string ComputerConfiguration::getIP() const { return IP; }
 void ComputerConfiguration::setIP(string newIP){ IP = newIP; }
 
-RankConfiguration *ComputerConfiguration::getRankConfigurationList(){ return rankConfigurationList; }
-void ComputerConfiguration::setRankConfigurationList(RankConfiguration newList[RANKCONFIGURATIONLIST_SIZE]){
-    for (int i = 0 ; i<RANKCONFIGURATIONLIST_SIZE ; i++) {
-        rankConfigurationList[i] = newList[i];
+
+vector<RankConfiguration> ComputerConfiguration::getRankConfigurationList() const { return rankConfigurationList; }
+RankConfiguration ComputerConfiguration::getRankConfiguration_byIndex(unsigned int index) const {
+    return getRankConfigurationList()[index];
+}
+void ComputerConfiguration::setRankConfigurationList(vector<RankConfiguration> newList){
+    getRankConfigurationList().clear();
+    for (int i=0 ; i<newList.size() ; i++) {
+        getRankConfigurationList().push_back(newList[i]);
     }
 }
-void ComputerConfiguration::rankConfigurationList_init(){
-    for (int i=0 ; i<RANKCONFIGURATIONLIST_SIZE ; i++) {
-        rankConfigurationList[i] = RankConfiguration();
-    } 
+void ComputerConfiguration::setRankConfiguration_byIndex(unsigned int index, RankConfiguration value){
+    getRankConfigurationList()[index] = value;
 }
-
 

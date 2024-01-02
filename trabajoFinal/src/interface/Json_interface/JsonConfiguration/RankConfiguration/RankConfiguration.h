@@ -3,9 +3,8 @@
 
 #include <string>
 #include <limits.h>
+#include <vector>
 
-#define RANKLIST_SIZE 16
-#define VALUELIST_SIZE 10
 
 using namespace std;
 
@@ -14,47 +13,50 @@ class RankConfiguration{
     
     private:
         bool isDefault;
-        unsigned int rank;
+        vector<unsigned int> rankList;
         string outputFile;
         
         string heuristicID;       
-        unsigned  int iterations;
+        unsigned int iterations;
         unsigned int poblation;
-        float valueList[VALUELIST_SIZE];
+        vector<float> valueList;
 
     public:
         RankConfiguration();
-        RankConfiguration(unsigned int rank, string outputFile, string heuristicID, unsigned int poblation, float valueList[VALUELIST_SIZE]);
+        RankConfiguration(vector<unsigned int>rankList, string outputFile, string heuristicID, unsigned int iterations, unsigned int poblation, vector<float> valueList);
         ~RankConfiguration();
 
         string displayInfo();
 
 
 
+        //**********************************************
         //* MÉTODOS DE TRATAMIENTO DE VARIABLES PRIVADAS
         //**********************************************
-        bool getIsDefault();
+        bool getIsDefault() const;
         void setIsDefault(bool isDefault);
 
-        unsigned int getRank();
-        void setRank(unsigned int newRank);
+        vector<unsigned int> getRankList() const;
+        unsigned int getRank_byIndex(unsigned int index) const;
+        void setRankList(vector<unsigned int> newList);
+        void setRank_byIndex(unsigned int index, unsigned int value);
         
-        string getOutputFile();
+        string getOutputFile() const;
         void setOutputFile(string newOutputFile);
 
-        string getHeuristicID();
+        string getHeuristicID() const;
         void setHeuristicID(string newHeuristicID);
         
-        unsigned int getIterations();
+        unsigned int getIterations() const;
         void setIterations(unsigned int newIterations);
         
-        unsigned int getPoblation();
+        unsigned int getPoblation() const;
         void setPoblation(unsigned int newPoblation);
         
-        float *getValueList();
-        void setValueList(float newList[VALUELIST_SIZE]);
+        vector<float> getValueList() const;
+        float getValue_byIndex(unsigned int index) const;
+        void setValueList(vector<float> newList);
         void setValue_byIndex(unsigned int index, float value);
-        void valueList_init();
 
 };
 

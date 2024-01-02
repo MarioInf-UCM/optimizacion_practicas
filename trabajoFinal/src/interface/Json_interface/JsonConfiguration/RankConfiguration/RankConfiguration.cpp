@@ -1,6 +1,7 @@
 #include "RankConfiguration.h"
 #include <string>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -9,21 +10,23 @@ using namespace std;
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
 //******************************************
 RankConfiguration::RankConfiguration():
-    isDefault(true),
-    rank(0),
+    isDefault(false),
+    rankList(vector<unsigned int>()),
     outputFile(""),
     heuristicID(""),
     iterations(USHRT_MAX),
     poblation(0)
-{
-    valueList_init();
-}
-RankConfiguration::RankConfiguration(unsigned int rank, string outputFile, string heuristicID, unsigned int poblation, float valueList[VALUELIST_SIZE]):
+{}
+RankConfiguration::RankConfiguration(vector<unsigned int>rankList, string outputFile, string heuristicID, unsigned int iterations, unsigned int poblation, vector<float> valueList):
     isDefault(false),
+    rankList(vector<unsigned int>()),
     outputFile(outputFile),
-    heuristicID(heuristicID)
+    heuristicID(heuristicID),
+    poblation(poblation),
+    iterations(iterations),
+    valueList(valueList)
 {
-    setValueList(valueList);
+    setRankList(rankList);
 }
 
 RankConfiguration::~RankConfiguration(){}
@@ -37,10 +40,23 @@ string RankConfiguration::displayInfo(){
     stringstream value;
 
     if(!getIsDefault()){
-        value << "\t\tRank: " << getRank() << "    OutputFile: " << getOutputFile() << 
-            "    HeuristicID: " << getHeuristicID() << "    Iterations: " << getIterations() << "    Poblation: " << getPoblation() << "    valueList[ ";
-        for(int i=0 ; i<VALUELIST_SIZE ; i++){
-            value << valueList[i] << ", " << ends;
+        value << "\t\tRankList: ";
+        for(int i=0 ; i<getRankList().size() ; i++){
+            if(i == (getRankList().size()-1)){
+                value << rankList[i] << ends;
+            }else{
+                value << rankList[i] << ", " << ends;
+            }
+        }
+        value <<" ]" <<endl;
+        
+        value << "    OutputFile: " << getOutputFile() << "    HeuristicID: " << getHeuristicID() << "    Iterations: " << getIterations() << "    Poblation: " << getPoblation() << "    valueList[ ";
+        for(int i=0 ; i<getValueList().size() ; i++){
+            if(i == (getRankList().size()-1)){
+                value << valueList[i] << ends;
+            }else{
+                value << valueList[i] << ", " << ends;
+            }
         }
         value <<" ]" <<endl;
     }
@@ -51,36 +67,51 @@ string RankConfiguration::displayInfo(){
 //*******************************************
 // MÉTODOS DE ACCESO A LAS VARIABLES PRIVADAS
 //*******************************************
-bool RankConfiguration::getIsDefault(){ return isDefault; }
+bool RankConfiguration::getIsDefault() const { return isDefault; }
 void RankConfiguration::setIsDefault(bool newIsDefault){ isDefault =newIsDefault; }
 
-unsigned int RankConfiguration::getRank(){ return rank; }
-void RankConfiguration::setRank(unsigned int newRank){ rank = newRank; }
 
-string RankConfiguration::getOutputFile() { return outputFile; }
+vector<unsigned int> RankConfiguration::getRankList() const { return rankList; }
+unsigned int RankConfiguration::getRank_byIndex(unsigned int index) const { 
+    return getRankList()[index];
+}
+void RankConfiguration::setRankList(vector<unsigned int> newList){
+    rankList.clear();
+    for (int i=0 ; i<newList.size() ; i++) {
+    rankList.push_back(newList[i]);
+    }
+}
+void RankConfiguration::setRank_byIndex(unsigned int index, unsigned int value){
+    rankList[index] = value;
+}
+
+
+string RankConfiguration::getOutputFile() const { return outputFile; }
 void RankConfiguration::setOutputFile(string newOutputFile) { outputFile = newOutputFile; }
 
-string RankConfiguration::getHeuristicID() { return heuristicID; }
+
+string RankConfiguration::getHeuristicID() const { return heuristicID; }
 void RankConfiguration::setHeuristicID(string newHeuristicID) { heuristicID = newHeuristicID; }
 
-unsigned int RankConfiguration::getIterations() { return iterations; }
+
+unsigned int RankConfiguration::getIterations() const { return iterations; }
 void RankConfiguration::setIterations(unsigned int newIterations) { iterations = newIterations; }
 
-unsigned int RankConfiguration::getPoblation() { return poblation; }
+
+unsigned int RankConfiguration::getPoblation() const { return poblation; }
 void RankConfiguration::setPoblation(unsigned int newPoblation) { poblation = newPoblation; }
 
-float *RankConfiguration::getValueList(){ return valueList; }
-void RankConfiguration::setValueList(float newList[VALUELIST_SIZE]){
-    for (int i=0 ; i<VALUELIST_SIZE ; i++) {
-        valueList[i] = newList[i];
+
+vector<float> RankConfiguration::getValueList() const { return valueList; }
+float RankConfiguration::getValue_byIndex(unsigned int index) const {
+    return getValueList()[index];
+}
+void RankConfiguration::setValueList(vector<float> newList){
+    getValueList().clear();
+    for (int i=0 ; i<newList.size() ; i++) {
+        getValueList().push_back(newList[i]);
     }
 }
 void RankConfiguration::setValue_byIndex(unsigned int index, float value){
-    valueList[index] = value;
+    getValueList()[index] = value;
 }
-void RankConfiguration::valueList_init(){
-    for (int i=0 ; i<VALUELIST_SIZE ; i++) {
-        valueList[i] = 0.0;
-    } 
-}
-

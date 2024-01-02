@@ -19,13 +19,18 @@ class WorldConfiguration{
 
         string displayInfo();
 
-        string getID();
+
+
+        //**********************************************
+        //* MÉTODOS DE TRATAMIENTO DE VARIABLES PRIVADAS
+        //**********************************************
+        string getID() const;
         void setID(string newID);
 
-        unsigned int getDimensions();
+        unsigned int getDimensions() const;
         void setDimensions(unsigned int newDimensions);
 
-        string getFitnessFunctionID();
+        string getFitnessFunctionID() const;
         void setFitnessFunctionID(string newFitnessFunctionID);
 
 

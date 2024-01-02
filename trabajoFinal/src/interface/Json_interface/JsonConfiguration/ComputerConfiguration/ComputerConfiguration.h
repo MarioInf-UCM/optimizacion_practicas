@@ -2,36 +2,35 @@
 #define COMPUTERCONFIGURATION_H
 
 #include <string>
+#include <vector>
 #include <limits.h>
+
 #include "../RankConfiguration/RankConfiguration.h"
 
-#define RANKCONFIGURATIONLIST_SIZE 16
-
 using namespace std;
+
 
 class ComputerConfiguration{
 
     private:
-        bool isDefault;
         string IP;
-        RankConfiguration rankConfigurationList[RANKCONFIGURATIONLIST_SIZE];
+        vector<RankConfiguration> rankConfigurationList;
 
     public:
         ComputerConfiguration();
-        ComputerConfiguration(string IP, RankConfiguration rankConfigurationList[RANKCONFIGURATIONLIST_SIZE]);
+        ComputerConfiguration(string IP, vector<RankConfiguration> rankConfigurationList);
         ~ComputerConfiguration();
+
 
         string displayInfo();
 
-        bool getIsDefault();
-        void setIsDefault(bool isDefault);
-
-        string getIP();
+        string getIP() const;
         void setIP(string newIP);
         
-        RankConfiguration *getRankConfigurationList();
-        void setRankConfigurationList(RankConfiguration newList[RANKCONFIGURATIONLIST_SIZE]);
-        void rankConfigurationList_init();
+        vector<RankConfiguration> getRankConfigurationList() const;
+        RankConfiguration getRankConfiguration_byIndex(unsigned int index) const;
+        void setRankConfigurationList(vector<RankConfiguration> newList);
+        void setRankConfiguration_byIndex(unsigned int index, RankConfiguration value);
 
 };
 #endif

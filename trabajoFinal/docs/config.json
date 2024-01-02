@@ -5,10 +5,9 @@
         "fitnessFunctionID": "circle"
     },
     "computerConfiguration": [{
-        "isDefault?": false,
         "IP": "11.11.11.11",
         "rankConfigurationList": [{
-            "rank": 0,
+            "rankList": [99],
             "outFIleURL": "output_rank0.txt",
             "heuristicID": "pso",
             "iterations": 500,
@@ -16,7 +15,15 @@
             "valueList":[0.3925, 2.5586, 1.3358]
         },
         {
-            "rank": 1,
+            "rankList": [0],
+            "outFIleURL": "output_rank0.txt",
+            "heuristicID": "pso",
+            "iterations": 500,
+            "poblation" : 25,
+            "valueList":[0.3925, 2.5586, 1.3358]
+        },
+        {
+            "rankList": [1],
             "outFIleURL": "output_rank1.txt",
             "heuristicID": "pso",
             "iterations": 500,
@@ -25,10 +32,9 @@
         }]
     },
     {
-        "isDefault?": false,
         "IP": "12.12.12.12",
         "rankConfigurationList": [{
-            "rank": 0,
+            "rankList": [0],
             "outFIleURL": "output_rank0.txt",
             "heuristicID": "pso",
             "iterations": 500,
@@ -36,7 +42,7 @@
             "valueList":[0.3925, 2.5586, 1.3358]
         },
         {
-            "rank": 1,
+            "rankList": [1],
             "outFIleURL": "output_rank1.txt",
             "heuristicID": "pso",
             "iterations": 500,

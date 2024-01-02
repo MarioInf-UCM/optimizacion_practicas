@@ -18,7 +18,7 @@ class Json_interface {
         Json_interface(string jsonFileURL);
         ~Json_interface();
         
-        JsonConfiguration getJSONConfiguration_FromFile();
+        JsonConfiguration getJSONConfiguration_FromFile(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses);
 
         string getFileURL();
         void setFileURL(string data);
