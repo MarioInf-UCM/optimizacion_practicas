@@ -11,7 +11,6 @@
 #include "World/World.h"
 #include "interface/Json_interface/Json_interface.h"
 #include "interface/Json_interface/JsonConfiguration/JsonConfiguration.h"
-#include "../libs/ArrayList/ArrayList.h"
 
 #define ROOT 0
 #define ENTRY_PARAM_NUM 2
@@ -92,7 +91,6 @@ int main(int argc, char** argv) {
         }
         Json_interface json_interface = Json_interface(argv[1]);
         jsonConfiguration = json_interface.getJSONConfiguration_FromFile(ipv4Addresses, ipv6Addresses);
-        cout <<  jsonConfiguration.displayInfo();  
     }
 
     result = false;
@@ -113,39 +111,7 @@ int main(int argc, char** argv) {
 
     cout << "Configuración proceso " << rank << " :" << configRank.displayInfo() << endl; 
 
-/*     
-        for (int i = 0; i < CommComputer_size; i++) {
-            if(i==rank){
-                continue;
-            }
 
-            configRank = RankConfiguration();
-            vector<char> serializedData = configRank.serialize();
-            result = MPI_Send(serializedData.data(), serializedData.size(), MPI_BYTE, i, 0, MPI_COMM_WORLD);
-            if(result != MPI_SUCCESS) {
-                MPI_Error_string(result, errorString, &errorStringLen);
-                cerr << "Error al realizar el envío de los parámetros de configuración JSON..: " << errorString << endl;
-                cerr << "FINALIZANDO PROGRAMA" << endl;
-                FinalizingExecution(&CommComputer);
-                return 1;            
-            }
-        }
-
-    }else{
-
-        int dataSize;
-        MPI_Probe(0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        MPI_Get_count(MPI_STATUS_IGNORE, MPI_BYTE, &dataSize);
-
-        vector<char> receivedData(dataSize);
-        result = MPI_Recv(receivedData.data(), dataSize, MPI_BYTE, ROOT, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        if(result != MPI_SUCCESS){
-            MPI_Error_string(result, errorString, &errorStringLen);
-            cerr << "Error en la recepción de los parámetros de configuración..: " << errorString << endl;
-        }
-        configRank = RankConfiguration::deserialize(receivedData);
-        cout << "MENSAJE RECIBIDO: " << rank << configRank.displayInfo() << endl;
-    } */
 
 
 
