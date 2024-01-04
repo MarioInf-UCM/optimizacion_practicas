@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <string.h>
 
 using namespace std;
 
@@ -60,6 +61,41 @@ string RankConfiguration::displayInfo(){
     }
 
     return value.str();
+}
+
+// Método para serializar la instancia en un vector de bytes
+vector<char> RankConfiguration::serialize() const {
+    vector<char> buffer(sizeof(RankConfiguration));
+    char* ptr = buffer.data();
+
+    // Copiar los datos de la instancia a la memoria del buffer
+    memcpy(ptr, this, sizeof(RankConfiguration));
+
+    // Serializar vectores
+    size_t rankListSize = rankList.size();
+    size_t valueListSize = valueList.size();
+
+    memcpy(ptr + sizeof(RankConfiguration), rankList.data(), rankListSize * sizeof(unsigned int));
+    memcpy(ptr + sizeof(RankConfiguration) + rankListSize * sizeof(unsigned int), valueList.data(), valueListSize * sizeof(float));
+
+    return buffer;
+}
+
+// Método para deserializar un vector de bytes en una instancia
+RankConfiguration RankConfiguration::deserialize(const vector<char>& buffer) {
+    RankConfiguration instance;
+
+    // Copiar los datos desde el buffer a la instancia
+    memcpy(&instance, buffer.data(), sizeof(RankConfiguration));
+
+    // Deserializar vectores
+    size_t rankListSize = instance.rankList.size();
+    size_t valueListSize = instance.valueList.size();
+
+    memcpy(instance.rankList.data(), buffer.data() + sizeof(RankConfiguration), rankListSize * sizeof(unsigned int));
+    memcpy(instance.valueList.data(), buffer.data() + sizeof(RankConfiguration) + rankListSize * sizeof(unsigned int), valueListSize * sizeof(float));
+
+    return instance;
 }
 
 //*******************************************

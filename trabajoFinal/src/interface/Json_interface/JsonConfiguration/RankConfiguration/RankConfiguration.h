@@ -27,6 +27,9 @@ class RankConfiguration{
         ~RankConfiguration();
 
         string displayInfo();
+        
+        vector<char> serialize() const;
+        static RankConfiguration deserialize(const vector<char>& buffer);
 
 
 
