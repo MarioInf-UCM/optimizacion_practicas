@@ -21,6 +21,7 @@ SRCS += src/interface/Json_interface/JsonConfiguration/JsonConfiguration.cpp
 SRCS += src/interface/Json_interface/JsonConfiguration/ComputerConfiguration/ComputerConfiguration.cpp
 SRCS += src/interface/Json_interface/JsonConfiguration/RankConfiguration/RankConfiguration.cpp
 SRCS += src/interface/Json_interface/JsonConfiguration/WorldConfiguration/WorldConfiguration.cpp
+SRCS += src/interface/FileWriter_interface/FileWriter_interface.cpp
 
 #Referencia a los elementos del directorio src/FitnessFunction
 SRCS += src/FitnessFunction/FitnessFunction.cpp
