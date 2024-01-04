@@ -20,6 +20,7 @@
 
 bool entryParams_check(int argc, char** argv, bool printInfo = true);
 bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, bool printInfo = true);
+bool checkRankInList(vector<unsigned int> vector, unsigned int rank);
 bool FinalizingExecution(MPI_Comm *CommComputer);
 
 using namespace std;
@@ -75,7 +76,44 @@ int main(int argc, char** argv) {
         cout << endl;
         cout << "*************************************************************************" << endl;
         cout << endl;
+    
+    }else{      
+        if(!entryParams_check(argc, argv, false)){
+            cerr << "Error en los parámetros de entrada." << endl;
+            cerr << "FINALIZANDO PROGRAMA" << endl;
+            FinalizingExecution(&CommComputer);
+            return 1;
+        }
+        if(!getIPDirections_UNIX(ipv4Addresses, ipv6Addresses, false)) {
+            cerr << "Error al obtener direcciones IP." << endl;
+            cerr << "FINALIZANDO PROGRAMA" << endl;
+            FinalizingExecution(&CommComputer);
+            return 1;
+        }
+        Json_interface json_interface = Json_interface(argv[1]);
+        jsonConfiguration = json_interface.getJSONConfiguration_FromFile(ipv4Addresses, ipv6Addresses);
+        cout <<  jsonConfiguration.displayInfo();  
+    }
 
+    result = false;
+    for(int i=0 ; i<jsonConfiguration.getComputerConfiguration().getRankConfigurationList().size() ; i++){
+        if(checkRankInList(jsonConfiguration.getComputerConfiguration().getRankConfiguration_byIndex(i).getRankList(), rank)){
+            configRank = jsonConfiguration.getComputerConfiguration().getRankConfiguration_byIndex(i);
+            result = true;
+            break;
+        }
+    }
+    if(!result){
+        cerr << "No se ha encontrado una configuración válida pra el proceso " << rank << endl;
+        cerr << "FINALIZANDO PROGRAMA" << endl;
+        FinalizingExecution(&CommComputer);
+        return 1;        
+    }
+
+
+    cout << "Configuración proceso " << rank << " :" << configRank.displayInfo() << endl; 
+
+/*     
         for (int i = 0; i < CommComputer_size; i++) {
             if(i==rank){
                 continue;
@@ -107,9 +145,8 @@ int main(int argc, char** argv) {
         }
         configRank = RankConfiguration::deserialize(receivedData);
         cout << "MENSAJE RECIBIDO: " << rank << configRank.displayInfo() << endl;
-    }
+    } */
 
-    cout << "PROCESO TERMINADO: " << rank << endl; 
 
 
     FinalizingExecution(&CommComputer);
@@ -189,6 +226,15 @@ bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Add
     return true;
 }
 
+
+bool checkRankInList(vector<unsigned int> vector, unsigned int rank){
+    for(int i=0 ; i<vector.size() ; i++){
+        if(vector[i] == rank){
+            return true;
+        }
+    }
+    return false;
+}
 
 
 bool FinalizingExecution(MPI_Comm *CommComputer){
