@@ -26,8 +26,8 @@ JsonConfiguration::~JsonConfiguration(){}
 string JsonConfiguration::displayInfo(){
     stringstream value;
     value << "Status: " << (getStatus()? "true" : "false" ) << endl;
-    value << "WorldConfiguration{" << endl << "\t" << getWorldConfiguration().displayInfo() << endl << "}" <<endl;
-    value << "ComputerConfiguration{" << endl << "\t" << getComputerConfiguration().displayInfo() << "}" << endl;
+    value << "WorldConfiguration{" << endl << getWorldConfiguration().displayInfo() << endl << "}" <<endl;
+    value << "ComputerConfiguration{" << endl << getComputerConfiguration().displayInfo() << "}" << endl;
     return value.str();
 }
 

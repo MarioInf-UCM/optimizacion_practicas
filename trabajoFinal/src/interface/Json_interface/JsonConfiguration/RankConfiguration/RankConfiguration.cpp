@@ -16,7 +16,9 @@ RankConfiguration::RankConfiguration():
     outputFile(""),
     heuristicID(""),
     iterations(USHRT_MAX),
-    poblation(0)
+    poblation(0),
+    dimensions(0),
+    valueList(vector<float>())
 {}
 RankConfiguration::RankConfiguration(vector<unsigned int>rankList, string outputFile, string heuristicID, unsigned int iterations, unsigned int poblation, vector<float> valueList):
     isDefault(false),
@@ -25,9 +27,11 @@ RankConfiguration::RankConfiguration(vector<unsigned int>rankList, string output
     heuristicID(heuristicID),
     poblation(poblation),
     iterations(iterations),
-    valueList(valueList)
+    dimensions(0),
+    valueList(vector<float>())
 {
     setRankList(rankList);
+    setValueList(valueList);
 }
 
 RankConfiguration::~RankConfiguration(){}
@@ -40,25 +44,23 @@ RankConfiguration::~RankConfiguration(){}
 string RankConfiguration::displayInfo(){
     stringstream value;
 
-    if(!getIsDefault()){
-        value << "\t\tRankList[";
-        for(int i=0 ; i<getRankList().size() ; i++){
-            if(i == (getRankList().size()-1)){
-                value << rankList[i] << ends;
-            }else{
-                value << rankList[i] << ", " << ends;
-            }
+    value << "\t\tRankList[";
+    for(int i=0 ; i<getRankList().size() ; i++){
+        if(i == (getRankList().size()-1)){
+            value << rankList[i] << ends;
+        }else{
+            value << rankList[i] << ", " << ends;
         }
-        value <<"]" << "    OutputFile: " << getOutputFile() << "    HeuristicID: " << getHeuristicID() << "    Iterations: " << getIterations() << "    Poblation: " << getPoblation() << "    valueList[";
-        for(int i=0 ; i<getValueList().size() ; i++){
-            if(i == (getValueList().size()-1)){
-                value << valueList[i] << ends;
-            }else{
-                value << valueList[i] << ", " << ends;
-            }
-        }
-        value <<"]" <<endl;
     }
+    value <<"]" << "    OutputFile: " << getOutputFile() << "    HeuristicID: " << getHeuristicID() << "    Iterations: " << getIterations() << "    Poblation: " << getPoblation() << "    valueList[";
+    for(int i=0 ; i<getValueList().size() ; i++){
+        if(i == (getValueList().size()-1)){
+            value << valueList[i] << ends;
+        }else{
+            value << valueList[i] << ", " << ends;
+        }
+    }
+    value <<"]" <<endl;
 
     return value.str();
 }
@@ -134,6 +136,10 @@ void RankConfiguration::setIterations(unsigned int newIterations) { iterations =
 
 unsigned int RankConfiguration::getPoblation() const { return poblation; }
 void RankConfiguration::setPoblation(unsigned int newPoblation) { poblation = newPoblation; }
+
+
+unsigned int RankConfiguration::getDimensions() const {return dimensions;}
+void RankConfiguration::setDimensions(unsigned int newDimensions) {dimensions = newDimensions;}
 
 
 vector<float>& RankConfiguration::getValueList() { return valueList; }

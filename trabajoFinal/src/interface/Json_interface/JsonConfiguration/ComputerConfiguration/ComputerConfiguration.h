@@ -14,11 +14,12 @@ class ComputerConfiguration{
 
     private:
         string IP;
+        string logCommonFile;
         vector<RankConfiguration> rankConfigurationList;
 
     public:
         ComputerConfiguration();
-        ComputerConfiguration(string IP, vector<RankConfiguration> rankConfigurationList);
+        ComputerConfiguration(string IP, vector<RankConfiguration> rankConfigurationList, string logCommonFile);
         ~ComputerConfiguration();
 
 
@@ -26,6 +27,9 @@ class ComputerConfiguration{
 
         string getIP() const;
         void setIP(string newIP);
+
+        string getLogCommonFile() const;
+        void setLogCommonFile(string data);
         
         vector<RankConfiguration>& getRankConfigurationList();
         RankConfiguration getRankConfiguration_byIndex(unsigned int index);

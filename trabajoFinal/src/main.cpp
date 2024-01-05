@@ -11,6 +11,7 @@
 #include "World/World.h"
 #include "interface/Json_interface/Json_interface.h"
 #include "interface/Json_interface/JsonConfiguration/JsonConfiguration.h"
+#include "interface/FileWriter_interface/FileWriter_interface.h"
 
 #define ROOT 0
 #define ENTRY_PARAM_NUM 2
@@ -20,7 +21,7 @@
 bool entryParams_check(int argc, char** argv, bool printInfo = true);
 bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, bool printInfo = true);
 bool checkRankInList(vector<unsigned int> vector, unsigned int rank);
-bool FinalizingExecution(MPI_Comm *CommComputer);
+bool FinalizingExecution(MPI_Comm *CommComputer, bool abort=false);
 
 using namespace std;
 
@@ -31,6 +32,9 @@ int main(int argc, char** argv) {
     vector<string> ipv4Addresses;
     vector<string> ipv6Addresses;
     RankConfiguration configRank;
+    FileWriter_interface logCommonFile;
+    FileWriter_interface outPutFile;
+    
     int result, errorStringLen;
     char errorString[MPI_MAX_ERROR_STRING];
     
@@ -52,31 +56,55 @@ int main(int argc, char** argv) {
         cout << "************************************************" << endl;
         cout << endl;
 
+        bool flag = true;
         if(!entryParams_check(argc, argv)){
             cerr << "Error en los parámetros de entrada." << endl;
-            cerr << "FINALIZANDO PROGRAMA" << endl;
-            FinalizingExecution(&CommComputer);
-            return 1;
+            flag=false;
         }
         if(!getIPDirections_UNIX(ipv4Addresses, ipv6Addresses)) {
             cerr << "Error al obtener direcciones IP." << endl;
+            flag=false;
+        }
+
+        if(flag){
+            Json_interface json_interface = Json_interface(argv[1]);
+            jsonConfiguration = json_interface.getJSONConfiguration_FromFile(ipv4Addresses, ipv6Addresses);
+            logCommonFile.setFileURL(jsonConfiguration.getComputerConfiguration().getLogCommonFile());
+
+            cout << endl << endl << "Fichero de configuración..:" << endl << endl;
+            cout <<  jsonConfiguration.displayInfo();
+
+            cout << endl;
+            cout << "*************************************************************************" << endl;
+            cout << endl;
+        }
+    
+        for (int dest = 1; dest < size; ++dest) {
+            int send_status = MPI_Send(&flag, 1, MPI_CXX_BOOL, dest, 0, MPI_COMM_WORLD);
+            if (send_status != MPI_SUCCESS) {
+                std::cerr << "Error al enviar datos desde el proceso 0 al proceso " << dest << std::endl;
+                MPI_Abort(MPI_COMM_WORLD, 1);
+            }
+        }
+
+        if(!flag){
             cerr << "FINALIZANDO PROGRAMA" << endl;
             FinalizingExecution(&CommComputer);
-            return 1;
         }
-        cout << endl;
-        cout << "*************************************************************************" << endl;
-        cout << endl;
 
-        Json_interface json_interface = Json_interface(argv[1]);
-        jsonConfiguration = json_interface.getJSONConfiguration_FromFile(ipv4Addresses, ipv6Addresses);
-        cout <<  jsonConfiguration.displayInfo();
-
-        cout << endl;
-        cout << "*************************************************************************" << endl;
-        cout << endl;
-    
     }else{      
+
+        bool flag;
+        result = MPI_Recv(&flag, 1, MPI_CXX_BOOL, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        if (result != MPI_SUCCESS) {
+            cerr << "Error al recibir datos en el proceso " << rank << " desde el proceso 0" << endl;
+            MPI_Abort(MPI_COMM_WORLD, 1);
+            return 1;
+        }else if(!flag){
+            FinalizingExecution(&CommComputer);
+            return 1;            
+        }
+
         if(!entryParams_check(argc, argv, false)){
             cerr << "Error en los parámetros de entrada." << endl;
             cerr << "FINALIZANDO PROGRAMA" << endl;
@@ -203,11 +231,12 @@ bool checkRankInList(vector<unsigned int> vector, unsigned int rank){
 }
 
 
-bool FinalizingExecution(MPI_Comm *CommComputer){
+bool FinalizingExecution(MPI_Comm *CommComputer, bool abort){
     bool result = true;
     if(MPI_Comm_free(CommComputer) != MPI_SUCCESS){
         result = false;
     };
+    
     if(MPI_Finalize() != MPI_SUCCESS){
         result = false;
     }

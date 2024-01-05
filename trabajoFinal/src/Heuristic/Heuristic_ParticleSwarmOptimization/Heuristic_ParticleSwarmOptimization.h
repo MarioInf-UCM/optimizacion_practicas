@@ -13,7 +13,6 @@ class Heuristic_ParticleSwarmOptimization:public Heuristic{
 
     public:
         Heuristic_ParticleSwarmOptimization();
-        Heuristic_ParticleSwarmOptimization(string ID);
         ~Heuristic_ParticleSwarmOptimization();
 
         bool execHeuristic();

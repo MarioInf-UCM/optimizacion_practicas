@@ -59,7 +59,10 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile(vector<string>& 
     
     jsonConfiguration.getWorldConfiguration().setFitnessFunctionID(root["worldConfiguration"]["fitnessFunctionID"].asString());
     jsonConfiguration.getWorldConfiguration().setID(root["worldConfiguration"]["id"].asString());
-    jsonConfiguration.getWorldConfiguration().setDimensions(root["worldConfiguration"]["dimensions"].asUInt());
+    jsonConfiguration.getWorldConfiguration().setLimitUp(root["worldConfiguration"]["limitUp"].asDouble());
+    jsonConfiguration.getWorldConfiguration().setLimitDown(root["worldConfiguration"]["limitDown"].asDouble());
+    jsonConfiguration.getWorldConfiguration().setLimitRight(root["worldConfiguration"]["limitRight"].asDouble());
+    jsonConfiguration.getWorldConfiguration().setLimitLeft(root["worldConfiguration"]["limitLeft"].asDouble());
    
     Value computerConfigurationSelected = Value::null;
     for (const auto &computerConfig : root["computerConfiguration"]) {
@@ -74,6 +77,7 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile(vector<string>& 
         return jsonConfiguration;
     }
     jsonConfiguration.getComputerConfiguration().setIP(computerConfigurationSelected["IP"].asString());
+    jsonConfiguration.getComputerConfiguration().setLogCommonFile(computerConfigurationSelected["logCommonFile"].asString());
 
     RankConfiguration rankConfigurationTemp;
     for (const auto &rankConfig : computerConfigurationSelected["rankConfigurationList"]) {
@@ -81,6 +85,7 @@ JsonConfiguration Json_interface::getJSONConfiguration_FromFile(vector<string>& 
         rankConfigurationTemp.setIsDefault(false);
         rankConfigurationTemp.setOutputFile(rankConfig["outFIleURL"].asString());
         rankConfigurationTemp.setHeuristicID(rankConfig["heuristicID"].asString());
+        rankConfigurationTemp.setDimensions(rankConfig["dimensions"].asUInt());
         rankConfigurationTemp.setIterations(rankConfig["iterations"].asUInt());
         rankConfigurationTemp.setPoblation(rankConfig["poblation"].asUInt());
 

@@ -16,9 +16,11 @@ class RankConfiguration{
         vector<unsigned int> rankList;
         string outputFile;
         
-        string heuristicID;       
+        string heuristicID;
         unsigned int iterations;
         unsigned int poblation;
+        unsigned int dimensions;
+
         vector<float> valueList;
 
     public:
@@ -55,6 +57,9 @@ class RankConfiguration{
         
         unsigned int getPoblation() const;
         void setPoblation(unsigned int newPoblation);
+
+        unsigned int getDimensions() const;
+        void setDimensions(unsigned int newDimensions);
         
         vector<float>& getValueList();
         float getValue_byIndex(unsigned int index);

@@ -12,10 +12,12 @@ using namespace std;
 //******************************************
 ComputerConfiguration::ComputerConfiguration():
     IP("0.0.0.0"),
+    logCommonFile(),
     rankConfigurationList(vector<RankConfiguration>())
 {}
-ComputerConfiguration::ComputerConfiguration(string IP, vector<RankConfiguration> rankConfigurationList):
+ComputerConfiguration::ComputerConfiguration(string IP, vector<RankConfiguration> rankConfigurationList, string logCommonFile):
     IP(IP),
+    logCommonFile(logCommonFile),
     rankConfigurationList(vector<RankConfiguration>())
 {
     setRankConfigurationList(rankConfigurationList);
@@ -30,7 +32,8 @@ ComputerConfiguration::~ComputerConfiguration(){}
 //**********************************
 string ComputerConfiguration::displayInfo(){
     stringstream value;
-    value << "IP: " << getIP() << "    rankConfigurationList[" << endl;
+    value << "\tIP: " << getIP() << "    LogCommonFile: " << getLogCommonFile() << endl;
+    value << "\trankConfigurationList[" << endl;
     for(int i=0 ; i<getRankConfigurationList().size() ; i++){
         value << rankConfigurationList[i].displayInfo();
     }
@@ -45,6 +48,9 @@ string ComputerConfiguration::displayInfo(){
 //*******************************************
 string ComputerConfiguration::getIP() const { return IP; }
 void ComputerConfiguration::setIP(string newIP){ IP = newIP; }
+
+string ComputerConfiguration::getLogCommonFile() const { return logCommonFile; }
+void ComputerConfiguration::setLogCommonFile(string data){ logCommonFile = data; }
 
 
 vector<RankConfiguration>& ComputerConfiguration::getRankConfigurationList() { return rankConfigurationList; }

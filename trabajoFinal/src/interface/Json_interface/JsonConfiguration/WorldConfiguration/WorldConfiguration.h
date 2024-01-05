@@ -9,12 +9,15 @@ class WorldConfiguration{
 
     private:
         string ID;
-        unsigned int dimensions;
         string fitnessFunctionID;
+        long double limitUp;
+        long double limitDown;
+        long double limitRight;
+        long double limitLeft;
 
     public:
         WorldConfiguration();
-        WorldConfiguration(string ID, unsigned int dimensions, string fitnessFunctionID);
+        WorldConfiguration(string ID, string fitnessFunctionID, long double limitUp, long double limitDown, long double limitLeft, long double limitRight);
         ~WorldConfiguration();
 
         string displayInfo();
@@ -27,12 +30,20 @@ class WorldConfiguration{
         string getID() const;
         void setID(string newID);
 
-        unsigned int getDimensions() const;
-        void setDimensions(unsigned int newDimensions);
-
         string getFitnessFunctionID() const;
         void setFitnessFunctionID(string newFitnessFunctionID);
 
+        long double getLimitUp() const;
+        void setLimitUp(long double data);
+
+        long double getLimitDown() const;
+        void setLimitDown(long double data);
+
+        long double getLimitRight() const;
+        void setLimitRight(long double data);
+
+        long double getLimitLeft() const;
+        void setLimitLeft(long double data);
 
 };
 
