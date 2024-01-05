@@ -4,6 +4,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <mutex>
+#include <map>
 
 using namespace std;
 
@@ -11,7 +13,7 @@ class FileWriter_interface{
 
     private:
         string fileURL;
-        ofstream fileStream;
+        static map<string, mutex> mutexes;
 
     public:
         FileWriter_interface();
@@ -21,10 +23,8 @@ class FileWriter_interface{
         //**********************************
         // DEFINICIÓN DE MÉTODOS FUNCIONALES
         //**********************************
-        bool openFile();
         bool write(string data, bool verbose = false);
         bool writeln(string data, bool verbose = false);
-        bool closeFile();
         
 
         //**********************************************
