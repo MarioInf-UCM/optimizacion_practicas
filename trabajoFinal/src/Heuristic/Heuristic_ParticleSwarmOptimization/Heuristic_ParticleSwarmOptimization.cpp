@@ -1,5 +1,14 @@
+#include <cstdlib>
+#include <ctime>
 #include "Heuristic_ParticleSwarmOptimization.h"
 
+static final boolean VERBOSE_FLAG = true;
+static final int ITERATIONS_CHECK = 1; // Valor mayor que 0
+static final Double DIMENSION_MIN_VALUE = - 100d;
+static final Double DIMENSION_MAX_VALUE = 100d;
+static final Double MAX_VELOCITY_ABSOLUTE_VALOR = DIMENSION_MAX_VALUE/10;
+
+using namespace std;
 
 //******************************************
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
@@ -15,48 +24,49 @@ Heuristic_ParticleSwarmOptimization::~Heuristic_ParticleSwarmOptimization(){}
 // DEFINICIÓN DE MÉTODOS FUNCIONALES
 //**********************************
 
-bool Heuristic_ParticleSwarmOptimization::execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration RankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose){
+bool Heuristic_ParticleSwarmOptimization::execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration rankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose){
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     ostringstream printStream;
+    srand(static_cast<unsigned int>(time(0)));
     printStream << "Proceso:" << rank << " - Inicio ejecución heurística" << getID(); file_commonLog.writeln(printStream, flagVerbose);
-    
 
-/* 
-    Scanner sc = new Scanner(System.in);
-    int dimensions = Integer.parseInt(args[0]);
-    int iterations = Integer.parseInt(args[1]);
-    int poblation = Integer.parseInt(args[2]);
-    float inertiaFactor = Float.parseFloat(args[3]);
-    float personalFactor = Float.parseFloat(args[4]);
-    float grupalFactor = Float.parseFloat(args[5]);
+    unsigned int dimensions = rankConfiguration.getDimensions();
+    unsigned int iterations = rankConfiguration.getIterations();
+    unsigned int poblation = rankConfiguration.getPoblation();
+    float inertiaFactor = rankConfiguration.getValue_byIndex(0);
+    float personalFactor = rankConfiguration.getValue_byIndex(1);
+    float grupalFactor = rankConfiguration.getValue_byIndex(2);
 
-    World world = new World(dimensions, poblation, DIMENSION_MIN_VALUE, DIMENSION_MAX_VALUE, MAX_VELOCITY_ABSOLUTE_VALOR);
-    if (VERBOSE_FLAG) {
-        System.out.println("\nInitial World..:");
-        world.print_all();
-        System.out.println("\n\n");
-    }
-
-    Double newVelocity = 0.0d;
-    Double newPosition = 0.0d;
-    Double resultFitness_actualposition = 0.0d;
-    Double resultFitness_bestPositionPersonal = 0.0d;
-    Double resultFitness_bestPositionGlobal = 0.0d;
-    Double posTemp = 0.0d;
+    double newVelocity = 0.0;
+    double newPosition = 0.0;
+    double resultFitness_actualposition = 0.0;
+    double resultFitness_bestPositionPersonal = 0.0;
+    double resultFitness_bestPositionGlobal = 0.0;
+    double posTemp = 0.0;
     int lastIteration = 0;
-    boolean flagEnd = false;
+    bool flagEnd = false;
 
-    ArrayList<Double> minPointList = new ArrayList<Double>();
+
+    
+    vector<double> minPointList = vector<double>();
     for(int i=0 ; i<dimensions ; i++){
-        minPointList.add(  ((Math.random() * (DIMENSION_MAX_VALUE - DIMENSION_MIN_VALUE)) + DIMENSION_MIN_VALUE) );
+        minPointList.push_back(  worldConfiguration.getLimitLeft() + static_cast<double>(std::rand()) / (static_cast<double>(RAND_MAX / (worldConfiguration.getLimitRight() - worldConfiguration.getLimitLeft()))) );
     }
+    vector<vector<float>> velocityList = vector<vector<float>>();
+    for(int i=0 ; i<poblation ; i++){
+        for(int j=0 ; j<dimensions; j++)
+        vector[i][j].push_back(0.0);
+    }
+
+
+
 
     for (int iteration = lastIteration; iteration < iterations; iteration++) {
 
         // Paso 1: Actualización del vector de velocidades por cada partícula
-        for (int particle = 0; particle < world.getInfo_particleList_size(); particle++) {
-            for (int dimension = 0; dimension < world.getInfo_dimensionList_size(); dimension++) {
+        for (int particle = 0; particle < poblation; particle++) {
+            for (int dimension = 0; dimension < dimensions; dimension++) {
 
                 //System.out.println("Velocidad actual: " + world.getElement_particleList_byIndex(particle).getElement_actualVelocityList_byIndex(dimension));
 
@@ -73,10 +83,7 @@ bool Heuristic_ParticleSwarmOptimization::execHeuristic(WorldConfiguration world
                 }else if(newVelocity < (- Math.abs(MAX_VELOCITY_ABSOLUTE_VALOR))){
                     newVelocity = - Math.abs(MAX_VELOCITY_ABSOLUTE_VALOR);
                 }
-
-                world.getElement_particleList_byIndex(particle).modifyElement_actualVelocityList_byIndex(dimension, newVelocity);
-                
-                //System.out.println("Velocidad calculada: " + newVelocity + "\n");
+                world.getElement_particleList_byIndex(particle).modifyElement_actualVelocityList_byIndex(dimension, newVelocity);                
             }
         }
 
@@ -137,9 +144,15 @@ bool Heuristic_ParticleSwarmOptimization::execHeuristic(WorldConfiguration world
         System.out.println("\n\n");
     }
     
-    System.out.println("\n\nFINALIZACIÓN..:"); */
+    System.out.println("\n\nFINALIZACIÓN..:");
 
     
     return true;
 }
 
+
+double random0to1() {
+    srand(std::time(0));
+    double numeroAleatorio = rand() / (double)RAND_MAX;
+    return numeroAleatorio;
+}

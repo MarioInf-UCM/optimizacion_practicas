@@ -21,7 +21,7 @@ class Heuristic{
         Heuristic(string ID);
         ~Heuristic();
 
-        //bool execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration RankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV);
+        //bool execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration rankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV);
 
 
         //**********************************************
