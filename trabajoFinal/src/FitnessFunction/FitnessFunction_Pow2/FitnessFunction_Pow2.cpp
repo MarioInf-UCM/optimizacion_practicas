@@ -1,17 +1,17 @@
 #include <cmath>
-#include "FitnessFunction_pow2.h"
+#include "FitnessFunction_Pow2.h"
 
 //******************************************
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
 //******************************************
-FitnessFunction_pow2::FitnessFunction_pow2():
-    FitnessFunction("")
+FitnessFunction_Pow2::FitnessFunction_Pow2():
+    FitnessFunction("Pow2")
 {}
-FitnessFunction_pow2::FitnessFunction_pow2(string ID):
+FitnessFunction_Pow2::FitnessFunction_Pow2(string ID):
     FitnessFunction(ID)
 {}
 
-FitnessFunction_pow2::~FitnessFunction_pow2()
+FitnessFunction_Pow2::~FitnessFunction_Pow2()
 {}
 
 
@@ -19,6 +19,6 @@ FitnessFunction_pow2::~FitnessFunction_pow2()
 //**********************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES
 //**********************************
-float FitnessFunction_pow2::execFunction(float x){
+float FitnessFunction_Pow2::execFunction(float x){
     return pow(x, 2);
 }

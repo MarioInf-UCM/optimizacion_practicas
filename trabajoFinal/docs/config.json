@@ -1,7 +1,7 @@
 {
     "worldConfiguration":{
         "id": "MundoCirculo1",
-        "fitnessFunctionID": "circle",
+        "fitnessFunctionID": "Pow2",
         "limitUp": 100,
         "limitDown": -100, 
         "limitRight": 100,
@@ -11,18 +11,36 @@
         "IP": "0.0.0.0",
         "logCommonFile":"/home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/out/logFile_MundoCirculo1.txt",
         "rankConfigurationList": [{
-            "rankList": [0, 1],
-            "outFIleURL": "out/output_rank01.txt",
-            "heuristicID": "pso",
+            "rankList": [0],
+            "outFIleURL": "out/output_ParticleSwarmOptimization.txt",
+            "heuristicID": "ParticleSwarmOptimization",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 2,
             "valueList":[0.3925, 2.5586, 1.3358]
         },
         {
-            "rankList": [2, 3],
-            "outFIleURL": "out/output_rank23.txt",
-            "heuristicID": "pso",
+            "rankList": [1],
+            "outFIleURL": "out/output_DifferentialEvolution.txt",
+            "heuristicID": "DifferentialEvolution",
+            "iterations": 500,
+            "poblation" : 25,
+            "dimensions": 2,
+            "valueList":[0.3925, 2.5586, 1.3358]
+        },
+        {
+            "rankList": [2],
+            "outFIleURL": "out/output_ArtificialBeeColony.txt",
+            "heuristicID": "ArtificialBeeColony",
+            "iterations": 500,
+            "poblation" : 25,
+            "dimensions": 2,
+            "valueList":[0.3925, 2.5586, 1.3358]
+        },
+        {
+            "rankList": [3],
+            "outFIleURL": "out/output_Fireworks.txt",
+            "heuristicID": "Fireworks",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 2,
@@ -33,8 +51,8 @@
         "IP": "12.12.12.12",
         "rankConfigurationList": [{
             "rankList": [0],
-            "outFIleURL": "out/output_rank0.txt",
-            "heuristicID": "pso",
+            "outFIleURL": "out/.txt",
+            "heuristicID": "",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 2,
@@ -42,8 +60,8 @@
         },
         {
             "rankList": [1],
-            "outFIleURL": "out/output_rank1.txt",
-            "heuristicID": "pso",
+            "outFIleURL": "out/.txt",
+            "heuristicID": "",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 2,

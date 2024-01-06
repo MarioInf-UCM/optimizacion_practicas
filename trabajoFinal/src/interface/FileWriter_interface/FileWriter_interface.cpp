@@ -26,17 +26,18 @@ FileWriter_interface::~FileWriter_interface(){}
 //**********************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES
 //**********************************
-bool FileWriter_interface::write(string data, bool verbose){
-    std::lock_guard<std::mutex> lock(mutexes[fileURL]);
-    std::ofstream archivo(fileURL, ios::app);
+bool FileWriter_interface::write(ostringstream& data, bool verbose){
+    lock_guard<mutex> lock(mutexes[fileURL]);
+    ofstream archivo(fileURL, ios::app);
 
     if (archivo.is_open()) {
 
-        archivo << data << ends;
+        archivo << data.str() << ends;
         if(verbose){
-            cout << data << ends;
+            cout << data.str() << ends;
         }
-        archivo.close();
+        data.clear();
+        (data.str(std::string()), data.clear());
 
     } else {
         cerr << "El archivo de escritura no se abrió correctamente." << endl;
@@ -46,17 +47,18 @@ bool FileWriter_interface::write(string data, bool verbose){
     return true;
 }
 
-bool FileWriter_interface::writeln(string data, bool verbose){
-    std::lock_guard<std::mutex> lock(mutexes[fileURL]);
-    std::ofstream archivo(fileURL, ios::app);
+bool FileWriter_interface::writeln(ostringstream& data, bool verbose){
+    lock_guard<mutex> lock(mutexes[fileURL]);
+    ofstream archivo(fileURL, ios::app);
 
     if (archivo.is_open()) {
 
-        archivo << data << endl;
+        archivo << data.str() << endl;
         if(verbose){
-            cout << data << endl;
+            cout << data.str() << endl;
         }
-        archivo.close();
+        data.clear();
+        (data.str(std::string()), data.clear());
 
     } else {
         cerr << "El archivo de escritura no se abrió correctamente." << endl;

@@ -1,13 +1,14 @@
 CC = mpic++
 CFLAGS = -std=c++11 
 LIBS = -ljsoncpp
-OUT_DIR = bin
+BIN_DIR = bin
+OUT_DIR = out
 TARGET = trabajoFinal_exec
-numProc = 2
+numProc = 4
 #configFileURL = /home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/docs/config.json
 configFileURL = /home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/docs/config.json
 
-OBJS = $(patsubst %.cpp,$(OUT_DIR)/%.o,$(SRCS))
+OBJS = $(patsubst %.cpp,$(BIN_DIR)/%.o,$(SRCS))
 
 #Incluimos la clase Main
 SRCS += src/main.cpp
@@ -25,10 +26,13 @@ SRCS += src/interface/FileWriter_interface/FileWriter_interface.cpp
 
 #Referencia a los elementos del directorio src/FitnessFunction
 SRCS += src/FitnessFunction/FitnessFunction.cpp
-SRCS += src/FitnessFunction/FitnessFunction_pow2/FitnessFunction_pow2.cpp
+SRCS += src/FitnessFunction/FitnessFunction_Pow2/FitnessFunction_Pow2.cpp
 
 #Referencia a los elementos del directorio src/Heuristic
 SRCS += src/Heuristic/Heuristic.cpp
+SRCS += src/Heuristic/Heuristic_ArtificialBeeColony/Heuristic_ArtificialBeeColony.cpp
+SRCS += src/Heuristic/Heuristic_DifferentialEvolution/Heuristic_DifferentialEvolution.cpp
+SRCS += src/Heuristic/Heuristic_Fireworks/Heuristic_Fireworks.cpp
 SRCS += src/Heuristic/Heuristic_ParticleSwarmOptimization/Heuristic_ParticleSwarmOptimization.cpp
 
 
@@ -36,21 +40,24 @@ SRCS += src/Heuristic/Heuristic_ParticleSwarmOptimization/Heuristic_ParticleSwar
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(OUT_DIR)/$(TARGET) $(LIBS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(BIN_DIR)/$(TARGET) $(LIBS)
 
-$(OUT_DIR)/%.o: %.cpp
+$(BIN_DIR)/%.o: %.cpp
 	mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
 
 run: $(TARGET)
-	mpirun -n $(numProc) ./$(OUT_DIR)/$(TARGET) $(configFileURL)
+	mpirun -n $(numProc) ./$(BIN_DIR)/$(TARGET) $(configFileURL)
 
 
 
-clean:
-	rm -rf $(OUT_DIR) $(TARGET)
+clear:
+	rm -rf $(BIN_DIR) $(TARGET)
+
+clearOutPut:
+	rm -rf $(OUT_DIR)/*
 
 
 

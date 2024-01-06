@@ -2,6 +2,7 @@
 #define FILEWRITER_INTERFACE_H_
 
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <string>
 #include <mutex>
@@ -23,8 +24,8 @@ class FileWriter_interface{
         //**********************************
         // DEFINICIÓN DE MÉTODOS FUNCIONALES
         //**********************************
-        bool write(string data, bool verbose = false);
-        bool writeln(string data, bool verbose = false);
+        bool write(ostringstream& data, bool verbose = false);
+        bool writeln(ostringstream& data, bool verbose = false);
         
 
         //**********************************************

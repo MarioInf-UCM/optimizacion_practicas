@@ -9,12 +9,12 @@
 using namespace std;
 
 
-class FitnessFunction_pow2: public FitnessFunction{
+class FitnessFunction_Pow2: public FitnessFunction{
         
     public:
-        FitnessFunction_pow2();
-        FitnessFunction_pow2(string ID);
-        ~FitnessFunction_pow2();
+        FitnessFunction_Pow2();
+        FitnessFunction_Pow2(string ID);
+        ~FitnessFunction_Pow2();
 
         float execFunction(float x);
 

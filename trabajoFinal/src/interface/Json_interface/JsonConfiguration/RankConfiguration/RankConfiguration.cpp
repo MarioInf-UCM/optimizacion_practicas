@@ -47,17 +47,17 @@ string RankConfiguration::displayInfo(){
     value << "\t\tRankList[";
     for(int i=0 ; i<getRankList().size() ; i++){
         if(i == (getRankList().size()-1)){
-            value << rankList[i] << ends;
+            value << rankList[i];
         }else{
-            value << rankList[i] << ", " << ends;
+            value << rankList[i] << ", ";
         }
     }
     value <<"]" << "    OutputFile: " << getOutputFile() << "    HeuristicID: " << getHeuristicID() << "    Iterations: " << getIterations() << "    Poblation: " << getPoblation() << "    valueList[";
     for(int i=0 ; i<getValueList().size() ; i++){
         if(i == (getValueList().size()-1)){
-            value << valueList[i] << ends;
+            value << valueList[i];
         }else{
-            value << valueList[i] << ", " << ends;
+            value << valueList[i] << ", ";
         }
     }
     value <<"]" <<endl;

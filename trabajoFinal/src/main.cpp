@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <sstream>
 #include <ifaddrs.h>
 
 #include "World/World.h"
@@ -15,11 +16,14 @@
 
 #define ROOT 0
 #define ENTRY_PARAM_NUM 2
+#define VERBOSE true
 #define IPV4_DEFAULT "0.0.0.0"
 #define IPV6_DEFAULT "::0"
 
-bool entryParams_check(int argc, char** argv, bool printInfo = true);
-bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, bool printInfo = true);
+bool entryParams_check(int argc, char** argv);
+void print_entryParams(int argc, char** argv, FileWriter_interface& fileOutPut, bool printInfo);
+bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, vector<string>& IPv4Ifaces, vector<string>& IPv6Ifaces);
+void print_IPdirections(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, vector<string>& IPv4Ifaces, vector<string>& IPv6Ifaces, FileWriter_interface& fileOutPut, bool printInfo = true);
 bool checkRankInList(vector<unsigned int> vector, unsigned int rank);
 bool FinalizingExecution(MPI_Comm *CommComputer, bool abort=false);
 
@@ -29,13 +33,15 @@ int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
 
     JsonConfiguration jsonConfiguration;
-    vector<string> ipv4Addresses;
-    vector<string> ipv6Addresses;
+    vector<string> ipv4Addresses, IPv4Ifaces;
+    vector<string> ipv6Addresses, IPv6Ifaces;
     RankConfiguration configRank;
     FileWriter_interface logCommonFile;
     FileWriter_interface outPutFile;
     
+    ostringstream printStream;
     int result, errorStringLen;
+    bool flag = true;
     char errorString[MPI_MAX_ERROR_STRING];
     
     int rank, size;
@@ -50,18 +56,11 @@ int main(int argc, char** argv) {
 
 
     if(rank == ROOT){
-        cout << endl;
-        cout << "************************************************" << endl;
-        cout << "EJECUCIÓN DE ALGORITMOS HEURÍSTICOS DISTRIBUIDOS" << endl;
-        cout << "************************************************" << endl;
-        cout << endl;
-
-        bool flag = true;
         if(!entryParams_check(argc, argv)){
             cerr << "Error en los parámetros de entrada." << endl;
             flag=false;
         }
-        if(!getIPDirections_UNIX(ipv4Addresses, ipv6Addresses)) {
+        if(!getIPDirections_UNIX(ipv4Addresses, ipv6Addresses, IPv4Ifaces, IPv6Ifaces)) {
             cerr << "Error al obtener direcciones IP." << endl;
             flag=false;
         }
@@ -71,12 +70,13 @@ int main(int argc, char** argv) {
             jsonConfiguration = json_interface.getJSONConfiguration_FromFile(ipv4Addresses, ipv6Addresses);
             logCommonFile.setFileURL(jsonConfiguration.getComputerConfiguration().getLogCommonFile());
 
-            cout << endl << endl << "Fichero de configuración..:" << endl << endl;
-            cout <<  jsonConfiguration.displayInfo();
-
-            cout << endl;
-            cout << "*************************************************************************" << endl;
-            cout << endl;
+            printStream << "************************************************"; logCommonFile.writeln(printStream, true);
+            printStream << "EJECUCIÓN DE ALGORITMOS HEURÍSTICOS DISTRIBUIDOS"; logCommonFile.writeln(printStream, true);
+            printStream << "************************************************"; logCommonFile.writeln(printStream, true);
+            print_entryParams(argc, argv, logCommonFile, VERBOSE);
+            print_IPdirections(ipv4Addresses, ipv6Addresses, IPv4Ifaces, IPv6Ifaces, logCommonFile, VERBOSE);
+            printStream << endl << "Fichero de configuración..:" << endl << jsonConfiguration.displayInfo(); logCommonFile.writeln(printStream, true);
+            printStream << "*************************************************************************" << endl; logCommonFile.writeln(printStream, true);
         }
     
         for (int dest = 1; dest < size; ++dest) {
@@ -105,13 +105,7 @@ int main(int argc, char** argv) {
             return 1;            
         }
 
-        if(!entryParams_check(argc, argv, false)){
-            cerr << "Error en los parámetros de entrada." << endl;
-            cerr << "FINALIZANDO PROGRAMA" << endl;
-            FinalizingExecution(&CommComputer);
-            return 1;
-        }
-        if(!getIPDirections_UNIX(ipv4Addresses, ipv6Addresses, false)) {
+        if(!getIPDirections_UNIX(ipv4Addresses, ipv6Addresses, IPv4Ifaces, IPv6Ifaces)) {
             cerr << "Error al obtener direcciones IP." << endl;
             cerr << "FINALIZANDO PROGRAMA" << endl;
             FinalizingExecution(&CommComputer);
@@ -119,6 +113,7 @@ int main(int argc, char** argv) {
         }
         Json_interface json_interface = Json_interface(argv[1]);
         jsonConfiguration = json_interface.getJSONConfiguration_FromFile(ipv4Addresses, ipv6Addresses);
+        logCommonFile.setFileURL(jsonConfiguration.getComputerConfiguration().getLogCommonFile());
     }
 
     result = false;
@@ -149,26 +144,29 @@ int main(int argc, char** argv) {
 
 
 
-bool entryParams_check(int argc, char** argv, bool printInfo){
-
+bool entryParams_check(int argc, char** argv){
     if(argc != ENTRY_PARAM_NUM){
         cerr << "Parámetros de entrada incorrectos. Se esperaban "<< ENTRY_PARAM_NUM << ", se han registrado " << argc << endl;
         cerr << "Ejemplo de ejecución: mpirun -n \"numProcesos\" program \"configFileURL\"" << endl;
         return false;
-    }else if(printInfo){
-        cout << "Parámetros iniciales:" << endl;
-        cout << "\tFichero de configuración:" << argv[1] << endl << endl;
     }
     return true;
 }
 
 
+void print_entryParams(int argc, char** argv, FileWriter_interface& fileOutPut, bool printInfo){
+    ostringstream printStream;
+    if(printInfo){
+        printStream << endl << "Parámetros iniciales:"; fileOutPut.writeln(printStream, printInfo);
+        printStream << "\tFichero de configuración:" << argv[1]; fileOutPut.writeln(printStream, printInfo);
+    }
+    return;
+}
 
-bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, bool printInfo) {
+
+bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, vector<string>& IPv4Ifaces, vector<string>& IPv6Ifaces){
     struct ifaddrs *ifAddrStruct = nullptr;
     struct ifaddrs *ifa = nullptr;
-    vector<string> IPv4Ifaces;
-    vector<string> IPv6Ifaces;
 
     if(getifaddrs(&ifAddrStruct) == -1) {
         cerr << "Error al obtener la información de las interfaces de red." << endl;
@@ -206,18 +204,23 @@ bool getIPDirections_UNIX(vector<string>& ipv4Addresses, vector<string>& ipv6Add
     if(ifAddrStruct != nullptr) {
         freeifaddrs(ifAddrStruct);
     }
-    if(printInfo){
-        cout << "Direcciones IPv4:" << endl;
-        for (size_t i = 0; i < ipv4Addresses.size(); ++i) {
-            cout << "\tInterfaz: " << IPv4Ifaces[i] << "\t\tDirección: " << ipv4Addresses[i] << endl;
-        }
-        cout << "\nDirecciones IPv6:" << endl;
-        for (size_t i = 0; i < ipv6Addresses.size(); ++i) {
-            cout << "\tInterfaz: " << IPv6Ifaces[i] << "\t\tDirección: " << ipv6Addresses[i] << endl;
-        }
-    }
 
     return true;
+}
+
+
+void print_IPdirections(vector<string>& ipv4Addresses, vector<string>& ipv6Addresses, vector<string>& IPv4Ifaces, vector<string>& IPv6Ifaces, FileWriter_interface& fileOutPut, bool printInfo){
+    ostringstream printStream;
+
+    printStream << endl << "Direcciones IPv4:"; fileOutPut.writeln(printStream, printInfo);
+    for (size_t i = 0; i < ipv4Addresses.size(); ++i) {
+        printStream << "\tInterfaz: " << IPv4Ifaces[i] << "\t\tDirección: " << ipv4Addresses[i]; fileOutPut.writeln(printStream, printInfo);
+    }
+    printStream << endl << "Direcciones IPv6:"; fileOutPut.writeln(printStream, printInfo);
+    for (size_t i = 0; i < ipv6Addresses.size(); ++i) {
+        printStream << "\tInterfaz: " << IPv6Ifaces[i] << "\t\tDirección: " << ipv6Addresses[i]; fileOutPut.writeln(printStream, printInfo);
+    }
+    return;
 }
 
 
