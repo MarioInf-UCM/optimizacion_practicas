@@ -13,6 +13,10 @@
 #include "interface/Json_interface/Json_interface.h"
 #include "interface/Json_interface/JsonConfiguration/JsonConfiguration.h"
 #include "interface/FileWriter_interface/FileWriter_interface.h"
+#include "Heuristic/Heuristic_ArtificialBeeColony/Heuristic_ArtificialBeeColony.h"
+#include "Heuristic/Heuristic_DifferentialEvolution/Heuristic_DifferentialEvolution.h"
+#include "Heuristic/Heuristic_Fireworks/Heuristic_Fireworks.h"
+#include "Heuristic/Heuristic_ParticleSwarmOptimization/Heuristic_ParticleSwarmOptimization.h"
 
 #define ROOT 0
 #define ENTRY_PARAM_NUM 2
@@ -36,7 +40,7 @@ int main(int argc, char** argv) {
     vector<string> ipv4Addresses, IPv4Ifaces;
     vector<string> ipv6Addresses, IPv6Ifaces;
     RankConfiguration configRank;
-    FileWriter_interface logCommonFile;
+    FileWriter_interface file_commonLog;
     FileWriter_interface outPutFile;
     
     ostringstream printStream;
@@ -68,15 +72,15 @@ int main(int argc, char** argv) {
         if(flag){
             Json_interface json_interface = Json_interface(argv[1]);
             jsonConfiguration = json_interface.getJSONConfiguration_FromFile(ipv4Addresses, ipv6Addresses);
-            logCommonFile.setFileURL(jsonConfiguration.getComputerConfiguration().getLogCommonFile());
+            file_commonLog.setFileURL(jsonConfiguration.getComputerConfiguration().getLogCommonFile());
 
-            printStream << "************************************************"; logCommonFile.writeln(printStream, true);
-            printStream << "EJECUCIÓN DE ALGORITMOS HEURÍSTICOS DISTRIBUIDOS"; logCommonFile.writeln(printStream, true);
-            printStream << "************************************************"; logCommonFile.writeln(printStream, true);
-            print_entryParams(argc, argv, logCommonFile, VERBOSE);
-            print_IPdirections(ipv4Addresses, ipv6Addresses, IPv4Ifaces, IPv6Ifaces, logCommonFile, VERBOSE);
-            printStream << endl << "Fichero de configuración..:" << endl << jsonConfiguration.displayInfo(); logCommonFile.writeln(printStream, true);
-            printStream << "*************************************************************************" << endl; logCommonFile.writeln(printStream, true);
+            printStream << "************************************************"; file_commonLog.writeln(printStream, VERBOSE);
+            printStream << "EJECUCIÓN DE ALGORITMOS HEURÍSTICOS DISTRIBUIDOS"; file_commonLog.writeln(printStream, VERBOSE);
+            printStream << "************************************************"; file_commonLog.writeln(printStream, VERBOSE);
+            print_entryParams(argc, argv, file_commonLog, VERBOSE);
+            print_IPdirections(ipv4Addresses, ipv6Addresses, IPv4Ifaces, IPv6Ifaces, file_commonLog, VERBOSE);
+            printStream << endl << "Fichero de configuración..:" << endl << jsonConfiguration.displayInfo(); file_commonLog.writeln(printStream, VERBOSE);
+            printStream << "*************************************************************************" << endl; file_commonLog.writeln(printStream, VERBOSE);
         }
     
         for (int dest = 1; dest < size; ++dest) {
@@ -113,13 +117,14 @@ int main(int argc, char** argv) {
         }
         Json_interface json_interface = Json_interface(argv[1]);
         jsonConfiguration = json_interface.getJSONConfiguration_FromFile(ipv4Addresses, ipv6Addresses);
-        logCommonFile.setFileURL(jsonConfiguration.getComputerConfiguration().getLogCommonFile());
+        file_commonLog.setFileURL(jsonConfiguration.getComputerConfiguration().getLogCommonFile());
     }
 
     result = false;
     for(int i=0 ; i<jsonConfiguration.getComputerConfiguration().getRankConfigurationList().size() ; i++){
         if(checkRankInList(jsonConfiguration.getComputerConfiguration().getRankConfiguration_byIndex(i).getRankList(), rank)){
             configRank = jsonConfiguration.getComputerConfiguration().getRankConfiguration_byIndex(i);
+            outPutFile.setFileURL(configRank.getOutputFile());
             result = true;
             break;
         }
@@ -131,10 +136,31 @@ int main(int argc, char** argv) {
         return 1;        
     }
 
+    Heuristic_ArtificialBeeColony heuristic_ArtificialBeeColony = Heuristic_ArtificialBeeColony();
+    Heuristic_DifferentialEvolution heuristic_DifferentialEvolution = Heuristic_DifferentialEvolution();
+    Heuristic_Fireworks heuristic_Fireworks = Heuristic_Fireworks();
+    Heuristic_ParticleSwarmOptimization heuristic_ParticleSwarmOptimization = Heuristic_ParticleSwarmOptimization();
+    printStream << "Proceso " << rank << " - Configuración{" << configRank.displayInfo() << "}"; file_commonLog.writeln(printStream, VERBOSE);
 
-    cout << "Configuración proceso " << rank << " :" << configRank.displayInfo() << endl; 
+    if(!configRank.getHeuristicID().compare(heuristic_ArtificialBeeColony.getID())){
+        result = heuristic_ArtificialBeeColony.execHeuristic(jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
+
+    }else if(!configRank.getHeuristicID().compare(heuristic_DifferentialEvolution.getID())){
+        result = heuristic_DifferentialEvolution.execHeuristic(jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
+
+    }else if(!configRank.getHeuristicID().compare(heuristic_Fireworks.getID())){
+        result = heuristic_Fireworks.execHeuristic(jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
+
+    }else if(!configRank.getHeuristicID().compare(heuristic_ParticleSwarmOptimization.getID())){
+        result = heuristic_ParticleSwarmOptimization.execHeuristic(jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
+    }
 
 
+
+
+
+
+    printStream << "proceso:" << rank << " - Ejecución finalizada"; file_commonLog.writeln(printStream, VERBOSE);
 
 
 

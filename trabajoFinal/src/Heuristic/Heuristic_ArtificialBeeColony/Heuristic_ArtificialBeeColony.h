@@ -15,7 +15,7 @@ class Heuristic_ArtificialBeeColony:public Heuristic{
         Heuristic_ArtificialBeeColony();
         ~Heuristic_ArtificialBeeColony();
 
-        bool execHeuristic();
+        bool execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration RankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose=false);
 
 };
 

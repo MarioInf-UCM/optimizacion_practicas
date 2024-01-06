@@ -15,7 +15,7 @@ class Heuristic_ParticleSwarmOptimization:public Heuristic{
         Heuristic_ParticleSwarmOptimization();
         ~Heuristic_ParticleSwarmOptimization();
 
-        bool execHeuristic();
+        bool execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration RankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose=false);
 
 };
 

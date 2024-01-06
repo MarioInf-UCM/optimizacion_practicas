@@ -60,7 +60,7 @@ string RankConfiguration::displayInfo(){
             value << valueList[i] << ", ";
         }
     }
-    value <<"]" <<endl;
+    value <<"]";
 
     return value.str();
 }

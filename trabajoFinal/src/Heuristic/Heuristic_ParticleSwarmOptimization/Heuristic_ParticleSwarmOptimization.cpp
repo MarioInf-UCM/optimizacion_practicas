@@ -14,7 +14,14 @@ Heuristic_ParticleSwarmOptimization::~Heuristic_ParticleSwarmOptimization(){}
 //**********************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES
 //**********************************
-bool Heuristic_ParticleSwarmOptimization::execHeuristic(){
+
+bool Heuristic_ParticleSwarmOptimization::execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration RankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose){
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    ostringstream printStream;
+    printStream << "Proceso:" << rank << " - Inicio ejecución heurística" << getID(); file_commonLog.writeln(printStream, flagVerbose);
+    
+
 /* 
     Scanner sc = new Scanner(System.in);
     int dimensions = Integer.parseInt(args[0]);

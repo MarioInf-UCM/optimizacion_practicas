@@ -15,7 +15,7 @@ class Heuristic_Fireworks:public Heuristic{
         Heuristic_Fireworks();
         ~Heuristic_Fireworks();
 
-        bool execHeuristic();
+        bool execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration RankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose=false);
 
 };
 

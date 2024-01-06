@@ -1,6 +1,7 @@
 #include "Heuristic.h"
 
 
+
 //******************************************
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
 //******************************************
@@ -10,7 +11,6 @@ Heuristic::Heuristic():
 Heuristic::Heuristic(string ID):
     ID(ID)
 {}
-
 Heuristic::~Heuristic(){}
 
 
@@ -18,13 +18,13 @@ Heuristic::~Heuristic(){}
 //**********************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES
 //**********************************
-bool Heuristic::execHeuristic(){
+/* bool Heuristic::execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration RankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV){
     return true;
-}
+} */
 
 
 
 //**********************************************
 //* MÉTODOS DE TRATAMIENTO DE VARIABLES PRIVADAS
 //**********************************************
-string Heuristic::getID() const{ return ID; }
+string Heuristic::getID(){ return ID; }
