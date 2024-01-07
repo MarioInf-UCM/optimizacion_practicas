@@ -25,8 +25,8 @@
             "heuristicID": "DifferentialEvolution",
             "iterations": 500,
             "poblation" : 25,
-            "dimensions": 2,
-            "valueList":[0.3925, 2.5586, 1.3358]
+            "dimensions": 4,
+            "valueList":[0.7450, 0.9096]
         },
         {
             "rankList": [2],

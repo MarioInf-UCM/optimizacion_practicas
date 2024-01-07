@@ -15,8 +15,10 @@ class Heuristic_DifferentialEvolution:public Heuristic{
         Heuristic_DifferentialEvolution();
         ~Heuristic_DifferentialEvolution();
 
-        bool execHeuristic(float (*fitnessFunction)(float), WorldConfiguration worldConfiguration, RankConfiguration RankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose=false);
+        bool execHeuristic(float (*fitnessFunction)(float), WorldConfiguration worldConfiguration, RankConfiguration rankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose=false);
 
+    private:
+        double generarNumeroAleatorio(double minimo, double maximo);
 };
 
 
