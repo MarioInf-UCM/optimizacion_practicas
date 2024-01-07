@@ -3,8 +3,8 @@
 #include <cmath>
 #include "Heuristic_ParticleSwarmOptimization.h"
 
-#define ITERATIONS_CHECK  1; // Valor mayor que 0
-#define MAX_VELOCITY_PERCENTAGE = 10;
+#define MAX_VELOCITY_PERCENTAGE 10
+#define DEPURE_MESSAGES_FLAG false
 
 using namespace std;
 
@@ -126,30 +126,46 @@ bool Heuristic_ParticleSwarmOptimization::execHeuristic(float (*fitnessFunction)
             }
         }
 
-        printStream <<"Proceso: " << rank << " - Iteración: " << iteration << " Mínimos gobales[ ";
-        for(int i=0 ; i<minPosList.size() ; i++){
-            printStream << minPosList[i] << " ";
+        if(DEPURE_MESSAGES_FLAG){
+            printStream <<"Proceso: " << rank << " - Iteración: " << iteration << " Posición actual{";
+            for (int particle = 0; particle < poblation; particle++) {
+                printStream <<"[ ";
+                for (int dimension = 0; dimension < dimensions; dimension++) {
+                    printStream << actualPositionList[particle][dimension] << " "; 
+                }
+                printStream <<"]";
+            }
+            printStream <<"} Velocidad actual:{";
+            for (int particle = 0; particle < poblation; particle++) {
+                printStream <<"[ ";
+                for (int dimension = 0; dimension < dimensions; dimension++) {
+                    printStream << actualVelocityList[particle][dimension] << " "; 
+                }
+                printStream <<"]";
+            }
+            printStream <<"} Mejores mínimos personales:{";
+            for (int particle = 0; particle < poblation; particle++) {
+                printStream <<"[ ";
+                for (int dimension = 0; dimension < dimensions; dimension++) {
+                    printStream << bestPositionPersonalList[particle][dimension] << " "; 
+                }
+                printStream <<"]";
+            }
+            printStream <<" Mínimos globales:[";
+            for(int i=0 ; i<minPosList.size() ; i++){
+                printStream << minPosList[i] << " ";
+            }
+            printStream << "]";
+            file_commonLog.writeln(printStream, flagVerbose);
+        }else{
+            printStream <<"Proceso: " << rank << " - Iteración: " << iteration << " Mínimos globales[";
+            for(int i=0 ; i<minPosList.size() ; i++){
+                printStream << minPosList[i] << " ";
+            }
+            printStream << "]";
+            file_commonLog.writeln(printStream, flagVerbose);
         }
-        printStream << "]";
-        file_commonLog.writeln(printStream, flagVerbose);
 
-/* 
-        lastIteration = iteration;
-        if (VERBOSE_FLAG) {
-            System.out.println("\nIteracion: " + (iteration + 1));
-            System.out.print("Minimos globales:");
-            for(int i=0 ; i<minPointList.size() ; i++){
-                System.out.print((i+1) +")"+ minPointList.get(i) + "    ");
-            }
-            world.print_onlyParticles();
-        } else if ((ITERATIONS_CHECK > 0) && (((iteration + 1) % ITERATIONS_CHECK) == 0)) {
-            System.out.println("\nIteracion: " + (iteration + 1));
-            System.out.print("Minimos globales:");
-            for(int i=0 ; i<minPointList.size() ; i++){
-                System.out.print((i+1) + minPointList.get(i) + "    ");
-            }
-        }
-        System.out.println("\n\n"); */
     }
     
     return true;
@@ -157,7 +173,6 @@ bool Heuristic_ParticleSwarmOptimization::execHeuristic(float (*fitnessFunction)
 
 
 double Heuristic_ParticleSwarmOptimization::generarNumeroAleatorio(double minimo, double maximo) {
-    srand(static_cast<unsigned int>(std::time(0)));
     double numeroAleatorio = minimo + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (maximo - minimo)));
     return numeroAleatorio;
 }
