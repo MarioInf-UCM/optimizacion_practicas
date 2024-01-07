@@ -16,7 +16,7 @@ class FitnessFunction_Pow2: public FitnessFunction{
         FitnessFunction_Pow2(string ID);
         ~FitnessFunction_Pow2();
 
-        float execFunction(float x);
+        static float execFunction(float x);
 
         //**********************************************
         //* MÉTODOS DE TRATAMIENTO DE VARIABLES PRIVADAS

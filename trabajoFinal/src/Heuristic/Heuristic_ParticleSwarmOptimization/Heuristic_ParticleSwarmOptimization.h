@@ -15,7 +15,10 @@ class Heuristic_ParticleSwarmOptimization:public Heuristic{
         Heuristic_ParticleSwarmOptimization();
         ~Heuristic_ParticleSwarmOptimization();
 
-        bool execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration rankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose=false);
+        bool execHeuristic(float (*fitnessFunction)(float), WorldConfiguration worldConfiguration, RankConfiguration rankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose=false);
+
+    private:
+        double generarNumeroAleatorio(double minimo, double maximo);
 
 };
 

@@ -14,7 +14,7 @@ Heuristic_Fireworks::~Heuristic_Fireworks(){}
 //**********************************
 // DEFINICIÓN DE MÉTODOS FUNCIONALES
 //**********************************
-bool Heuristic_Fireworks::execHeuristic(WorldConfiguration worldConfiguration, RankConfiguration RankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose){
+bool Heuristic_Fireworks::execHeuristic(float (*fitnessFunction)(float), WorldConfiguration worldConfiguration, RankConfiguration RankConfiguration, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose){
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     ostringstream printStream;

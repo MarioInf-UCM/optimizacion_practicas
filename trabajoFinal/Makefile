@@ -4,17 +4,14 @@ LIBS = -ljsoncpp
 BIN_DIR = bin
 OUT_DIR = out
 TARGET = trabajoFinal_exec
-numProc = 4
-#configFileURL = /home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/docs/config.json
-configFileURL = /home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/docs/config.json
+numProc = 2
+configFileURL = /home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/docs/config.json
+#configFileURL = /home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/docs/config.json
 
 OBJS = $(patsubst %.cpp,$(BIN_DIR)/%.o,$(SRCS))
 
 #Incluimos la clase Main
 SRCS += src/main.cpp
-
-#Incluimos la clase World
-SRCS += src/World/World.cpp
 
 #Referencia a los elementos del directorio src/Interface
 SRCS += src/interface/Json_interface/Json_interface.cpp

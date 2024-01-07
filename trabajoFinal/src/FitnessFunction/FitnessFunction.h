@@ -17,7 +17,7 @@ class FitnessFunction{
         FitnessFunction(string ID);
         ~FitnessFunction();
 
-        float execFunction(float x);
+        static float execFunction(float x);
 
         //**********************************************
         //* MÉTODOS DE TRATAMIENTO DE VARIABLES PRIVADAS

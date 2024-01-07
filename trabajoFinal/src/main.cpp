@@ -9,7 +9,6 @@
 #include <sstream>
 #include <ifaddrs.h>
 
-#include "World/World.h"
 #include "interface/Json_interface/Json_interface.h"
 #include "interface/Json_interface/JsonConfiguration/JsonConfiguration.h"
 #include "interface/FileWriter_interface/FileWriter_interface.h"
@@ -17,6 +16,7 @@
 #include "Heuristic/Heuristic_DifferentialEvolution/Heuristic_DifferentialEvolution.h"
 #include "Heuristic/Heuristic_Fireworks/Heuristic_Fireworks.h"
 #include "Heuristic/Heuristic_ParticleSwarmOptimization/Heuristic_ParticleSwarmOptimization.h"
+#include "FitnessFunction/FitnessFunction_Pow2/FitnessFunction_Pow2.h"
 
 #define ROOT 0
 #define ENTRY_PARAM_NUM 2
@@ -136,6 +136,12 @@ int main(int argc, char** argv) {
         return 1;        
     }
 
+    float (*FitnessFunction)(float);
+    FitnessFunction_Pow2 fitnessFunction_Pow2 = FitnessFunction_Pow2();
+    if(!jsonConfiguration.getWorldConfiguration().getFitnessFunctionID().compare(fitnessFunction_Pow2.getID())){
+        FitnessFunction = FitnessFunction_Pow2::execFunction;
+    }
+
     Heuristic_ArtificialBeeColony heuristic_ArtificialBeeColony = Heuristic_ArtificialBeeColony();
     Heuristic_DifferentialEvolution heuristic_DifferentialEvolution = Heuristic_DifferentialEvolution();
     Heuristic_Fireworks heuristic_Fireworks = Heuristic_Fireworks();
@@ -143,26 +149,18 @@ int main(int argc, char** argv) {
     printStream << "Proceso " << rank << " - Configuración{" << configRank.displayInfo() << "}"; file_commonLog.writeln(printStream, VERBOSE);
 
     if(!configRank.getHeuristicID().compare(heuristic_ArtificialBeeColony.getID())){
-        result = heuristic_ArtificialBeeColony.execHeuristic(jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
+        result = heuristic_ArtificialBeeColony.execHeuristic(FitnessFunction, jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
 
     }else if(!configRank.getHeuristicID().compare(heuristic_DifferentialEvolution.getID())){
-        result = heuristic_DifferentialEvolution.execHeuristic(jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
+        result = heuristic_DifferentialEvolution.execHeuristic(FitnessFunction, jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
 
     }else if(!configRank.getHeuristicID().compare(heuristic_Fireworks.getID())){
-        result = heuristic_Fireworks.execHeuristic(jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
+        result = heuristic_Fireworks.execHeuristic(FitnessFunction, jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
 
     }else if(!configRank.getHeuristicID().compare(heuristic_ParticleSwarmOptimization.getID())){
-        result = heuristic_ParticleSwarmOptimization.execHeuristic(jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
+        result = heuristic_ParticleSwarmOptimization.execHeuristic(FitnessFunction, jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
     }
-
-
-
-
-
-
     printStream << "proceso:" << rank << " - Ejecución finalizada"; file_commonLog.writeln(printStream, VERBOSE);
-
-
 
     FinalizingExecution(&CommComputer);
     return 0;
