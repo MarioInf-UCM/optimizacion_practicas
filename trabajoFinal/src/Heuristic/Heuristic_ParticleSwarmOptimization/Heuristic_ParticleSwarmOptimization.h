@@ -19,7 +19,8 @@ class Heuristic_ParticleSwarmOptimization:public Heuristic{
 
     private:
         double generarNumeroAleatorio(double minimo, double maximo);
-
+        void checkAndSendMinimun(float posTemp, float oldMin, float newMin, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose=false);
+        bool checkAndReciveMinimun(float *data,  FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose);
 };
 
 

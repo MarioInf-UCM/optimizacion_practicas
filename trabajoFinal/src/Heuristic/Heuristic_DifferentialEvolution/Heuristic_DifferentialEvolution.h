@@ -19,6 +19,10 @@ class Heuristic_DifferentialEvolution:public Heuristic{
 
     private:
         double generarNumeroAleatorio(double minimo, double maximo);
+        void checkAndSendMinimun(double posTemp, float oldMin, float newMin, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose=false);
+        bool checkAndReciveMinimun(float *data,  FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose);
+
+
 };
 
 

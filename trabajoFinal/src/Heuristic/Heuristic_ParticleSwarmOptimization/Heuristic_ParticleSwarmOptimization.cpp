@@ -1,10 +1,14 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include <cfloat>
 #include "Heuristic_ParticleSwarmOptimization.h"
 
 #define MAX_VELOCITY_PERCENTAGE 10
 #define DEPURE_MESSAGES_FLAG false
+#define SHARED_THRESHOLD_PERCENTAGE 0.1 //(0-1)
+#define PRINT_STATUS_CYCLICAL 100
+#define SEPARATOR " "
 
 using namespace std;
 
@@ -45,7 +49,7 @@ bool Heuristic_ParticleSwarmOptimization::execHeuristic(float (*fitnessFunction)
     double posTemp = 0.0;
     int lastIteration = 0;
     bool flagEnd = false;
-
+    float minShared = 0.0;
 
     
     vector<float> minPosList = vector<float>();
@@ -105,9 +109,8 @@ bool Heuristic_ParticleSwarmOptimization::execHeuristic(float (*fitnessFunction)
             }
         }
 
- 
         // Paso 3: Actualización de los minimos locales y globales
-       for (int particle = 0; particle < poblation; particle++) {
+        for (int particle = 0; particle < poblation; particle++) {
             for (int dimension = 0; dimension < dimensions; dimension++) {
 
                 posTemp = actualPositionList[particle][dimension];
@@ -121,8 +124,23 @@ bool Heuristic_ParticleSwarmOptimization::execHeuristic(float (*fitnessFunction)
                 }
                 if (resultFitness_actualposition < resultFitness_bestPositionGlobal) {
                     minPosList[dimension]=posTemp;
+
+                    //Compartimos el nuevo mínimo
+                    checkAndSendMinimun(posTemp, resultFitness_bestPositionGlobal, resultFitness_actualposition, file_commonLog, file_resultCSV);
+
                 }
                 
+            }
+        }
+
+        //Paso 4: Comprobamos los mínimos recibidos
+        if(checkAndReciveMinimun(&minShared, file_commonLog, file_resultCSV, flagVerbose)){
+            for(int dimension=0 ; dimension<dimensions ; dimension++){
+                if(fitnessFunction(minShared) < fitnessFunction(minPosList[dimension])){
+                    minPosList[dimension] = minShared;
+                    printStream <<"Proceso: " << rank << " - Iteración: " << iteration << " Posición " << minShared << "compartida, aceptada como nuevo mínimo de la dimension: " << dimension;
+                    file_commonLog.writeln(printStream, flagVerbose);
+                }
             }
         }
 
@@ -157,7 +175,7 @@ bool Heuristic_ParticleSwarmOptimization::execHeuristic(float (*fitnessFunction)
             }
             printStream << "]";
             file_commonLog.writeln(printStream, flagVerbose);
-        }else{
+        }else if(iteration%PRINT_STATUS_CYCLICAL == 0){
             printStream <<"Proceso: " << rank << " - Iteración: " << iteration << " Mínimos globales[";
             for(int i=0 ; i<minPosList.size() ; i++){
                 printStream << minPosList[i] << " ";
@@ -175,4 +193,55 @@ bool Heuristic_ParticleSwarmOptimization::execHeuristic(float (*fitnessFunction)
 double Heuristic_ParticleSwarmOptimization::generarNumeroAleatorio(double minimo, double maximo) {
     double numeroAleatorio = minimo + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (maximo - minimo)));
     return numeroAleatorio;
+}
+
+
+void Heuristic_ParticleSwarmOptimization::checkAndSendMinimun(float posTemp, float oldMin, float newMin, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose){
+
+    ostringstream printStream;
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size); 
+
+    if(newMin < oldMin - (oldMin*SHARED_THRESHOLD_PERCENTAGE)){
+
+        for (int destino = 0; destino < size; ++destino) {
+            if (destino != rank) {
+                MPI_Send(&posTemp, 1, MPI_FLOAT, destino, 0, MPI_COMM_WORLD);
+            }
+        }
+        printStream << "Proceso: " << rank << " - Nuevo mínimo comparido{ x:" << posTemp << " y:" << oldMin << "}";
+        file_commonLog.writeln(printStream, flagVerbose);
+        printStream << getID() << SEPARATOR << posTemp << SEPARATOR << newMin;
+        file_resultCSV.writeln(printStream, flagVerbose);
+
+    }
+    return;
+}
+
+bool Heuristic_ParticleSwarmOptimization::checkAndReciveMinimun(float *data,  FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose){
+    ostringstream printStream;
+    MPI_Status statusMessage;
+    int rank, size, result, numMessages;
+    float receivedData = FLT_MAX;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size); 
+
+    result = MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &numMessages, &statusMessage);
+    if(result != MPI_SUCCESS){
+        printStream << "Proceso: " << rank << "Error en la comprobación de mensajes pendientes{ fuente: " << statusMessage.MPI_SOURCE << " errorCode:"  << statusMessage.MPI_ERROR << "}" ; file_commonLog.writeln(printStream, flagVerbose);
+
+    }else if(numMessages>0){
+        result != MPI_Recv(&receivedData, 1, MPI_FLOAT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &statusMessage);
+        if(result != MPI_SUCCESS){
+            printStream << "Proceso: " << rank << "Error en la recepción de mensajes{ fuente: " << statusMessage.MPI_SOURCE << " errorCode:"  << statusMessage.MPI_ERROR << "}" ; file_commonLog.writeln(printStream, flagVerbose);
+        }else{
+            printStream << "Proceso: " << rank << " - Nuevo mínimo recibido{ fuente: " << statusMessage.MPI_SOURCE << " x: " << receivedData << "}"; file_commonLog.writeln(printStream, flagVerbose);
+            if(receivedData < *data){
+                *data = receivedData;
+            }
+            return true;
+        }
+    }
+    return false;
 }

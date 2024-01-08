@@ -27,6 +27,6 @@ class Heuristic{
         //**********************************************
         //* MÉTODOS DE TRATAMIENTO DE VARIABLES PRIVADAS
         //**********************************************
-        string getID();
+        virtual string getID();
 };
 #endif

@@ -9,11 +9,11 @@
     },
     "computerConfiguration": [{
         "IP": "0.0.0.0",
-        "logCommonFile":"/home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/out/logFile_MundoCirculo1.txt",
+        "logCommonFile":"/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/logFile_MundoCirculo1.txt",
         "rankConfigurationList": [{
             "rankList": [0],
-            "outFIleURL": "out/output_ParticleSwarmOptimization.txt",
             "heuristicID": "ParticleSwarmOptimization",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output_ParticleSwarmOptimization.csv",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 4,
@@ -21,8 +21,8 @@
         },
         {
             "rankList": [1],
-            "outFIleURL": "out/output_DifferentialEvolution.txt",
             "heuristicID": "DifferentialEvolution",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output_DifferentialEvolution.csv",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 4,
@@ -30,41 +30,20 @@
         },
         {
             "rankList": [2],
-            "outFIleURL": "out/output_ArtificialBeeColony.txt",
             "heuristicID": "ArtificialBeeColony",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output_ArtificialBeeColony.csv",
             "iterations": 500,
             "poblation" : 25,
-            "dimensions": 2,
+            "dimensions": 4,
             "valueList":[0.3925, 2.5586, 1.3358]
         },
         {
             "rankList": [3],
-            "outFIleURL": "out/output_Fireworks.txt",
             "heuristicID": "Fireworks",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output_Fireworks.csv",
             "iterations": 500,
             "poblation" : 25,
-            "dimensions": 2,
-            "valueList":[0.3925, 2.5586, 1.3358]
-        }]
-    },
-    {
-        "IP": "12.12.12.12",
-        "rankConfigurationList": [{
-            "rankList": [0],
-            "outFIleURL": "out/.txt",
-            "heuristicID": "",
-            "iterations": 500,
-            "poblation" : 25,
-            "dimensions": 2,
-            "valueList":[0.3925, 2.5586, 1.3358]
-        },
-        {
-            "rankList": [1],
-            "outFIleURL": "out/.txt",
-            "heuristicID": "",
-            "iterations": 500,
-            "poblation" : 25,
-            "dimensions": 2,
+            "dimensions": 4,
             "valueList":[0.3925, 2.5586, 1.3358]
         }]
     },
@@ -76,7 +55,7 @@
             "heuristicID": "pso",
             "iterations": 500,
             "poblation" : 25,
-            "dimensions": 2,
+            "dimensions": 4,
             "valueList":[0.3925, 2.5586, 1.3358]
         }]
     }]

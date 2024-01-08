@@ -1,11 +1,16 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include <cfloat>
 
 #include "Heuristic_DifferentialEvolution.h"
 
 #define MAX_VELOCITY_PERCENTAGE 10
 #define DEPURE_MESSAGES_FLAG false
+#define SHARED_THRESHOLD_PERCENTAGE 0.1 //(0-1)
+#define PRINT_STATUS_CYCLICAL 100
+#define SEPARATOR " "
+
 
 //******************************************
 // DEFINICIÓN DE CONSTRUCORES Y DESTRUCTORES
@@ -34,7 +39,6 @@ bool Heuristic_DifferentialEvolution::execHeuristic(float (*fitnessFunction)(flo
         float differentialWeight = rankConfiguration.getValue_byIndex(1);
         float maxVelocity_AbsoluteValor = fabs(worldConfiguration.getLimitRight() - worldConfiguration.getLimitLeft());
 
-
         int lastIteration = 0;
         bool flagEnd = false;
         int partSelected_1=0, indexSelected_1=0;
@@ -42,6 +46,7 @@ bool Heuristic_DifferentialEvolution::execHeuristic(float (*fitnessFunction)(flo
         int partSelected_3=0, indexSelected_3=0;
         int dimensionSelected=0;
         double newPosition = 0.0;
+        float minShared = 0.0;
 
 
         vector<float> minPosList = vector<float>();
@@ -92,6 +97,9 @@ bool Heuristic_DifferentialEvolution::execHeuristic(float (*fitnessFunction)(flo
                     actualPositionList[particle][dimensionSelected] = newPosition;
                 
                     if(fitnessFunction(newPosition)<fitnessFunction(minPosList[dimensionSelected])){
+                        
+                        //Compartimos el nuevo mínimo
+                        checkAndSendMinimun(newPosition, fitnessFunction(minPosList[dimensionSelected]), fitnessFunction(newPosition), file_commonLog, file_resultCSV);
                         minPosList[dimensionSelected] = newPosition;
                     }
                 }
@@ -111,10 +119,21 @@ bool Heuristic_DifferentialEvolution::execHeuristic(float (*fitnessFunction)(flo
                     }
                 }
 
+                //Paso 4: Comprobamos los mínimos recibidos
+                if(checkAndReciveMinimun(&minShared, file_commonLog, file_resultCSV, flagVerbose)){
+                    for(int dimension=0 ; dimension<dimensions ; dimension++){
+                        if(fitnessFunction(minShared) < fitnessFunction(minPosList[dimension])){
+                            minPosList[dimension] = minShared;
+                            printStream <<"Proceso: " << rank << " - Iteración: " << iteration << " Posición " << minShared << " compartida, aceptada como nuevo mínimo de la dimension: " << dimension;
+                            file_commonLog.writeln(printStream, flagVerbose);
+                        }
+                    }
+                }
+
             }
 
             if(DEPURE_MESSAGES_FLAG){
-            printStream <<"Proceso: " << rank << " - Iteración: " << iteration << " Posición actual{";
+                printStream <<"Proceso: " << rank << " - Iteración: " << iteration << " Posición actual{";
                 for (int particle = 0; particle < poblation; particle++) {
                     printStream <<"[ ";
                     for (int dimension = 0; dimension < dimensions; dimension++) {
@@ -127,8 +146,9 @@ bool Heuristic_DifferentialEvolution::execHeuristic(float (*fitnessFunction)(flo
                     printStream << minPosList[i] << " ";
                 }
                 printStream << "]";
-                file_commonLog.writeln(printStream, flagVerbose);                
-            }else{
+                file_commonLog.writeln(printStream, flagVerbose);      
+
+            }else if(iteration%PRINT_STATUS_CYCLICAL == 0){
                 printStream <<"Proceso: " << rank << " - Iteración: " << iteration << " Mínimos globales[";
                 for(int i=0 ; i<minPosList.size() ; i++){
                     printStream << minPosList[i] << " ";
@@ -137,11 +157,65 @@ bool Heuristic_DifferentialEvolution::execHeuristic(float (*fitnessFunction)(flo
                 file_commonLog.writeln(printStream, flagVerbose);                
             }
         }
+        
+
     
     return true;
 }
 
+
 double Heuristic_DifferentialEvolution::generarNumeroAleatorio(double minimo, double maximo) {
     double numeroAleatorio = minimo + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (maximo - minimo)));
     return numeroAleatorio;
+}
+
+
+void Heuristic_DifferentialEvolution::checkAndSendMinimun(double posTemp, float oldMin, float newMin, FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose){
+
+    ostringstream printStream;
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size); 
+
+    if(newMin < oldMin - (oldMin*SHARED_THRESHOLD_PERCENTAGE)){
+        for (int destino = 0; destino < size; ++destino) {
+            if (destino != rank) {
+                MPI_Send(&posTemp, 1, MPI_FLOAT, destino, 0, MPI_COMM_WORLD);
+            }
+        }
+        printStream << "Proceso: " << rank << " - Nuevo mínimo comparido{ x:" << posTemp << " y:" << oldMin << "}";
+        file_commonLog.writeln(printStream, flagVerbose);
+        printStream << getID() << SEPARATOR << posTemp << SEPARATOR << newMin;
+        file_resultCSV.writeln(printStream, flagVerbose);
+
+    }
+    return;
+}
+
+
+bool Heuristic_DifferentialEvolution::checkAndReciveMinimun(float *data,  FileWriter_interface file_commonLog, FileWriter_interface file_resultCSV, bool flagVerbose){
+    ostringstream printStream;
+    MPI_Status statusMessage;
+    int rank, size, result, numMessages;
+    float receivedData = FLT_MAX;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size); 
+
+    result = MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &numMessages, &statusMessage);
+    if(result != MPI_SUCCESS){
+        printStream << "Proceso: " << rank << "Error en la comprobación de mensajes pendientes{ fuente: " << statusMessage.MPI_SOURCE << " errorCode:"  << statusMessage.MPI_ERROR << "}" ; file_commonLog.writeln(printStream, flagVerbose);
+
+    }else if(numMessages>0){
+        result != MPI_Recv(&receivedData, 1, MPI_FLOAT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &statusMessage);
+        if(result != MPI_SUCCESS){
+            printStream << "Proceso: " << rank << "Error en la recepción de mensajes{ fuente: " << statusMessage.MPI_SOURCE << " errorCode:"  << statusMessage.MPI_ERROR << "}" ; file_commonLog.writeln(printStream, flagVerbose);
+        }else{
+            printStream << "Proceso: " << rank << " - Nuevo mínimo recibido{ fuente: " << statusMessage.MPI_SOURCE << " x: " << receivedData << "}"; file_commonLog.writeln(printStream, flagVerbose);
+            if(receivedData < *data){
+                *data = receivedData;
+            }
+            return true;
+        }
+    }
+    return false;
 }
