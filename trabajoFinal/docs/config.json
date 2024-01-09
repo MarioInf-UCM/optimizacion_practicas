@@ -13,7 +13,7 @@
         "rankConfigurationList": [{
             "rankList": [0],
             "heuristicID": "ParticleSwarmOptimization",
-            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output_ParticleSwarmOptimization.csv",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output.csv",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 4,
@@ -22,7 +22,7 @@
         {
             "rankList": [1],
             "heuristicID": "DifferentialEvolution",
-            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output_DifferentialEvolution.csv",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output.csv",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 4,
@@ -31,7 +31,7 @@
         {
             "rankList": [2],
             "heuristicID": "ArtificialBeeColony",
-            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output_ArtificialBeeColony.csv",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output.csv",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 4,
@@ -40,7 +40,7 @@
         {
             "rankList": [3],
             "heuristicID": "Fireworks",
-            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output_Fireworks.csv",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output.csv",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 4,

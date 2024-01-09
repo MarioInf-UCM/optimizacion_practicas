@@ -9,6 +9,7 @@
 #include <sstream>
 #include <ifaddrs.h>
 
+
 #include "interface/Json_interface/Json_interface.h"
 #include "interface/Json_interface/JsonConfiguration/JsonConfiguration.h"
 #include "interface/FileWriter_interface/FileWriter_interface.h"
@@ -161,6 +162,8 @@ int main(int argc, char** argv) {
         result = heuristic_ParticleSwarmOptimization.execHeuristic(FitnessFunction, jsonConfiguration.getWorldConfiguration(), configRank, file_commonLog, outPutFile);
     }
     printStream << "proceso:" << rank << " - Ejecución finalizada"; file_commonLog.writeln(printStream, VERBOSE);
+
+system("clear");
 
     FinalizingExecution(&CommComputer);
     return 0;

@@ -49,15 +49,11 @@ $(BIN_DIR)/%.o: %.cpp
 run: $(TARGET)
 	mpirun -n $(numProc) ./$(BIN_DIR)/$(TARGET) $(configFileURL)
 
-
-
 clear:
 	rm -rf $(BIN_DIR) $(TARGET)
 
 clearOutPut:
 	rm -rf $(OUT_DIR)/*
 
-
-
-
-
+plot:
+	gnuplot src/GnuPlot_scripts/examplePlot.gp
