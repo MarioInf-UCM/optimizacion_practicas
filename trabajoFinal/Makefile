@@ -56,4 +56,4 @@ clearOutPut:
 	rm -rf $(OUT_DIR)/*
 
 plot:
-	gnuplot src/GnuPlot_scripts/examplePlot.gp
+	gnuplot scripts/examplePlot.gp
