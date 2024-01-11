@@ -519,7 +519,23 @@ DifferentialEvolution -0.494612 0.244641
 .
 ```
 
-<img src="images/resultado.png" alt="drawing" style="width:50%; 
+### Resultado de la ejecución de la función 1 (x^2)
+
+<img src="images/resultado_pow2.png" alt="drawing" style="width:50%; 
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1%;
+    margin-botton: 1%;
+"/>
+
+<br />
+
+### Resultado de la ejecución de la función 8 ( -x*sin(sqrt(|x|)) )
+
+Para poder visualizar correctamente dicha función, ha sido necesario descartar los valores tan extremos producidos por la heurística **Particle Swarm Optimization**, puesto que esta incrementa enormemente su velocidad. Es necesario hacer un reajuste de dichos parámetros.
+
+<img src="images/resultadoNum8.png" alt="drawing" style="width:50%; 
     display: block;
     margin-left: auto;
     margin-right: auto;

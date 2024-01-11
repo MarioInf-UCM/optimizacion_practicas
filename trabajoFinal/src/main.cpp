@@ -18,6 +18,7 @@
 #include "Heuristic/Heuristic_Fireworks/Heuristic_Fireworks.h"
 #include "Heuristic/Heuristic_ParticleSwarmOptimization/Heuristic_ParticleSwarmOptimization.h"
 #include "FitnessFunction/FitnessFunction_Pow2/FitnessFunction_Pow2.h"
+#include "FitnessFunction/FitnessFunction_num8/FitnessFunction_num8.h"
 
 #define ROOT 0
 #define ENTRY_PARAM_NUM 2
@@ -139,8 +140,14 @@ int main(int argc, char** argv) {
 
     float (*FitnessFunction)(float);
     FitnessFunction_Pow2 fitnessFunction_Pow2 = FitnessFunction_Pow2();
+    FitnessFunction_num8 fitnessFunction_num8 = FitnessFunction_num8();
     if(!jsonConfiguration.getWorldConfiguration().getFitnessFunctionID().compare(fitnessFunction_Pow2.getID())){
         FitnessFunction = FitnessFunction_Pow2::execFunction;
+    }else if(!jsonConfiguration.getWorldConfiguration().getFitnessFunctionID().compare(fitnessFunction_num8.getID())){
+        FitnessFunction = FitnessFunction_num8::execFunction;
+    }else{
+        printStream << "Proceso " << rank << " - No se ha podido identificar la función de fitness correctamente (" << jsonConfiguration.getWorldConfiguration().getFitnessFunctionID() << ")"; file_commonLog.writeln(printStream, VERBOSE);
+        MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
     Heuristic_ArtificialBeeColony heuristic_ArtificialBeeColony = Heuristic_ArtificialBeeColony();

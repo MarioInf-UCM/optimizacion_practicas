@@ -1,7 +1,7 @@
 {
     "worldConfiguration":{
         "id": "MundoCirculo1",
-        "fitnessFunctionID": "Pow2",
+        "fitnessFunctionID": "num8",
         "limitUp": 100,
         "limitDown": -100, 
         "limitRight": 100,

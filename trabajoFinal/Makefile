@@ -25,6 +25,7 @@ SRCS += src/interface/FileWriter_interface/FileWriter_interface.cpp
 #Referencia a los elementos del directorio src/FitnessFunction
 SRCS += src/FitnessFunction/FitnessFunction.cpp
 SRCS += src/FitnessFunction/FitnessFunction_Pow2/FitnessFunction_Pow2.cpp
+SRCS += src/FitnessFunction/FitnessFunction_num8/FitnessFunction_num8.cpp
 
 #Referencia a los elementos del directorio src/Heuristic
 SRCS += src/Heuristic/Heuristic.cpp

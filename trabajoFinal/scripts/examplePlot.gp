@@ -1,9 +1,6 @@
 # Definir la variable para la dirección del archivo de datos
 data_file = '/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output.csv'
 
-
-
-
 # Configuración de la terminal y la salida del gráfico
 set terminal wxt persist
 set title "Gráfica de Puntos"
