@@ -9,11 +9,11 @@
     },
     "computerConfiguration": [{
         "IP": "0.0.0.0",
-        "logCommonFile":"/home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/out/logFile_MundoCirculo1.txt",
+        "logCommonFile":"/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/logFile_MundoCirculo1.txt",
         "rankConfigurationList": [{
             "rankList": [0],
             "heuristicID": "ParticleSwarmOptimization",
-            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/out/output.csv",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output.csv",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 4,
@@ -22,25 +22,25 @@
         {
             "rankList": [1],
             "heuristicID": "DifferentialEvolution",
-            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/out/output.csv",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output.csv",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 4,
             "valueList":[0.7450, 0.9096]
         },
         {
-            "rankList": [2],
+            "rankList": [],
             "heuristicID": "ArtificialBeeColony",
-            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/out/output.csv",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output.csv",
             "iterations": 500,
             "poblation" : 25,
             "dimensions": 4,
             "valueList":[0.3925, 2.5586, 1.3358]
         },
         {
-            "rankList": [3],
+            "rankList": [],
             "heuristicID": "Fireworks",
-            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion_practicas/trabajoFinal/out/output.csv",
+            "outFIleURL": "/home/mario/Documentos/universidad/optimizacion/optimizacion_practicas/trabajoFinal/out/output.csv",
             "iterations": 500,
             "poblation" : 5,
             "dimensions": 4,

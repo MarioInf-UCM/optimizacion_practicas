@@ -22,7 +22,7 @@ bool Heuristic_Fireworks::execHeuristic(float (*fitnessFunction)(float), WorldCo
     ostringstream printStream;
     printStream << "Proceso:" << rank << " - Inicio ejecución heurística" << getID(); file_commonLog.writeln(printStream, flagVerbose);
 
-
+/* 
     setDimensions(rankConfiguration.getDimensions());
     setIterations(rankConfiguration.getIterations());
     setNumFireworks(rankConfiguration.getPoblation());
@@ -48,7 +48,7 @@ bool Heuristic_Fireworks::execHeuristic(float (*fitnessFunction)(float), WorldCo
         locationList.push_back(generarNumeroAleatorio(worldConfiguration.getLimitLeft(), worldConfiguration.getLimitRight()));
     }
     
-
+ */
 
 
     
@@ -132,7 +132,7 @@ float Heuristic_Fireworks::calculateSparkPosition(float x, vector<float> locatio
     }
 
  */
-
+    return 0.0;
 }
 
 
