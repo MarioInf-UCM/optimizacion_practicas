@@ -163,7 +163,6 @@ int main(int argc, char** argv) {
     }
     printStream << "proceso:" << rank << " - Ejecución finalizada"; file_commonLog.writeln(printStream, VERBOSE);
 
-system("clear");
 
     FinalizingExecution(&CommComputer);
     return 0;
